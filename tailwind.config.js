@@ -58,7 +58,8 @@ module.exports = {
         'Segoe UI Symbol',
         'Noto Color Emoji',
       ],
+      ubuntu: ['Ubuntu'],
     },
+    plugins: [],
   },
-  plugins: [],
 };
