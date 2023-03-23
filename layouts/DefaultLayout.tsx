@@ -1,17 +1,17 @@
 import Navbar from '@/components/Navbar';
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 
 type TypeProps = {
-  children: JSX.Element
-}
+  children: JSX.Element;
+};
 
 const DefaultLayout: FC<TypeProps> = ({ children }) => {
   return (
-    <>
-      <div>{children}</div>
+    <div className="flex flex-row min-h-screen">
       <Navbar />
-    </>
+      <div>{children}</div>
+    </div>
   );
-}
+};
 
 export default DefaultLayout;
