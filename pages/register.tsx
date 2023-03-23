@@ -31,20 +31,24 @@ export default function register() {
       data.password !== '' &&
       data.confirm_password !== ''
     ) {
-      if (data.password === data.confirm_password) {
-        if (isTermsChecked) {
-          RegisterAxios(data).then((response: any) => {
-            if (response && response.status === 'error') {
-              setErrorMessage(response.message);
-            } else {
-              push('/');
-            }
-          });
+      if (data.password.length >= 3) {
+        if (data.password === data.confirm_password) {
+          if (isTermsChecked) {
+            RegisterAxios(data).then((response: any) => {
+              if (response && response.status === 'error') {
+                setErrorMessage(response.message);
+              } else {
+                push('/');
+              }
+            });
+          } else {
+            setErrorMessage('*Vous devez accepter les termes et conditions');
+          }
         } else {
-          setErrorMessage('*Vous devez accepter les termes et conditions');
+          setErrorMessage('*Les deux mots de passe doivent être identiques');
         }
       } else {
-        setErrorMessage('*Les deux mots de passe doivent être identiques');
+        setErrorMessage('*Le mot de passe doit faire au moins 3 caractères');
       }
     } else {
       setErrorMessage('*Veuillez remplir tous les champs');
