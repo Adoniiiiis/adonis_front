@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import LoginAxios from '@/Axios/LoginAxios';
+import { useRouter } from 'next/router';
 
 export default function login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const { push } = useRouter();
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    LoginAxios(email, password).then(
+      (res: { status: string; message: string }) => {
+        if (res.status === 'success') {
+          push('/');
+        } else {
+          setErrorMessage(res.message);
+        }
+      }
+    );
+  };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -10,7 +30,10 @@ export default function login() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Connecte-toi à ton compte
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={(e) => handleSubmit(e)}
+            >
               <div>
                 <label
                   htmlFor="email"
@@ -19,6 +42,7 @@ export default function login() {
                   Email
                 </label>
                 <input
+                  onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   name="email"
                   id="email"
@@ -34,6 +58,7 @@ export default function login() {
                   Mot de passe
                 </label>
                 <input
+                  onChange={(e) => setPassword(e.target.value)}
                   type="password"
                   name="password"
                   id="password"
@@ -59,14 +84,19 @@ export default function login() {
                       Se souvenir de moi
                     </label>
                   </div>
+                  <a
+                    href="#"
+                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 md:ml-24 ml-32"
+                  >
+                    Mot de passe oublié?
+                  </a>
                 </div>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >
-                  Mot de passe oublié?
-                </a>
               </div>
+              {errorMessage && (
+                <p className="text-red-600 text-[1em] flex justify-center">
+                  {errorMessage}
+                </p>
+              )}
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -74,7 +104,7 @@ export default function login() {
                 Se connecter
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Pas encore de compte?{' '}
+                Pas encore de compte?&nbsp;{' '}
                 <Link
                   href="/register"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"

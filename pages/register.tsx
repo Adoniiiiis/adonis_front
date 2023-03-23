@@ -4,15 +4,6 @@ import RegisterAxios from '@/Axios/RegisterAxios';
 import { useRouter } from 'next/router';
 
 export default function register() {
-  type dataType = {
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-    confirm_password: string;
-    terms: boolean;
-  };
-
   const initialData = {
     name: '',
     email: '',
@@ -23,10 +14,9 @@ export default function register() {
   };
 
   const { push } = useRouter();
-
-  const [data, setData] = useState<dataType>(initialData);
-  const [isTermsChecked, setIsTermsChecked] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [data, setData] = useState(initialData);
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setData({ ...data, terms: isTermsChecked });
@@ -34,11 +24,35 @@ export default function register() {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    RegisterAxios(data).then((response: any) => {
-      response.status === 'error'
-        ? setErrorMessage(response.message)
-        : push('/');
-    });
+    if (
+      data.name !== '' &&
+      data.email !== '' &&
+      data.username !== '' &&
+      data.password !== '' &&
+      data.confirm_password !== ''
+    ) {
+      if (data.password.length >= 3) {
+        if (data.password === data.confirm_password) {
+          if (isTermsChecked) {
+            RegisterAxios(data).then((response: any) => {
+              if (response && response.status === 'error') {
+                setErrorMessage(response.message);
+              } else {
+                push('/');
+              }
+            });
+          } else {
+            setErrorMessage('*Vous devez accepter les termes et conditions');
+          }
+        } else {
+          setErrorMessage('*Les deux mots de passe doivent être identiques');
+        }
+      } else {
+        setErrorMessage('*Le mot de passe doit faire au moins 3 caractères');
+      }
+    } else {
+      setErrorMessage('*Veuillez remplir tous les champs');
+    }
   };
 
   const handleInputChange = (
