@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import LoginAxios from '@/Axios/LoginAxios';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux/es/exports';
 import { ADD_USER } from '@/Redux/Reducers/UserSlice';
+import { useDispatch } from 'react-redux';
+import { LoginAxiosType } from '../Types/LoginAxiosType';
 
 export default function login() {
   const [email, setEmail] = useState('');
@@ -14,16 +15,14 @@ export default function login() {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    LoginAxios(email, password).then(
-      (res: { status: string; message: string; userData: {} }) => {
-        if (res.status === 'success') {
-          dispatch(ADD_USER(res.userData));
-          push('/');
-        } else {
-          setErrorMessage(res.message);
-        }
+    LoginAxios(email, password).then((res: LoginAxiosType) => {
+      if (res.status === 'success') {
+        dispatch(ADD_USER(res.userData));
+        push('/');
+      } else {
+        setErrorMessage(res.message);
       }
-    );
+    });
   };
 
   return (

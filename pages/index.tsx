@@ -1,7 +1,10 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import { useSelector } from 'react-redux';
+import { ReduxUserType } from '@/Types/ReduxUserType';
 
 export default function Home() {
+  // const userData = useSelector((state: ReduxUserType) => state.user.user);
   return (
     <>
       <Head>
@@ -12,7 +15,9 @@ export default function Home() {
       </Head>
       <main>
         <DefaultLayout>
-          <h1>Homepage</h1>
+          <>
+            <h1>Homepage</h1>
+          </>
         </DefaultLayout>
       </main>
     </>
