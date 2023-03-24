@@ -1,19 +1,22 @@
 import ForgotPasswordAxios from '@/Axios/ForgotPasswordAxios';
+import ResetPasswordAxios from '@/Axios/ResetPasswordAxios';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 
 export default function resetPassword() {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password_confirmation, setConfirmPassword] = useState('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
+  const router = useRouter();
+  const token: any = router.query['token][email'];
+  const email: any = router.query.email;
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    ForgotPasswordAxios(email);
+    ResetPasswordAxios(token, email, password, password_confirmation);
   };
 
   useEffect(() => {
-    setEmail('params');
     if (
       password !== '' &&
       password_confirmation !== '' &&
@@ -23,7 +26,7 @@ export default function resetPassword() {
     } else {
       setIsBtnDisplayed(false);
     }
-  }, []);
+  }, [password, password_confirmation]);
 
   const submitBtn = isBtnDisplayed ? (
     <button
