@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import LoginAxios from '@/Axios/LoginAxios';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux/es/exports';
+import { ADD_USER } from '@/Redux/Reducers/UserSlice';
 
 export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { push } = useRouter();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     LoginAxios(email, password).then(
-      (res: { status: string; message: string }) => {
+      (res: { status: string; message: string; userData: {} }) => {
         if (res.status === 'success') {
+          dispatch(ADD_USER(res.userData));
           push('/');
         } else {
           setErrorMessage(res.message);
