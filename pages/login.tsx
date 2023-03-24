@@ -87,12 +87,13 @@ export default function login() {
                       Se souvenir de moi
                     </label>
                   </div>
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 md:ml-24 ml-32"
+                  <Link
+                    href="/forgotPassword"
+                    className="text-sm font-medium text-primary-600
+                  hover:underline dark:text-primary-500 md:ml-24 ml-32"
                   >
                     Mot de passe oublié?
-                  </a>
+                  </Link>
                 </div>
               </div>
               {errorMessage && (
