@@ -13,7 +13,14 @@ export default function resetPassword() {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    ResetPasswordAxios(token, email, password, password_confirmation);
+    ResetPasswordAxios(token, email, password, password_confirmation).then(
+      (res: { status: string }) => {
+        console.log(res.status);
+        if (res.status === 'Your password has been reset.') {
+          router.push('/login');
+        }
+      }
+    );
   };
 
   useEffect(() => {
