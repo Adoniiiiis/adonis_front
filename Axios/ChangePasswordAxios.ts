@@ -1,20 +1,21 @@
 import { axios } from './AxiosSetup';
 
-export default function LoginAxios(
-  email: string,
+export default function ChangePasswordAxios(
+  userId: number,
   password: string,
-  isRememberMeClicked: boolean
+  password_confirmation: string
 ) {
   try {
     const request = axios({
       method: 'POST',
-      url: '/login',
+      url: 'api/change-password',
       data: {
-        email: email,
+        userId: userId,
         password: password,
-        remember: isRememberMeClicked,
+        password_confirmation: password_confirmation,
       },
     });
+
     const response = request.then((res) => res.data);
     return response;
   } catch (err: any) {
