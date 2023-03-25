@@ -9,20 +9,23 @@ import { LoginAxiosType } from '../Types/LoginAxiosType';
 export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isRememberMeClicked, setIsRememberMeClicked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { push } = useRouter();
   const dispatch = useDispatch();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    LoginAxios(email, password).then((res: LoginAxiosType) => {
-      if (res.status === 'success') {
-        dispatch(ADD_USER(res.userData));
-        push('/');
-      } else {
-        setErrorMessage(res.message);
+    LoginAxios(email, password, isRememberMeClicked).then(
+      (res: LoginAxiosType) => {
+        if (res.status === 'success') {
+          dispatch(ADD_USER(res.userData));
+          push('/');
+        } else {
+          setErrorMessage(res.message);
+        }
       }
-    });
+    );
   };
 
   return (
@@ -73,6 +76,9 @@ export default function login() {
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
+                      onClick={() =>
+                        setIsRememberMeClicked(!isRememberMeClicked)
+                      }
                       id="remember"
                       aria-describedby="remember"
                       type="checkbox"

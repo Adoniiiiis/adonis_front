@@ -1,25 +1,27 @@
-import ResetPasswordAxios from '@/Axios/ResetPasswordAxios';
+import ChangePasswordAxios from '@/Axios/ChangePasswordAxios';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function resetPassword() {
   const [password, setPassword] = useState('');
   const [password_confirmation, setConfirmPassword] = useState('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
+  const userId: number = useSelector((state: any) => state.user.user.id);
   const router = useRouter();
-  const token: any = router.query['token][email'];
-  const email: any = router.query.email;
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    ResetPasswordAxios(token, email, password, password_confirmation).then(
-      (res: { status: string }) => {
-        console.log(res.status);
-        if (res.status === 'Your password has been reset.') {
-          router.push('/login');
-        }
-      }
-    );
+    if (
+      password !== '' &&
+      password_confirmation !== '' &&
+      password.length >= 3 &&
+      password === password_confirmation
+    ) {
+      ChangePasswordAxios(userId, password, password_confirmation).then(() => {
+        router.push('/profile');
+      });
+    }
   };
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function resetPassword() {
       type="submit"
       className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
     >
-      Réinitialiser mon mot de passe
+      Changer mon mot de passe
     </button>
   ) : (
     <button
@@ -47,7 +49,7 @@ export default function resetPassword() {
       className="disabled:opacity-50 w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       disabled
     >
-      Réinitialiser mon mot de passe
+      Changer mon mot de passe
     </button>
   );
 
