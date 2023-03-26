@@ -9,7 +9,7 @@ const DefaultLayout: FC<TypeProps> = ({ children }) => {
   return (
     <div className="flex flex-row min-h-screen bg-gray-200">
       <Navbar />
-      <div>{children}</div>
+      <div className="w-full">{children}</div>
     </div>
   );
 };

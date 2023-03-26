@@ -1,5 +1,7 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import BookCard from '@/components/BookCard';
+import image from '../public/images/book-cover-platon.jpg';
 
 export default function Home() {
   return (
@@ -10,11 +12,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
+      <main className="bg-gray-200">
         <DefaultLayout>
-          <>
-            <h1>Homepage</h1>
-          </>
+          <div className="flex justify-center">
+            <div className="flex-col">
+              <h1 className="mb-24">Homepage</h1>
+              <BookCard bookCoverUrl={image} />
+            </div>
+          </div>
         </DefaultLayout>
       </main>
     </>

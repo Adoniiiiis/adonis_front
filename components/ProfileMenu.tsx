@@ -5,8 +5,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { BsGearFill } from 'react-icons/bs';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { LOGOUT_USER } from '@/Redux/Reducers/UserSlice';
 
 export default function ProfileMenu() {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -14,6 +17,10 @@ export default function ProfileMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    setAnchorEl(null);
+    dispatch(LOGOUT_USER());
   };
 
   return (
@@ -49,8 +56,7 @@ export default function ProfileMenu() {
           <MenuItem onClick={handleClose}>
             <Link href="/changePassword">Changer mon mot de passe</Link>
           </MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Me déconnecter</MenuItem>
         </div>
       </Menu>
     </div>
