@@ -3,9 +3,12 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
 import VideoCard from '@/components/VideoCard';
+import QuoteCard from '@/components/QuoteCard';
 
 export default function Home() {
-  const url = 'https://www.youtube.com/embed/aOu8YeE0188?controls=1';
+  const originalUrl = 'https://www.youtube.com/watch?v=7ZTsqm1ilp0';
+  const validUrl = originalUrl.replace('watch?v=', 'embed/');
+  const videoUrl = `${validUrl}?controls=0`;
 
   return (
     <>
@@ -15,13 +18,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-gray-200">
+      <main>
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
               <h1 className="mb-20">Homepage</h1>
               <BookCard bookCoverUrl={image} />
-              <VideoCard videoUrl={url} />
+              <div className="-mt-5">
+                <VideoCard videoUrl={videoUrl} />
+              </div>
+              <div className="-mt-5">
+                <QuoteCard />
+              </div>
             </div>
           </div>
         </DefaultLayout>

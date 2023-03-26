@@ -1,9 +1,11 @@
 import Image from 'next/image';
+import Ranking from './Ranking';
 
 export default function BookCard({ bookCoverUrl }: any) {
+  const category = 'book';
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[350px] h-[275px] bg-white 2xl:mr-[100px] flex mb-8">
-      <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3">
+    <div className="md:w-[700px] md:h-[200px] w-[350px] h-[275px] bg-white 2xl:mr-[100px] flex mb-8 rounded-md border-gray-400 border-[1px]">
+      <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         50
       </div>
       <div className="md:flex flex-col w-full">
@@ -12,9 +14,9 @@ export default function BookCard({ bookCoverUrl }: any) {
         </div>
         <div className="flex-col md:-mt-[175px] md:ml-[150px] ml-[15px] mt-[5px]">
           <h1 className="underline underline-offset-4">
-            Book Title: Book SubTitle
+            Platon: Œuvres complètes
           </h1>
-          <p className="mt-1 text-gray-500 text-[0.8em]">Book Author</p>
+          <p className="mt-1 text-gray-500 text-[0.8em]">Luc Brisson</p>
           <div className="flex md:w-full md:h-full md:justify-end md:items-end md:mt-[30px] md:pr-[20px] mt-1">
             <div className="flex">
               <p className="text-gray-500 text-[0.8em]">Année:</p>
@@ -27,6 +29,7 @@ export default function BookCard({ bookCoverUrl }: any) {
           </div>
         </div>
       </div>
+      <Ranking postId={1} category={category} />
     </div>
   );
 }

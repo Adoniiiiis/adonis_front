@@ -15,83 +15,89 @@ export default function Profile() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-gray-200 h-[100vh]">
+      <main className="bg-gray-300 h-[100vh]">
         <DefaultLayout>
-          <div className="h-full bg-gray-200 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
-            <div className="bg-white rounded-lg shadow-xl pb-8">
-              <div className="w-full h-[250px]">
-                <img
-                  src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
-                  className="w-full h-full rounded-tl-lg rounded-tr-lg"
-                />
-              </div>
-              <div className="flex flex-col items-center -mt-20">
-                <img
-                  src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
-                  className="lg:w-40 w-32 border-4 border-white rounded-full"
-                />
-                <div className="flex items-center space-x-2 mt-2">
-                  <p className="text-2xl">{userData.name}</p>
+          <div className="flex justify-center 2xl:mr-[50px]">
+            <div className="h-full bg-gray-300 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
+              <div className="bg-white rounded-lg shadow-xl pb-8">
+                <div className="w-full h-[250px]">
+                  <img
+                    src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
+                    className="w-full h-full rounded-tl-lg rounded-tr-lg"
+                  />
                 </div>
-                <p className="text-sm text-gray-500">{userData.username}</p>
-              </div>
-              <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-                <div className="flex items-center space-x-4 mt-2">
-                  <button className="-mr-4 flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                    <span>Message</span>
-                  </button>
-                  <ProfileMenu />
+                <div className="flex flex-col items-center -mt-20">
+                  <img
+                    src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
+                    className="lg:w-40 w-32 border-4 border-white rounded-full"
+                  />
+                  <div className="flex items-center space-x-2 mt-2">
+                    <p className="text-2xl">{userData.name}</p>
+                  </div>
+                  <p className="text-sm text-gray-500">{userData.username}</p>
                 </div>
-              </div>
-            </div>
-
-            <div className="lg:flex lg:w-full">
-              <div className="my-4 flex-col 2xl:flex-row lg:min-w-[40%]">
-                <div className="lg:min-w-[100%] flex-col 2xl:w-1/3">
-                  <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 className="text-xl text-gray-900 font-bold pb-3">
-                      Informations personnelles
-                    </h4>
-                    <ul className="mt-2 text-gray-700">
-                      <li className="flex border-y py-2">
-                        <span className="font-bold w-40">Nom complet:</span>
-                        <span className="text-gray-700">{userData.name}</span>
-                      </li>
-                      <li className="flex border-y py-2">
-                        <span className="font-bold w-40">
-                          Nom d'utilisateur:
-                        </span>
-                        <span className="text-gray-700">
-                          {userData.username}
-                        </span>
-                      </li>
-                      <li className="flex border-b py-2">
-                        <span className="font-bold w-40">Addresse email:</span>
-                        <span className="text-gray-700">{userData.email}</span>
-                      </li>
-                    </ul>
+                <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
+                  <div className="flex items-center space-x-4 mt-2">
+                    <button className="-mr-4 flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                      <span>Message</span>
+                    </button>
+                    <ProfileMenu />
                   </div>
                 </div>
               </div>
 
-              <div className="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 lg:ml-[2%] lg:min-w-[58%]">
-                <div className="lg:min-w-full flex flex-col 2xl:w-1/3 lg:min-h-full">
-                  <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 className="text-xl text-gray-900 font-bold pb-3">
-                      Contenu ajouté
-                    </h4>
+              <div className="lg:flex lg:w-full">
+                <div className="my-4 flex-col 2xl:flex-row lg:min-w-[40%]">
+                  <div className="lg:min-w-[100%] flex-col 2xl:w-1/3">
+                    <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
+                      <h4 className="text-xl text-gray-900 font-bold pb-3">
+                        Informations personnelles
+                      </h4>
+                      <ul className="mt-2 text-gray-700">
+                        <li className="flex border-y py-2">
+                          <span className="font-bold w-40">Nom complet:</span>
+                          <span className="text-gray-700">{userData.name}</span>
+                        </li>
+                        <li className="flex border-y py-2">
+                          <span className="font-bold w-40">
+                            Nom d'utilisateur:
+                          </span>
+                          <span className="text-gray-700">
+                            {userData.username}
+                          </span>
+                        </li>
+                        <li className="flex border-b py-2">
+                          <span className="font-bold w-40">
+                            Addresse email:
+                          </span>
+                          <span className="text-gray-700">
+                            {userData.email}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 lg:ml-[2%] lg:min-w-[58%]">
+                  <div className="lg:min-w-full flex flex-col 2xl:w-1/3 lg:min-h-full">
+                    <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
+                      <h4 className="text-xl text-gray-900 font-bold pb-3">
+                        Contenu ajouté
+                      </h4>
+                    </div>
                   </div>
                 </div>
               </div>
