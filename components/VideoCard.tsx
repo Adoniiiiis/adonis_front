@@ -3,7 +3,7 @@ import Ranking from './Ranking';
 export default function VideoCard({ videoUrl }: any) {
   const category = 'video';
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[350px] h-[245px] bg-white 2xl:mr-[100px] flex mb-8 rounded-md border-gray-400 border-[1px]">
+    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[245px] bg-white 2xl:mr-[100px] flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         70
       </div>

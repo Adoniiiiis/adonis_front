@@ -3,7 +3,7 @@ import Ranking from './Ranking';
 export default function QuoteCard() {
   const category = 'quote';
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[350px] h-[275px] bg-white 2xl:mr-[100px] flex mb-8 rounded-md border-gray-400 border-[1px]">
+    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white 2xl:mr-[100px] flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         20
       </div>
