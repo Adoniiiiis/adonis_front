@@ -2,8 +2,11 @@ import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
+import VideoCard from '@/components/VideoCard';
 
 export default function Home() {
+  const url = 'https://www.youtube.com/embed/aOu8YeE0188?controls=1';
+
   return (
     <>
       <Head>
@@ -16,8 +19,9 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <h1 className="mb-24">Homepage</h1>
+              <h1 className="mb-20">Homepage</h1>
               <BookCard bookCoverUrl={image} />
+              <VideoCard videoUrl={url} />
             </div>
           </div>
         </DefaultLayout>
