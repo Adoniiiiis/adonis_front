@@ -7,8 +7,7 @@ import tripleArrow from '../public/images/tripleArrow.png';
 
 export default function Ranking({ postId, category }: any) {
   const handleArrowClick = async (note: number) => {
-    const request = await UpdateRankingAxios(postId, category, note);
-    console.log(request);
+    await UpdateRankingAxios(postId, category, note);
   };
 
   return (
