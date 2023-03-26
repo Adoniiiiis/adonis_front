@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import RegisterAxios from '@/Axios/RegisterAxios';
 import { useRouter } from 'next/router';
+import { ADD_USER } from '@/Redux/Reducers/UserSlice';
+import { useDispatch } from 'react-redux';
 
 export default function register() {
   const initialData = {
@@ -14,6 +16,7 @@ export default function register() {
   };
 
   const { push } = useRouter();
+  const dispatch = useDispatch();
   const [data, setData] = useState(initialData);
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -38,6 +41,7 @@ export default function register() {
               if (response && response.status === 'error') {
                 setErrorMessage(response.message);
               } else {
+                dispatch(ADD_USER(response.userData));
                 push('/');
               }
             });

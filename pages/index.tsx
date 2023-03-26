@@ -1,7 +1,15 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import BookCard from '@/components/BookCard';
+import image from '../public/images/book-cover-platon.jpg';
+import VideoCard from '@/components/VideoCard';
+import QuoteCard from '@/components/QuoteCard';
 
 export default function Home() {
+  const originalUrl = 'https://www.youtube.com/watch?v=7ZTsqm1ilp0';
+  const validUrl = originalUrl.replace('watch?v=', 'embed/');
+  const videoUrl = `${validUrl}?controls=0`;
+
   return (
     <>
       <Head>
@@ -12,9 +20,18 @@ export default function Home() {
       </Head>
       <main>
         <DefaultLayout>
-          <>
-            <h1>Homepage</h1>
-          </>
+          <div className="flex justify-center">
+            <div className="flex-col">
+              <h1 className="mb-20">Homepage</h1>
+              <BookCard bookCoverUrl={image} />
+              <div className="-mt-5">
+                <VideoCard videoUrl={videoUrl} />
+              </div>
+              <div className="-mt-5">
+                <QuoteCard />
+              </div>
+            </div>
+          </div>
         </DefaultLayout>
       </main>
     </>

@@ -9,8 +9,11 @@ export const userSlice = createSlice({
     ADD_USER: (state, { payload }) => {
       state.user = payload;
     },
+    LOGOUT_USER: (state) => {
+      state.user = null;
+    },
   },
 });
 
-export const { ADD_USER } = userSlice.actions;
+export const { ADD_USER, LOGOUT_USER } = userSlice.actions;
 export default userSlice.reducer;
