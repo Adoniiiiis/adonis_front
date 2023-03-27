@@ -83,10 +83,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(homepageContent);
-  }, [homepageContent]);
-
   return (
     <>
       <Head>
