@@ -1,10 +1,10 @@
 import { axios } from './AxiosSetup';
 
-export default function GetHomepageContent() {
+export default function GetNewContentAxios() {
   try {
     const request = axios({
       method: 'GET',
-      url: 'api/getHomepageContent',
+      url: 'api/getNewContent',
     });
     const response = request.then((res) => res.data);
     return response;

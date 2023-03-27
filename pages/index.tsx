@@ -4,35 +4,38 @@ import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
 import VideoCard from '@/components/VideoCard';
 import QuoteCard from '@/components/QuoteCard';
-import { useDispatch } from 'react-redux';
-import { ADD_CONTENTDATA } from '@/Redux/Reducers/ContentDataSlice';
 import { useEffect, useState } from 'react';
-import GetHomepageContent from '@/Axios/GetHomepageContent';
-import GetHomepageSortedContentAxios from '@/Axios/GetHomepageSortedContentAxios';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
 import { Skeleton } from '@mui/material';
+import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
+import GetFilteredContentAxios from '@/Axios/GetFilteredContentAxios';
+import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 
 export default function Home() {
-  const dispatch = useDispatch();
   const [popular, setPopular] = useState<any>(null);
   const [books, setBooks] = useState<any>(null);
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [isHomepageSortedContentLoading, setIsHomepageSortedContentLoading] =
-    useState(true);
+  const [isFilteredContentLoading, setIsFilteredContentLoading] =
+    useState<boolean>(true);
+  const [isNewContentLoading, setIsNewContentLoading] = useState<boolean>(true);
   const [filterButtons, setFilterButtons] = useState<any>(null);
+  const [newContent, setNewContent] = useState<any>(null);
 
   // Filtering by Popular, Book, Video or Quote
   const changeContentType = (contentType: string) => {
-    if (contentType === 'popular') {
-      setContentDisplayed(popular);
-    } else if (contentType === 'books') {
-      setContentDisplayed(books);
-    } else if (contentType === 'videos') {
-      setContentDisplayed(videos);
-    } else if (contentType === 'quotes') {
-      setContentDisplayed(quotes);
+    switch (contentType) {
+      case 'books':
+        return setContentDisplayed(books);
+      case 'videos':
+        return setContentDisplayed(videos);
+      case 'quotes':
+        return setContentDisplayed(quotes);
+      case 'newContent':
+        return setContentDisplayed(newContent);
+      default:
+        return setContentDisplayed(popular);
     }
   };
 
@@ -44,7 +47,7 @@ export default function Home() {
 
   // Setting Buttons to Filter by Popular, Book, Video or Quote
   useEffect(() => {
-    if (isHomepageSortedContentLoading) {
+    if (isFilteredContentLoading && isNewContentLoading) {
       setFilterButtons(
         <HomepageFilterButtons
           changeContentType={changeContentType}
@@ -59,11 +62,11 @@ export default function Home() {
         />
       );
     }
-  }, [isHomepageSortedContentLoading]);
+  }, [isFilteredContentLoading, isNewContentLoading]);
 
   function getSqueletonDisplay() {
     let squeletonDisplay = [];
-    for (let i = 0; i <= 4; i++) {
+    for (let i = 0; i < 4; i++) {
       squeletonDisplay.push(
         <div key={i} className="mb-8 -mt-5">
           <Skeleton
@@ -78,9 +81,9 @@ export default function Home() {
     return squeletonDisplay;
   }
 
-  // Getting Homepage Content
+  // Getting Popular Content
   useEffect(() => {
-    GetHomepageContent().then((res: any) => {
+    GetPopularContentAxios().then((res: any) => {
       setPopular(
         Object.values(res.contentData).map((el: any, key) => {
           if (el.category === 'book') {
@@ -107,11 +110,13 @@ export default function Home() {
         })
       );
     });
-    GetHomepageSortedContentAxios().then((res: any) => {
+
+    // Filtering Books, Quotes and Videos
+    GetFilteredContentAxios().then((res: any) => {
       setBooks(
         Object.values(res.books).map((book: any, key) => {
           return (
-            <div key={key}>
+            <div key={key} className="-mt-5">
               <BookCard bookCoverUrl={image} bookData={book} />
             </div>
           );
@@ -120,7 +125,7 @@ export default function Home() {
       setQuotes(
         Object.values(res.quotes).map((quote: any, key) => {
           return (
-            <div key={key}>
+            <div key={key} className="-mt-5">
               <QuoteCard quoteData={quote} />
             </div>
           );
@@ -131,13 +136,43 @@ export default function Home() {
           const validUrl = video.link.replace('watch?v=', 'embed/');
           const videoUrl = `${validUrl}?controls=0`;
           return (
-            <div key={key}>
+            <div key={key} className="-mt-5">
               <VideoCard videoUrl={videoUrl} videoData={video} />
             </div>
           );
         })
       );
-      setIsHomepageSortedContentLoading(false);
+      setIsFilteredContentLoading(false);
+    });
+
+    // Getting New Content
+    GetNewContentAxios().then((res: any) => {
+      setNewContent(
+        Object.values(res.contentData).map((el: any, key) => {
+          if (el.category === 'book') {
+            return (
+              <div key={key} className="-mt-5">
+                <BookCard bookCoverUrl={image} bookData={el} />
+              </div>
+            );
+          } else if (el.category === 'quote') {
+            return (
+              <div key={key} className="-mt-5">
+                <QuoteCard quoteData={el} />
+              </div>
+            );
+          } else if (el.category === 'video') {
+            const validUrl = el.link.replace('watch?v=', 'embed/');
+            const videoUrl = `${validUrl}?controls=0`;
+            return (
+              <div key={key} className="-mt-5">
+                <VideoCard videoUrl={videoUrl} videoData={el} />
+              </div>
+            );
+          }
+        })
+      );
+      setIsNewContentLoading(false);
     });
   }, []);
 
@@ -154,7 +189,9 @@ export default function Home() {
           <div className="flex justify-center">
             <div className="flex-col">
               {filterButtons}
-              {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
+              <div className="-mt-10">
+                {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
+              </div>
             </div>
           </div>
         </DefaultLayout>
