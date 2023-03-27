@@ -12,10 +12,11 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const dispatch = useDispatch();
   const [isContentDataLoading, setIsContentDataLoading] = useState(true);
-  const [homepageContent, setHomepageContent] = useState<any>(null);
-  const [books, setBooks] = useState<any>(null);
-  const [quotes, setQuotes] = useState<any>(null);
-  const [videos, setVideos] = useState<any>(null);
+  const [homepageContentDisplay, setHomepageContentDisplay] =
+    useState<any>(null);
+  const [booksDisplay, setBooks] = useState<any>(null);
+  const [quotesDisplay, setQuotes] = useState<any>(null);
+  const [videosDisplay, setVideos] = useState<any>(null);
 
   useEffect(() => {
     if (isContentDataLoading) {
@@ -99,7 +100,7 @@ export default function Home() {
           <div className="flex justify-center">
             <div className="flex-col">
               <h1 className="mb-20">Homepage</h1>
-              {homepageContent}
+              {homepageContentDisplay}
             </div>
           </div>
         </DefaultLayout>
