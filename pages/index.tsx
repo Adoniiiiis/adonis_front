@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import GetHomepageContent from '@/Axios/GetHomepageContent';
 import GetHomepageSortedContentAxios from '@/Axios/GetHomepageSortedContentAxios';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
+import { Skeleton } from '@mui/material';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -59,6 +60,23 @@ export default function Home() {
       );
     }
   }, [isHomepageSortedContentLoading]);
+
+  function getSqueletonDisplay() {
+    let squeletonDisplay = [];
+    for (let i = 0; i <= 4; i++) {
+      squeletonDisplay.push(
+        <div key={i} className="mb-8 -mt-5">
+          <Skeleton
+            variant="rectangular"
+            width={700}
+            height={200}
+            className="rounded-lg"
+          />
+        </div>
+      );
+    }
+    return squeletonDisplay;
+  }
 
   // Getting Homepage Content
   useEffect(() => {
@@ -136,7 +154,7 @@ export default function Home() {
           <div className="flex justify-center">
             <div className="flex-col">
               {filterButtons}
-              {contentDisplayed}
+              {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
             </div>
           </div>
         </DefaultLayout>
