@@ -4,11 +4,87 @@ import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
 import VideoCard from '@/components/VideoCard';
 import QuoteCard from '@/components/QuoteCard';
+import GetContentDataAxios from '@/Axios/GetContentDataAxios';
+import { useDispatch } from 'react-redux';
+import { ADD_CONTENTDATA } from '@/Redux/Reducers/ContentDataSlice';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const originalUrl = 'https://www.youtube.com/watch?v=7ZTsqm1ilp0';
-  const validUrl = originalUrl.replace('watch?v=', 'embed/');
-  const videoUrl = `${validUrl}?controls=0`;
+  const dispatch = useDispatch();
+  const [isContentDataLoading, setIsContentDataLoading] = useState(true);
+  const [homepageContent, setHomepageContent] = useState<any>(null);
+  const [books, setBooks] = useState<any>(null);
+  const [quotes, setQuotes] = useState<any>(null);
+  const [videos, setVideos] = useState<any>(null);
+
+  useEffect(() => {
+    if (isContentDataLoading) {
+      GetContentDataAxios().then((res: any) => {
+        dispatch(ADD_CONTENTDATA(res.contentData));
+        setHomepageContent(
+          Object.values(res.contentData.homepageContentData).map(
+            (el: any, key) => {
+              if (el.category === 'book') {
+                return (
+                  <div key={key} className="-mt-5">
+                    <BookCard bookCoverUrl={image} bookData={el} />
+                  </div>
+                );
+              } else if (el.category === 'quote') {
+                return (
+                  <div key={key} className="-mt-5">
+                    <QuoteCard quoteData={el} />
+                  </div>
+                );
+              } else if (el.category === 'video') {
+                const validUrl = el.link.replace('watch?v=', 'embed/');
+                const videoUrl = `${validUrl}?controls=0`;
+                return (
+                  <div key={key} className="-mt-5">
+                    <VideoCard videoUrl={videoUrl} videoData={el} />
+                  </div>
+                );
+              }
+            }
+          )
+        );
+        setBooks(
+          Object.values(res.contentData.books).map((book: any, key) => {
+            return (
+              <div key={key}>
+                <BookCard bookCoverUrl={image} bookData={book} />
+              </div>
+            );
+          })
+        );
+        setVideos(
+          Object.values(res.contentData.videos).map((video: any, key) => {
+            const validUrl = video.link.replace('watch?v=', 'embed/');
+            const videoUrl = `${validUrl}?controls=0`;
+            return (
+              <div key={key}>
+                <VideoCard videoUrl={videoUrl} videoData={video} />
+              </div>
+            );
+          })
+        );
+        setQuotes(
+          Object.values(res.contentData.quotes).map((quote: any, key) => {
+            return (
+              <div key={key}>
+                <QuoteCard quoteData={quote} />
+              </div>
+            );
+          })
+        );
+        setIsContentDataLoading(false);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(homepageContent);
+  }, [homepageContent]);
 
   return (
     <>
@@ -23,13 +99,7 @@ export default function Home() {
           <div className="flex justify-center">
             <div className="flex-col">
               <h1 className="mb-20">Homepage</h1>
-              <BookCard bookCoverUrl={image} />
-              <div className="-mt-5">
-                <VideoCard videoUrl={videoUrl} />
-              </div>
-              <div className="-mt-5">
-                <QuoteCard />
-              </div>
+              {homepageContent}
             </div>
           </div>
         </DefaultLayout>

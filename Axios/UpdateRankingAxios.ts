@@ -8,7 +8,7 @@ export default function UpdateRankingAxios(
   try {
     const request = axios({
       method: 'POST',
-      url: '/ranking',
+      url: 'api/ranking',
       data: {
         postId: postId,
         category: category,
