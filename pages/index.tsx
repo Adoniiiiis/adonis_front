@@ -4,83 +4,103 @@ import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
 import VideoCard from '@/components/VideoCard';
 import QuoteCard from '@/components/QuoteCard';
-import GetContentDataAxios from '@/Axios/GetContentDataAxios';
 import { useDispatch } from 'react-redux';
 import { ADD_CONTENTDATA } from '@/Redux/Reducers/ContentDataSlice';
 import { useEffect, useState } from 'react';
+import GetHomepageContent from '@/Axios/GetHomepageContent';
+import GetHomepageSortedContentAxios from '@/Axios/GetHomepageSortedContentAxios';
 
 export default function Home() {
   const dispatch = useDispatch();
-  const [isContentDataLoading, setIsContentDataLoading] = useState(true);
-  const [homepageContentDisplay, setHomepageContentDisplay] =
-    useState<any>(null);
-  const [booksDisplay, setBooksDisplay] = useState<any>(null);
-  const [quotesDisplay, setQuotesDisplay] = useState<any>(null);
-  const [videosDisplay, setVideosDisplay] = useState<any>(null);
+  const [popular, setPopular] = useState<any>(null);
+  const [books, setBooks] = useState<any>(null);
+  const [videos, setVideos] = useState<any>(null);
+  const [quotes, setQuotes] = useState<any>(null);
+  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
+  const [contentTypeDisplayed, setContentTypeDisplayed] =
+    useState<any>('popular');
 
   useEffect(() => {
-    if (isContentDataLoading) {
-      GetContentDataAxios().then((res: any) => {
-        dispatch(ADD_CONTENTDATA(res.contentData));
-        setHomepageContentDisplay(
-          Object.values(res.contentData.homepageContentData).map(
-            (el: any, key) => {
-              if (el.category === 'book') {
-                return (
-                  <div key={key} className="-mt-5">
-                    <BookCard bookCoverUrl={image} bookData={el} />
-                  </div>
-                );
-              } else if (el.category === 'quote') {
-                return (
-                  <div key={key} className="-mt-5">
-                    <QuoteCard quoteData={el} />
-                  </div>
-                );
-              } else if (el.category === 'video') {
-                const validUrl = el.link.replace('watch?v=', 'embed/');
-                const videoUrl = `${validUrl}?controls=0`;
-                return (
-                  <div key={key} className="-mt-5">
-                    <VideoCard videoUrl={videoUrl} videoData={el} />
-                  </div>
-                );
-              }
-            }
-          )
-        );
-        setBooksDisplay(
-          Object.values(res.contentData.books).map((book: any, key) => {
+    if (contentTypeDisplayed === 'popular') {
+      setContentDisplayed(popular);
+    } else {
+      if (books && quotes && videos) {
+        if (contentTypeDisplayed === 'books') {
+          setContentDisplayed(books);
+        } else if (contentTypeDisplayed === 'videos') {
+          setContentDisplayed(videos);
+        } else if (contentTypeDisplayed === 'quotes') {
+          setContentDisplayed(quotes);
+        }
+      }
+    }
+  }, [contentTypeDisplayed]);
+
+  useEffect(() => {
+    if (popular) {
+      setContentDisplayed(popular);
+    }
+  }, [popular]);
+
+  useEffect(() => {
+    GetHomepageContent().then((res: any) => {
+      setPopular(
+        Object.values(res.contentData).map((el: any, key) => {
+          if (el.category === 'book') {
             return (
-              <div key={key}>
-                <BookCard bookCoverUrl={image} bookData={book} />
+              <div key={key} className="-mt-5">
+                <BookCard bookCoverUrl={image} bookData={el} />
               </div>
             );
-          })
-        );
-        setVideosDisplay(
-          Object.values(res.contentData.videos).map((video: any, key) => {
-            const validUrl = video.link.replace('watch?v=', 'embed/');
+          } else if (el.category === 'quote') {
+            return (
+              <div key={key} className="-mt-5">
+                <QuoteCard quoteData={el} />
+              </div>
+            );
+          } else if (el.category === 'video') {
+            const validUrl = el.link.replace('watch?v=', 'embed/');
             const videoUrl = `${validUrl}?controls=0`;
             return (
-              <div key={key}>
-                <VideoCard videoUrl={videoUrl} videoData={video} />
+              <div key={key} className="-mt-5">
+                <VideoCard videoUrl={videoUrl} videoData={el} />
               </div>
             );
-          })
-        );
-        setQuotesDisplay(
-          Object.values(res.contentData.quotes).map((quote: any, key) => {
-            return (
-              <div key={key}>
-                <QuoteCard quoteData={quote} />
-              </div>
-            );
-          })
-        );
-        setIsContentDataLoading(false);
-      });
-    }
+          }
+        })
+      );
+    });
+    GetHomepageSortedContentAxios().then((res: any) => {
+      setBooks(
+        Object.values(res.books).map((book: any, key) => {
+          return (
+            <div key={key}>
+              <BookCard bookCoverUrl={image} bookData={book} />
+            </div>
+          );
+        })
+      );
+      setQuotes(
+        Object.values(res.quotes).map((quote: any, key) => {
+          return (
+            <div key={key}>
+              <QuoteCard quoteData={quote} />
+            </div>
+          );
+        })
+      );
+      setVideos(
+        Object.values(res.videos).map((video: any, key) => {
+          const validUrl = video.link.replace('watch?v=', 'embed/');
+          const videoUrl = `${validUrl}?controls=0`;
+          return (
+            <div key={key}>
+              <VideoCard videoUrl={videoUrl} videoData={video} />
+            </div>
+          );
+        })
+      );
+    });
   }, []);
 
   return (
@@ -95,8 +115,30 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <h1 className="mb-20">Homepage</h1>
-              {homepageContentDisplay}
+              <div className="mt-8 mb-16">
+                <button
+                  onClick={() => setContentTypeDisplayed('popular')}
+                  className="mr-4"
+                >
+                  Populaires
+                </button>
+                <button
+                  onClick={() => setContentTypeDisplayed('books')}
+                  className="mr-4"
+                >
+                  Livres
+                </button>
+                <button
+                  onClick={() => setContentTypeDisplayed('videos')}
+                  className="mr-4"
+                >
+                  Vidéos
+                </button>
+                <button onClick={() => setContentTypeDisplayed('quotes')}>
+                  Citations
+                </button>
+              </div>
+              {contentDisplayed}
             </div>
           </div>
         </DefaultLayout>
