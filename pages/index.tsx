@@ -14,15 +14,15 @@ export default function Home() {
   const [isContentDataLoading, setIsContentDataLoading] = useState(true);
   const [homepageContentDisplay, setHomepageContentDisplay] =
     useState<any>(null);
-  const [booksDisplay, setBooks] = useState<any>(null);
-  const [quotesDisplay, setQuotes] = useState<any>(null);
-  const [videosDisplay, setVideos] = useState<any>(null);
+  const [booksDisplay, setBooksDisplay] = useState<any>(null);
+  const [quotesDisplay, setQuotesDisplay] = useState<any>(null);
+  const [videosDisplay, setVideosDisplay] = useState<any>(null);
 
   useEffect(() => {
     if (isContentDataLoading) {
       GetContentDataAxios().then((res: any) => {
         dispatch(ADD_CONTENTDATA(res.contentData));
-        setHomepageContent(
+        setHomepageContentDisplay(
           Object.values(res.contentData.homepageContentData).map(
             (el: any, key) => {
               if (el.category === 'book') {
@@ -49,7 +49,7 @@ export default function Home() {
             }
           )
         );
-        setBooks(
+        setBooksDisplay(
           Object.values(res.contentData.books).map((book: any, key) => {
             return (
               <div key={key}>
@@ -58,7 +58,7 @@ export default function Home() {
             );
           })
         );
-        setVideos(
+        setVideosDisplay(
           Object.values(res.contentData.videos).map((video: any, key) => {
             const validUrl = video.link.replace('watch?v=', 'embed/');
             const videoUrl = `${validUrl}?controls=0`;
@@ -69,7 +69,7 @@ export default function Home() {
             );
           })
         );
-        setQuotes(
+        setQuotesDisplay(
           Object.values(res.contentData.quotes).map((quote: any, key) => {
             return (
               <div key={key}>
