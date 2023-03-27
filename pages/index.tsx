@@ -20,34 +20,40 @@ export default function Home() {
   const [isFilteredContentLoading, setIsFilteredContentLoading] =
     useState<boolean>(true);
   const [isNewContentLoading, setIsNewContentLoading] = useState<boolean>(true);
+  const [isPopularContentLoading, setIsPopularContentLoading] =
+    useState<boolean>(true);
   const [filterButtons, setFilterButtons] = useState<any>(null);
   const [newContent, setNewContent] = useState<any>(null);
 
   // Filtering by Popular, Book, Video or Quote
   const changeContentType = (contentType: string) => {
-    switch (contentType) {
-      case 'books':
-        return setContentDisplayed(books);
-      case 'videos':
-        return setContentDisplayed(videos);
-      case 'quotes':
-        return setContentDisplayed(quotes);
-      case 'newContent':
-        return setContentDisplayed(newContent);
-      default:
-        return setContentDisplayed(popular);
+    if (popular) {
+      switch (contentType) {
+        case 'books':
+          return setContentDisplayed(books);
+        case 'videos':
+          return setContentDisplayed(videos);
+        case 'quotes':
+          return setContentDisplayed(quotes);
+        case 'newContent':
+          return setContentDisplayed(newContent);
+        case 'popular':
+          return setContentDisplayed(popular);
+      }
     }
   };
 
   useEffect(() => {
-    if (popular) {
-      setContentDisplayed(popular);
-    }
+    popular && setContentDisplayed(popular);
   }, [popular]);
 
   // Setting Buttons to Filter by Popular, Book, Video or Quote
   useEffect(() => {
-    if (isFilteredContentLoading && isNewContentLoading) {
+    if (
+      isFilteredContentLoading &&
+      isNewContentLoading &&
+      isPopularContentLoading
+    ) {
       setFilterButtons(
         <HomepageFilterButtons
           changeContentType={changeContentType}
@@ -62,7 +68,7 @@ export default function Home() {
         />
       );
     }
-  }, [isFilteredContentLoading, isNewContentLoading]);
+  }, [isFilteredContentLoading, isNewContentLoading, isPopularContentLoading]);
 
   function getSqueletonDisplay() {
     let squeletonDisplay = [];
@@ -83,97 +89,104 @@ export default function Home() {
 
   // Getting Popular Content
   useEffect(() => {
-    GetPopularContentAxios().then((res: any) => {
-      setPopular(
-        Object.values(res.contentData).map((el: any, key) => {
-          if (el.category === 'book') {
-            return (
-              <div key={key} className="-mt-5">
-                <BookCard bookCoverUrl={image} bookData={el} />
-              </div>
-            );
-          } else if (el.category === 'quote') {
-            return (
-              <div key={key} className="-mt-5">
-                <QuoteCard quoteData={el} />
-              </div>
-            );
-          } else if (el.category === 'video') {
-            const validUrl = el.link.replace('watch?v=', 'embed/');
-            const videoUrl = `${validUrl}?controls=0`;
-            return (
-              <div key={key} className="-mt-5">
-                <VideoCard videoUrl={videoUrl} videoData={el} />
-              </div>
-            );
-          }
-        })
-      );
-    });
+    if (isPopularContentLoading) {
+      GetPopularContentAxios().then((res: any) => {
+        setPopular(
+          Object.values(res.contentData).map((el: any, key) => {
+            if (el.category === 'book') {
+              return (
+                <div key={key} className="-mt-5">
+                  <BookCard bookCoverUrl={image} bookData={el} />
+                </div>
+              );
+            } else if (el.category === 'quote') {
+              return (
+                <div key={key} className="-mt-5">
+                  <QuoteCard quoteData={el} />
+                </div>
+              );
+            } else if (el.category === 'video') {
+              const validUrl = el.link.replace('watch?v=', 'embed/');
+              const videoUrl = `${validUrl}?controls=0`;
+              return (
+                <div key={key} className="-mt-5">
+                  <VideoCard videoUrl={videoUrl} videoData={el} />
+                </div>
+              );
+            }
+          })
+        );
+        setIsPopularContentLoading(false);
+      });
+    }
 
     // Filtering Books, Quotes and Videos
-    GetFilteredContentAxios().then((res: any) => {
-      setBooks(
-        Object.values(res.books).map((book: any, key) => {
-          return (
-            <div key={key} className="-mt-5">
-              <BookCard bookCoverUrl={image} bookData={book} />
-            </div>
-          );
-        })
-      );
-      setQuotes(
-        Object.values(res.quotes).map((quote: any, key) => {
-          return (
-            <div key={key} className="-mt-5">
-              <QuoteCard quoteData={quote} />
-            </div>
-          );
-        })
-      );
-      setVideos(
-        Object.values(res.videos).map((video: any, key) => {
-          const validUrl = video.link.replace('watch?v=', 'embed/');
-          const videoUrl = `${validUrl}?controls=0`;
-          return (
-            <div key={key} className="-mt-5">
-              <VideoCard videoUrl={videoUrl} videoData={video} />
-            </div>
-          );
-        })
-      );
-      setIsFilteredContentLoading(false);
-    });
-
-    // Getting New Content
-    GetNewContentAxios().then((res: any) => {
-      setNewContent(
-        Object.values(res.contentData).map((el: any, key) => {
-          if (el.category === 'book') {
+    if (isFilteredContentLoading) {
+      GetFilteredContentAxios().then((res: any) => {
+        setBooks(
+          Object.values(res.books).map((book: any, key) => {
             return (
               <div key={key} className="-mt-5">
-                <BookCard bookCoverUrl={image} bookData={el} />
+                <BookCard bookCoverUrl={image} bookData={book} />
               </div>
             );
-          } else if (el.category === 'quote') {
+          })
+        );
+        setQuotes(
+          Object.values(res.quotes).map((quote: any, key) => {
             return (
               <div key={key} className="-mt-5">
-                <QuoteCard quoteData={el} />
+                <QuoteCard quoteData={quote} />
               </div>
             );
-          } else if (el.category === 'video') {
-            const validUrl = el.link.replace('watch?v=', 'embed/');
+          })
+        );
+        setVideos(
+          Object.values(res.videos).map((video: any, key) => {
+            const validUrl = video.link.replace('watch?v=', 'embed/');
             const videoUrl = `${validUrl}?controls=0`;
             return (
               <div key={key} className="-mt-5">
-                <VideoCard videoUrl={videoUrl} videoData={el} />
+                <VideoCard videoUrl={videoUrl} videoData={video} />
               </div>
             );
-          }
-        })
-      );
-      setIsNewContentLoading(false);
-    });
+          })
+        );
+        setIsFilteredContentLoading(false);
+      });
+    }
+
+    // Getting New Content
+    if (isNewContentLoading) {
+      GetNewContentAxios().then((res: any) => {
+        setNewContent(
+          Object.values(res.contentData).map((el: any, key) => {
+            if (el.category === 'book') {
+              return (
+                <div key={key} className="-mt-5">
+                  <BookCard bookCoverUrl={image} bookData={el} />
+                </div>
+              );
+            } else if (el.category === 'quote') {
+              return (
+                <div key={key} className="-mt-5">
+                  <QuoteCard quoteData={el} />
+                </div>
+              );
+            } else if (el.category === 'video') {
+              const validUrl = el.link.replace('watch?v=', 'embed/');
+              const videoUrl = `${validUrl}?controls=0`;
+              return (
+                <div key={key} className="-mt-5">
+                  <VideoCard videoUrl={videoUrl} videoData={el} />
+                </div>
+              );
+            }
+          })
+        );
+        setIsNewContentLoading(false);
+      });
+    }
   }, []);
 
   return (
