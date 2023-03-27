@@ -9,6 +9,7 @@ import { ADD_CONTENTDATA } from '@/Redux/Reducers/ContentDataSlice';
 import { useEffect, useState } from 'react';
 import GetHomepageContent from '@/Axios/GetHomepageContent';
 import GetHomepageSortedContentAxios from '@/Axios/GetHomepageSortedContentAxios';
+import HomepageFilterButtons from '@/components/HomepageFilterButtons';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -17,24 +18,22 @@ export default function Home() {
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [contentTypeDisplayed, setContentTypeDisplayed] =
-    useState<any>('popular');
+  const [isHomepageSortedContentLoading, setIsHomepageSortedContentLoading] =
+    useState(true);
+  const [filterButtons, setFilterButtons] = useState<any>(null);
 
-  useEffect(() => {
-    if (contentTypeDisplayed === 'popular') {
+  // Filtering by Popular, Book, Video or Quote
+  const changeContentType = (contentType: string) => {
+    if (contentType === 'popular') {
       setContentDisplayed(popular);
-    } else {
-      if (books && quotes && videos) {
-        if (contentTypeDisplayed === 'books') {
-          setContentDisplayed(books);
-        } else if (contentTypeDisplayed === 'videos') {
-          setContentDisplayed(videos);
-        } else if (contentTypeDisplayed === 'quotes') {
-          setContentDisplayed(quotes);
-        }
-      }
+    } else if (contentType === 'books') {
+      setContentDisplayed(books);
+    } else if (contentType === 'videos') {
+      setContentDisplayed(videos);
+    } else if (contentType === 'quotes') {
+      setContentDisplayed(quotes);
     }
-  }, [contentTypeDisplayed]);
+  };
 
   useEffect(() => {
     if (popular) {
@@ -42,6 +41,26 @@ export default function Home() {
     }
   }, [popular]);
 
+  // Setting Buttons to Filter by Popular, Book, Video or Quote
+  useEffect(() => {
+    if (isHomepageSortedContentLoading) {
+      setFilterButtons(
+        <HomepageFilterButtons
+          changeContentType={changeContentType}
+          clickable={false}
+        />
+      );
+    } else {
+      setFilterButtons(
+        <HomepageFilterButtons
+          changeContentType={changeContentType}
+          clickable={true}
+        />
+      );
+    }
+  }, [isHomepageSortedContentLoading]);
+
+  // Getting Homepage Content
   useEffect(() => {
     GetHomepageContent().then((res: any) => {
       setPopular(
@@ -100,6 +119,7 @@ export default function Home() {
           );
         })
       );
+      setIsHomepageSortedContentLoading(false);
     });
   }, []);
 
@@ -115,29 +135,7 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <div className="mt-8 mb-16">
-                <button
-                  onClick={() => setContentTypeDisplayed('popular')}
-                  className="mr-4"
-                >
-                  Populaires
-                </button>
-                <button
-                  onClick={() => setContentTypeDisplayed('books')}
-                  className="mr-4"
-                >
-                  Livres
-                </button>
-                <button
-                  onClick={() => setContentTypeDisplayed('videos')}
-                  className="mr-4"
-                >
-                  Vidéos
-                </button>
-                <button onClick={() => setContentTypeDisplayed('quotes')}>
-                  Citations
-                </button>
-              </div>
+              {filterButtons}
               {contentDisplayed}
             </div>
           </div>
