@@ -16,9 +16,9 @@ export default function Home() {
   const [books, setBooks] = useState<any>(null);
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
-  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [filterButtons, setFilterButtons] = useState<any>(null);
   const [newContent, setNewContent] = useState<any>(null);
+  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
 
   // Filtering by Popular, Book, Video or Quote
   const changeContentType = (contentType: string) => {
@@ -140,9 +140,7 @@ export default function Home() {
             <div className="flex-col">
               {filterButtons}
               <div className="-mt-10">
-                <Suspense fallback={getSqueletonDisplay()}>
-                  {contentDisplayed}
-                </Suspense>
+                {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
               </div>
             </div>
           </div>
