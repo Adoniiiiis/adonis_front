@@ -5,20 +5,15 @@ export default function LoginAxios(
   password: string,
   isRememberMeClicked: boolean
 ) {
-  try {
-    const request = axios({
-      method: 'POST',
-      url: '/login',
-      data: {
-        email: email,
-        password: password,
-        remember: isRememberMeClicked,
-      },
-    });
-    const response = request.then((res) => res.data);
-    return response;
-  } catch (err: any) {
-    const error = err.message;
-    return error;
-  }
+  const request = axios({
+    method: 'POST',
+    url: '/login',
+    data: {
+      email: email,
+      password: password,
+      remember: isRememberMeClicked,
+    },
+  });
+  const response = request.then((res) => res.data);
+  return response;
 }

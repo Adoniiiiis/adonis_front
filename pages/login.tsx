@@ -1,31 +1,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import LoginAxios from '@/Axios/LoginAxios';
-import { useRouter } from 'next/router';
-import { ADD_USER } from '@/Redux/Reducers/UserSlice';
-import { useDispatch } from 'react-redux';
-import { LoginAxiosType } from '../Types/LoginAxiosType';
+import useAuth from '@/context/AuthContext';
 
 export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRememberMeClicked, setIsRememberMeClicked] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const { push } = useRouter();
-  const dispatch = useDispatch();
+  const { login, errors }: any = useAuth();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    LoginAxios(email, password, isRememberMeClicked).then(
-      (res: LoginAxiosType) => {
-        if (res.status === 'success') {
-          dispatch(ADD_USER(res.userData));
-          push('/');
-        } else {
-          setErrorMessage(res.message);
-        }
-      }
-    );
+    login(email, password, isRememberMeClicked);
   };
 
   return (
@@ -102,9 +87,9 @@ export default function login() {
                   </Link>
                 </div>
               </div>
-              {errorMessage && (
+              {errors && (
                 <p className="text-red-600 text-[1em] flex justify-center">
-                  {errorMessage}
+                  {errors}
                 </p>
               )}
               <button

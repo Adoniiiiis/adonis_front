@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import RegisterAxios from '@/Axios/RegisterAxios';
-import { useRouter } from 'next/router';
-import { ADD_USER } from '@/Redux/Reducers/UserSlice';
-import { useDispatch } from 'react-redux';
+import useAuth from '@/context/AuthContext';
 
 export default function register() {
   const initialData = {
@@ -15,11 +12,9 @@ export default function register() {
     terms: false,
   };
 
-  const { push } = useRouter();
-  const dispatch = useDispatch();
+  const { register, errors }: any = useAuth();
   const [data, setData] = useState(initialData);
   const [isTermsChecked, setIsTermsChecked] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setData({ ...data, terms: isTermsChecked });
@@ -27,36 +22,7 @@ export default function register() {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (
-      data.name !== '' &&
-      data.email !== '' &&
-      data.username !== '' &&
-      data.password !== '' &&
-      data.confirm_password !== ''
-    ) {
-      if (data.password.length >= 3) {
-        if (data.password === data.confirm_password) {
-          if (isTermsChecked) {
-            RegisterAxios(data).then((response: any) => {
-              if (response && response.status === 'error') {
-                setErrorMessage(response.message);
-              } else {
-                dispatch(ADD_USER(response.userData));
-                push('/');
-              }
-            });
-          } else {
-            setErrorMessage('*Vous devez accepter les termes et conditions');
-          }
-        } else {
-          setErrorMessage('*Les deux mots de passe doivent être identiques');
-        }
-      } else {
-        setErrorMessage('*Le mot de passe doit faire au moins 3 caractères');
-      }
-    } else {
-      setErrorMessage('*Veuillez remplir tous les champs');
-    }
+    register(data, isTermsChecked);
   };
 
   const handleInputChange = (
@@ -186,9 +152,9 @@ export default function register() {
                       Termes et Conditions
                     </a>
                   </label>
-                  {errorMessage && (
+                  {errors && (
                     <p className="text-red-600 text-[1em] pt-[10px] -mb-[5px]">
-                      {errorMessage}
+                      {errors}
                     </p>
                   )}
                 </div>

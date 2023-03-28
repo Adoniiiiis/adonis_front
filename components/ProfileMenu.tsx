@@ -7,11 +7,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { LOGOUT_USER } from '@/Redux/Reducers/UserSlice';
+import { useRouter } from 'next/router';
+import useAuth from '@/context/AuthContext';
 
 export default function ProfileMenu() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
+  const { logout }: any = useAuth();
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -20,7 +25,9 @@ export default function ProfileMenu() {
   };
   const handleLogout = () => {
     setAnchorEl(null);
+    logout();
     dispatch(LOGOUT_USER());
+    router.push('/login');
   };
 
   return (
