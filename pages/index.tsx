@@ -17,11 +17,6 @@ export default function Home() {
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [isFilteredContentLoaded, setIsFilteredContentLoaded] =
-    useState<boolean>(false);
-  const [isNewContentLoaded, setIsNewContentLoaded] = useState<boolean>(false);
-  const [isPopularContentLoaded, setIsPopularContentLoaded] =
-    useState<boolean>(false);
   const [filterButtons, setFilterButtons] = useState<any>(null);
   const [newContent, setNewContent] = useState<any>(null);
 
@@ -49,11 +44,7 @@ export default function Home() {
 
   // Setting Buttons to Filter by Popular, Book, Video or Quote
   useEffect(() => {
-    if (
-      isFilteredContentLoaded &&
-      isNewContentLoaded &&
-      isPopularContentLoaded
-    ) {
+    if (books && videos && quotes && newContent) {
       setFilterButtons(
         <HomepageFilterButtons
           changeContentType={changeContentType}
@@ -68,8 +59,9 @@ export default function Home() {
         />
       );
     }
-  }, [isFilteredContentLoaded, isNewContentLoaded, isPopularContentLoaded]);
+  }, [books, videos, quotes, newContent]);
 
+  // Displaying Squeletons while Data is Loading
   function getSqueletonDisplay() {
     let squeletonDisplay = [];
     for (let i = 0; i < 4; i++) {
@@ -89,58 +81,49 @@ export default function Home() {
 
   useEffect(() => {
     // Getting Popular Content
-    if (!isPopularContentLoaded) {
-      const fetchPopularContent = async () => {
-        setPopular(await GetPopularContentAxios());
-        setIsPopularContentLoaded(false);
-      };
-      fetchPopularContent();
-    }
+    const fetchPopularContent = async () => {
+      setPopular(await GetPopularContentAxios());
+    };
+    fetchPopularContent();
 
     // Getting New Content
-    if (!isNewContentLoaded) {
-      const fetchNewContent = async () => {
-        setNewContent(await GetNewContentAxios());
-        setIsNewContentLoaded(false);
-      };
-      fetchNewContent();
-    }
+    const fetchNewContent = async () => {
+      setNewContent(await GetNewContentAxios());
+    };
+    fetchNewContent();
 
     // Filtering Books, Quotes and Videos
-    if (!isFilteredContentLoaded) {
-      GetFilteredContentAxios().then((res: any) => {
-        setBooks(
-          Object.values(res.books).map((book: any, key) => {
-            return (
-              <div key={key} className="-mt-5">
-                <BookCard bookCoverUrl={image} bookData={book} />
-              </div>
-            );
-          })
-        );
-        setQuotes(
-          Object.values(res.quotes).map((quote: any, key) => {
-            return (
-              <div key={key} className="-mt-5">
-                <QuoteCard quoteData={quote} />
-              </div>
-            );
-          })
-        );
-        setVideos(
-          Object.values(res.videos).map((video: any, key) => {
-            const validUrl = video.link.replace('watch?v=', 'embed/');
-            const videoUrl = `${validUrl}?controls=0`;
-            return (
-              <div key={key} className="-mt-5">
-                <VideoCard videoUrl={videoUrl} videoData={video} />
-              </div>
-            );
-          })
-        );
-        setIsFilteredContentLoaded(true);
-      });
-    }
+    GetFilteredContentAxios().then((res: any) => {
+      setBooks(
+        Object.values(res.books).map((book: any, key) => {
+          return (
+            <div key={key} className="-mt-5">
+              <BookCard bookCoverUrl={image} bookData={book} />
+            </div>
+          );
+        })
+      );
+      setQuotes(
+        Object.values(res.quotes).map((quote: any, key) => {
+          return (
+            <div key={key} className="-mt-5">
+              <QuoteCard quoteData={quote} />
+            </div>
+          );
+        })
+      );
+      setVideos(
+        Object.values(res.videos).map((video: any, key) => {
+          const validUrl = video.link.replace('watch?v=', 'embed/');
+          const videoUrl = `${validUrl}?controls=0`;
+          return (
+            <div key={key} className="-mt-5">
+              <VideoCard videoUrl={videoUrl} videoData={video} />
+            </div>
+          );
+        })
+      );
+    });
   }, []);
 
   return (
