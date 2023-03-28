@@ -4,7 +4,7 @@ import BookCard from '@/components/BookCard';
 import image from '../public/images/book-cover-platon.jpg';
 import VideoCard from '@/components/VideoCard';
 import QuoteCard from '@/components/QuoteCard';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, use } from 'react';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
 import { Skeleton } from '@mui/material';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
@@ -17,11 +17,11 @@ export default function Home() {
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [isFilteredContentLoading, setIsFilteredContentLoading] =
-    useState<boolean>(true);
-  const [isNewContentLoading, setIsNewContentLoading] = useState<boolean>(true);
-  const [isPopularContentLoading, setIsPopularContentLoading] =
-    useState<boolean>(true);
+  const [isFilteredContentLoaded, setIsFilteredContentLoaded] =
+    useState<boolean>(false);
+  const [isNewContentLoaded, setIsNewContentLoaded] = useState<boolean>(false);
+  const [isPopularContentLoaded, setIsPopularContentLoaded] =
+    useState<boolean>(false);
   const [filterButtons, setFilterButtons] = useState<any>(null);
   const [newContent, setNewContent] = useState<any>(null);
 
@@ -50,25 +50,25 @@ export default function Home() {
   // Setting Buttons to Filter by Popular, Book, Video or Quote
   useEffect(() => {
     if (
-      isFilteredContentLoading &&
-      isNewContentLoading &&
-      isPopularContentLoading
+      isFilteredContentLoaded &&
+      isNewContentLoaded &&
+      isPopularContentLoaded
     ) {
-      setFilterButtons(
-        <HomepageFilterButtons
-          changeContentType={changeContentType}
-          clickable={false}
-        />
-      );
-    } else {
       setFilterButtons(
         <HomepageFilterButtons
           changeContentType={changeContentType}
           clickable={true}
         />
       );
+    } else {
+      setFilterButtons(
+        <HomepageFilterButtons
+          changeContentType={changeContentType}
+          clickable={false}
+        />
+      );
     }
-  }, [isFilteredContentLoading, isNewContentLoading, isPopularContentLoading]);
+  }, [isFilteredContentLoaded, isNewContentLoaded, isPopularContentLoaded]);
 
   function getSqueletonDisplay() {
     let squeletonDisplay = [];
@@ -87,41 +87,27 @@ export default function Home() {
     return squeletonDisplay;
   }
 
-  // Getting Popular Content
   useEffect(() => {
-    if (isPopularContentLoading) {
-      GetPopularContentAxios().then((res: any) => {
-        setPopular(
-          Object.values(res.contentData).map((el: any, key) => {
-            if (el.category === 'book') {
-              return (
-                <div key={key} className="-mt-5">
-                  <BookCard bookCoverUrl={image} bookData={el} />
-                </div>
-              );
-            } else if (el.category === 'quote') {
-              return (
-                <div key={key} className="-mt-5">
-                  <QuoteCard quoteData={el} />
-                </div>
-              );
-            } else if (el.category === 'video') {
-              const validUrl = el.link.replace('watch?v=', 'embed/');
-              const videoUrl = `${validUrl}?controls=0`;
-              return (
-                <div key={key} className="-mt-5">
-                  <VideoCard videoUrl={videoUrl} videoData={el} />
-                </div>
-              );
-            }
-          })
-        );
-        setIsPopularContentLoading(false);
-      });
+    // Getting Popular Content
+    if (!isPopularContentLoaded) {
+      const fetchPopularContent = async () => {
+        setPopular(await GetPopularContentAxios());
+        setIsPopularContentLoaded(false);
+      };
+      fetchPopularContent();
+    }
+
+    // Getting New Content
+    if (!isNewContentLoaded) {
+      const fetchNewContent = async () => {
+        setNewContent(await GetNewContentAxios());
+        setIsNewContentLoaded(false);
+      };
+      fetchNewContent();
     }
 
     // Filtering Books, Quotes and Videos
-    if (isFilteredContentLoading) {
+    if (!isFilteredContentLoaded) {
       GetFilteredContentAxios().then((res: any) => {
         setBooks(
           Object.values(res.books).map((book: any, key) => {
@@ -152,39 +138,7 @@ export default function Home() {
             );
           })
         );
-        setIsFilteredContentLoading(false);
-      });
-    }
-
-    // Getting New Content
-    if (isNewContentLoading) {
-      GetNewContentAxios().then((res: any) => {
-        setNewContent(
-          Object.values(res.contentData).map((el: any, key) => {
-            if (el.category === 'book') {
-              return (
-                <div key={key} className="-mt-5">
-                  <BookCard bookCoverUrl={image} bookData={el} />
-                </div>
-              );
-            } else if (el.category === 'quote') {
-              return (
-                <div key={key} className="-mt-5">
-                  <QuoteCard quoteData={el} />
-                </div>
-              );
-            } else if (el.category === 'video') {
-              const validUrl = el.link.replace('watch?v=', 'embed/');
-              const videoUrl = `${validUrl}?controls=0`;
-              return (
-                <div key={key} className="-mt-5">
-                  <VideoCard videoUrl={videoUrl} videoData={el} />
-                </div>
-              );
-            }
-          })
-        );
-        setIsNewContentLoading(false);
+        setIsFilteredContentLoaded(true);
       });
     }
   }, []);
@@ -203,7 +157,9 @@ export default function Home() {
             <div className="flex-col">
               {filterButtons}
               <div className="-mt-10">
-                {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
+                <Suspense fallback={getSqueletonDisplay()}>
+                  {contentDisplayed}
+                </Suspense>
               </div>
             </div>
           </div>
