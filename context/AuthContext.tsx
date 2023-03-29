@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }: any) => {
   const [errors, setErrors] = useState<any>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  // const [cookies, setCookie] = useCookies(['tokens']);
+  const [cookies, setCookie, removeCookie] = useCookies(['tokens']);
 
   // useEffect(() => {
   //   async function loadUserFromCookies() {
@@ -25,16 +25,8 @@ export const AuthProvider = ({ children }: any) => {
   //   loadUserFromCookies();
   // }, []);
 
-  // const getUser = () => {
-  //   const request = axios({
-  //     method: 'get',
-  //     url: 'api/user',
-  //   });
-  //   request.then((res) => {
-  //     console.log(res.data);
-  //     setUser(res.data);
-  //   });
-  // };
+  // contexts/auth.js
+  // append this new bit a the end:
 
   const login = async (
     email: string,
@@ -43,8 +35,13 @@ export const AuthProvider = ({ children }: any) => {
   ) => {
     LoginAxios(email, password, isRememberMeClicked).then((res: any) => {
       if (res.status === 'success') {
-        // getUser();
         dispatch(ADD_USER(res.userData));
+        let expires = new Date();
+        expires.setDate(expires.getDate() + 1);
+        setCookie('tokens', 'remembered', {
+          path: '/',
+          expires,
+        });
         router.push('/');
       } else {
         setErrors(res.message);
@@ -88,7 +85,8 @@ export const AuthProvider = ({ children }: any) => {
 
   const logout = () => {
     axios.post('/logout').then(() => {
-      setUser(null);
+      removeCookie('tokens');
+      router.push('/');
     });
   };
 
