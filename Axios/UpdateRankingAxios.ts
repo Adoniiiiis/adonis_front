@@ -3,7 +3,7 @@ import { axios } from './AxiosSetup';
 export default function UpdateRankingAxios(
   postId: number,
   category: string,
-  note: number
+  newRanking: number
 ) {
   try {
     const request = axios({
@@ -12,7 +12,7 @@ export default function UpdateRankingAxios(
       data: {
         postId: postId,
         category: category,
-        note: note,
+        note: newRanking,
       },
     });
     const response = request.then((res) => res.data);

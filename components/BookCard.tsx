@@ -1,13 +1,26 @@
+import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import Ranking from './Ranking';
 
 export default function BookCard({ bookCoverUrl, bookData }: any) {
   const category = 'book';
   const { id, title, subtitle, author, ranking } = bookData;
+  const [postRanking, setPostRanking] = useState<number>(0);
+
+  useEffect(() => {
+    setPostRanking(ranking);
+  }, []);
+
+  const handleArrowClick = async (note: number) => {
+    setPostRanking(postRanking + note);
+    await UpdateRankingAxios(id, category, note);
+  };
+
   return (
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
-        {ranking}
+        {postRanking}
       </div>
       <div className="md:flex flex-col w-full">
         <div className="mt-[12px] ml-[15px] relative min-h-[175px] w-[120px]">
@@ -30,7 +43,7 @@ export default function BookCard({ bookCoverUrl, bookData }: any) {
           </div>
         </div>
       </div>
-      <Ranking postId={id} category={category} />
+      <Ranking handleArrowClick={handleArrowClick} originalValue={ranking} />
     </div>
   );
 }
