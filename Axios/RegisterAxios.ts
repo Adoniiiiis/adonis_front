@@ -1,16 +1,8 @@
+import { RegisterType } from '@/Types/RegisterType';
 import { axios } from './AxiosSetup';
 
-type dataType = {
-  name: string;
-  email: string;
-  username: string;
-  password: string;
-  confirm_password: string;
-  terms: boolean;
-};
-
-export default function RegisterAxios(data: dataType) {
-  const { name, email, username, password, confirm_password, terms } = data;
+export default function RegisterAxios(data: RegisterType) {
+  const { name, email, username, password, confirm_password } = data;
   try {
     const request = axios({
       method: 'POST',
@@ -21,7 +13,6 @@ export default function RegisterAxios(data: dataType) {
         username: username,
         password: password,
         confirm_password: confirm_password,
-        isTermsChecked: terms,
       },
     });
     const response = request.then((res) => res.data);
