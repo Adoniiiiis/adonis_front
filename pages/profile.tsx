@@ -1,7 +1,5 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import { useSelector } from 'react-redux';
-import { ReduxUserType } from '@/Types/ReduxUserType';
 import ProfileMenu from '@/components/ProfileMenu';
 import useAuth from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
