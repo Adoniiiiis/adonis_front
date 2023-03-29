@@ -3,53 +3,68 @@ import { axios } from '@/Axios/AxiosSetup';
 import LoginAxios from '@/Axios/LoginAxios';
 import { useRouter } from 'next/router';
 import RegisterAxios from '@/Axios/RegisterAxios';
-import { useDispatch } from 'react-redux';
-import { ADD_USER } from '@/Redux/Reducers/UserSlice';
-import { useCookies } from 'react-cookie';
+import { RegisterType } from '@/Types/RegisterType';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<any>(null);
-  const [errors, setErrors] = useState<any>(null);
   const router = useRouter();
-  const dispatch = useDispatch();
-  const [cookies, setCookie, removeCookie] = useCookies(['tokens']);
+  const [user, setUser] = useState<object | null>(null);
+  const [errors, setErrors] = useState<any>(null);
 
-  // useEffect(() => {
-  //   async function loadUserFromCookies() {
-  //     const token = cookies['tokens'];
-  //     if (token) {
-  //     }
-  //   }
-  //   loadUserFromCookies();
-  // }, []);
+  useEffect(() => {
+    function authRedirect() {
+      const userToken = getToken();
+      if (!user) {
+        if (!userToken) {
+          router.push('/login');
+        } else {
+          router.push(router.pathname);
+        }
+      }
+    }
+    authRedirect();
+  }, []);
 
-  // contexts/auth.js
-  // append this new bit a the end:
+  const saveTokenAndRedirect = (
+    user: object,
+    token: string,
+    isRememberMeClicked: boolean
+  ) => {
+    sessionStorage.setItem('user', JSON.stringify(user));
+    isRememberMeClicked &&
+      sessionStorage.setItem('token', JSON.stringify(token));
+    setUser(user);
+    router.push('/');
+  };
 
-  const login = async (
+  const getToken = () => {
+    const token: any = sessionStorage.getItem('token');
+    const userToken = JSON.parse(token);
+    return userToken;
+  };
+
+  const getUser = () => {
+    const userToken: any = sessionStorage.getItem('user');
+    const userData = JSON.parse(userToken);
+    return userData;
+  };
+
+  const login = (
     email: string,
     password: string,
     isRememberMeClicked: boolean
   ) => {
-    LoginAxios(email, password, isRememberMeClicked).then((res: any) => {
+    LoginAxios(email, password).then((res: any) => {
       if (res.status === 'success') {
-        dispatch(ADD_USER(res.userData));
-        let expires = new Date();
-        expires.setDate(expires.getDate() + 1);
-        setCookie('tokens', 'remembered', {
-          path: '/',
-          expires,
-        });
-        router.push('/');
+        saveTokenAndRedirect(res.user, res.access_token, isRememberMeClicked);
       } else {
         setErrors(res.message);
       }
     });
   };
 
-  const register = async ({ data, isTermsChecked }: any) => {
+  const register = (data: RegisterType, isTermsChecked: boolean) => {
     if (
       data.name !== '' &&
       data.email !== '' &&
@@ -64,9 +79,7 @@ export const AuthProvider = ({ children }: any) => {
               if (res && res.status === 'error') {
                 setErrors(res.message);
               } else {
-                // getUser();
-                dispatch(ADD_USER(res.userData));
-                router.push('/');
+                saveTokenAndRedirect(res.user, res.access_token, false);
               }
             });
           } else {
@@ -85,13 +98,24 @@ export const AuthProvider = ({ children }: any) => {
 
   const logout = () => {
     axios.post('/logout').then(() => {
-      removeCookie('tokens');
-      router.push('/');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      setUser(null);
+      router.push('/login');
     });
   };
 
   return (
-    <AuthContext.Provider value={{ user, errors, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        getToken,
+        getUser,
+        errors,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

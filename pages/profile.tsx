@@ -3,9 +3,16 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import { useSelector } from 'react-redux';
 import { ReduxUserType } from '@/Types/ReduxUserType';
 import ProfileMenu from '@/components/ProfileMenu';
+import useAuth from '@/context/AuthContext';
+import { useEffect, useState } from 'react';
 
 export default function Profile() {
-  const userData = useSelector((state: ReduxUserType) => state.user.user);
+  const { getUser }: any = useAuth();
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    setUserData(getUser());
+  }, []);
 
   return (
     <>
@@ -32,9 +39,9 @@ export default function Profile() {
                     className="lg:w-40 w-32 border-4 border-white rounded-full"
                   />
                   <div className="flex items-center space-x-2 mt-2">
-                    <p className="text-2xl">{userData.name}</p>
+                    <p className="text-2xl">{userData?.name}</p>
                   </div>
-                  <p className="text-sm text-gray-500">{userData.username}</p>
+                  <p className="text-sm text-gray-500">{userData?.username}</p>
                 </div>
                 <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
                   <div className="flex items-center space-x-4 mt-2">
@@ -68,14 +75,16 @@ export default function Profile() {
                       <ul className="mt-2 text-gray-700">
                         <li className="flex border-y py-2">
                           <span className="font-bold w-40">Nom complet:</span>
-                          <span className="text-gray-700">{userData.name}</span>
+                          <span className="text-gray-700">
+                            {userData?.name}
+                          </span>
                         </li>
                         <li className="flex border-y py-2">
                           <span className="font-bold w-40">
                             Nom d'utilisateur:
                           </span>
                           <span className="text-gray-700">
-                            {userData.username}
+                            {userData?.username}
                           </span>
                         </li>
                         <li className="flex border-b py-2">
@@ -83,7 +92,7 @@ export default function Profile() {
                             Addresse email:
                           </span>
                           <span className="text-gray-700">
-                            {userData.email}
+                            {userData?.email}
                           </span>
                         </li>
                       </ul>
