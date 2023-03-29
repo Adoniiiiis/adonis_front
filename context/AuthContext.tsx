@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import RegisterAxios from '@/Axios/RegisterAxios';
 import { RegisterType } from '@/Types/RegisterType';
 import Axios from 'axios';
-import { axios } from '@/Axios/AxiosSetup';
 
 const AuthContext = createContext({});
 
