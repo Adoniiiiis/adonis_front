@@ -14,9 +14,11 @@ export default function VideoCard({ videoUrl, videoData }: any) {
     clientSideNewValue: number,
     serverSideNewValue: number
   ) => {
-    setIsUpdating(true);
-    setCurrentRanking(clientSideNewValue);
-    setIsUpdating(await UpdateRankingAxios(id, category, serverSideNewValue));
+    if (!isUpdating) {
+      setIsUpdating(true);
+      setCurrentRanking(clientSideNewValue);
+      setIsUpdating(await UpdateRankingAxios(id, category, serverSideNewValue));
+    }
   };
 
   return (

@@ -15,6 +15,8 @@ export default function Ranking({
   const [currentlyActive, setCurrentlyActive] = useState<string>('');
   const [previousArrowValue, setPreviousArrowValue] = useState<number>(0);
 
+  console.log(isUpdating);
+
   // Clicking on an unactive arrow
   function handleClickOnUnactive(e: any, arrowValue: number) {
     const clientSideNewValue = originalValue + arrowValue;

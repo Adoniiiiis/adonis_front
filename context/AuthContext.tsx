@@ -27,13 +27,9 @@ export const AuthProvider = ({ children }: any) => {
     authRedirect();
   }, []);
 
-  const saveTokenAndRedirect = (
-    user: object,
-    token: string,
-    isRememberMeClicked: boolean
-  ) => {
+  const saveTokenAndRedirect = (user: object, token: string) => {
     localStorage.setItem('user', JSON.stringify(user));
-    isRememberMeClicked && localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem('token', JSON.stringify(token));
     setUser(user);
     setToken(token);
     router.push('/');
@@ -51,14 +47,10 @@ export const AuthProvider = ({ children }: any) => {
     return userData;
   };
 
-  const login = (
-    email: string,
-    password: string,
-    isRememberMeClicked: boolean
-  ) => {
+  const login = (email: string, password: string) => {
     LoginAxios(email, password).then((res: any) => {
       if (res.status === 'success') {
-        saveTokenAndRedirect(res.user, res.access_token, isRememberMeClicked);
+        saveTokenAndRedirect(res.user, res.access_token);
       } else {
         setErrors(res.message);
       }
@@ -80,7 +72,7 @@ export const AuthProvider = ({ children }: any) => {
               if (res && res.status === 'error') {
                 setErrors(res.message);
               } else {
-                saveTokenAndRedirect(res.user, res.access_token, false);
+                saveTokenAndRedirect(res.user, res.access_token);
               }
             });
           } else {
