@@ -8,6 +8,7 @@ export default function QuoteCard({ quoteData }: any) {
   const [currentRanking, setCurrentRanking] = useState<number>(ranking);
   const originalValue = ranking;
 
+  // Updating client and server side values for the ranking
   const handleArrowClick = async (
     clientSideNewValue: number,
     serverSideNewValue: number
