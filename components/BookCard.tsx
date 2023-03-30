@@ -8,13 +8,16 @@ export default function BookCard({ bookCoverUrl, bookData }: any) {
   const { id, title, subtitle, author, ranking } = bookData;
   const [currentRanking, setCurrentRanking] = useState<number>(ranking);
   const originalValue = ranking;
+  const [isUpdating, setIsUpdating] = useState(false);
 
+  // Updating client and server side values for the ranking
   const handleArrowClick = async (
     clientSideNewValue: number,
     serverSideNewValue: number
   ) => {
+    setIsUpdating(true);
     setCurrentRanking(clientSideNewValue);
-    await UpdateRankingAxios(id, category, serverSideNewValue);
+    setIsUpdating(await UpdateRankingAxios(id, category, serverSideNewValue));
   };
 
   return (
@@ -46,6 +49,7 @@ export default function BookCard({ bookCoverUrl, bookData }: any) {
       <Ranking
         handleArrowClick={handleArrowClick}
         originalValue={originalValue}
+        isUpdating={isUpdating}
       />
     </div>
   );
