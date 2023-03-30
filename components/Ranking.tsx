@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import arrowImage from '../public/images/arrow.png';
 import doubleArrowImage from '../public/images/doubleArrow.png';
 import tripleArrowImage from '../public/images/tripleArrow.png';
@@ -7,7 +7,11 @@ import arrowActiveImage from '../public/images/arrowActive.png';
 import doubleArrowActiveImage from '../public/images/doubleArrowActive.png';
 import tripleArrowActiveImage from '../public/images/tripleArrowActive.png';
 
-export default function Ranking({ handleArrowClick, originalValue }: any) {
+export default function Ranking({
+  handleArrowClick,
+  originalValue,
+  isUpdating,
+}: any) {
   const [currentlyActive, setCurrentlyActive] = useState<string>('');
   const [previousArrowValue, setPreviousArrowValue] = useState<number>(0);
 
@@ -46,10 +50,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = 3;
-          setPreviousArrowValue(3);
-          currentlyActive === 'tripleArrowUp'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(3);
+            currentlyActive === 'tripleArrowUp'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="tripleArrowUp"
         src={
@@ -67,10 +73,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = -3;
-          setPreviousArrowValue(-3);
-          currentlyActive === 'tripleArrowDown'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(-3);
+            currentlyActive === 'tripleArrowDown'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="tripleArrowDown"
         src={
@@ -91,10 +99,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = 2;
-          setPreviousArrowValue(2);
-          currentlyActive === 'doubleArrowUp'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(2);
+            currentlyActive === 'doubleArrowUp'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="doubleArrowUp"
         src={
@@ -112,10 +122,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = -2;
-          setPreviousArrowValue(-2);
-          currentlyActive === 'doubleArrowDown'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(-2);
+            currentlyActive === 'doubleArrowDown'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="doubleArrowDown"
         src={
@@ -136,10 +148,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = 1;
-          setPreviousArrowValue(1);
-          currentlyActive === 'arrowUp'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(1);
+            currentlyActive === 'arrowUp'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="arrowUp"
         src={currentlyActive === 'arrowUp' ? arrowActiveImage : arrowImage}
@@ -153,10 +167,12 @@ export default function Ranking({ handleArrowClick, originalValue }: any) {
       <Image
         onClick={(e: any) => {
           const arrowValue = -1;
-          setPreviousArrowValue(-1);
-          currentlyActive === 'arrowDown'
-            ? handleClickOnActive(e, arrowValue)
-            : handleClickOnUnactive(e, arrowValue);
+          if (!isUpdating) {
+            setPreviousArrowValue(-1);
+            currentlyActive === 'arrowDown'
+              ? handleClickOnActive(e, arrowValue)
+              : handleClickOnUnactive(e, arrowValue);
+          }
         }}
         id="arrowDown"
         src={currentlyActive === 'arrowDown' ? arrowActiveImage : arrowImage}

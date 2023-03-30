@@ -15,6 +15,10 @@ export default function UpdateRankingAxios(
         newValue: serverSideNewValue,
       },
     });
+    const isUpdating = request.then(() => {
+      return false;
+    });
+    return isUpdating;
   } catch (err: any) {
     const error = err.message;
     return error;
