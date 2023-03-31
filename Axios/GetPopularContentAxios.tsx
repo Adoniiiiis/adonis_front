@@ -8,7 +8,7 @@ export default function GetPopularContentAxios() {
   try {
     const request = axios({
       method: 'GET',
-      url: 'api/getHomepageContent',
+      url: 'api/getPopularContent',
     }).then((res: any) => {
       const response = Object.values(res.data.contentData).map(
         (el: any, key) => {
