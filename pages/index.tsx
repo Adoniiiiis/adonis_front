@@ -3,13 +3,9 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
 import HomepageSqueletons from '@/components/homepageSqueletons';
 import { useEffect, useState } from 'react';
-import image from '../public/images/book-cover-platon.jpg';
 import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
-import BookCard from '@/components/BookCard';
-import QuoteCard from '@/components/QuoteCard';
-import VideoCard from '@/components/VideoCard';
 
 export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
@@ -26,7 +22,6 @@ export default function Home() {
     }
   }, []);
 
-  // Getting and Mapping the Content
   const getPopularContent = async () => {
     if (popularContent) {
       setContentDisplayed(popularContent);
@@ -51,15 +46,7 @@ export default function Home() {
     if (books) {
       setContentDisplayed(books);
     } else {
-      const booksMapping = Object.values(
-        await getContentByCategory('book')
-      ).map((book: any, key) => {
-        return (
-          <div key={key} className="-mt-5">
-            <BookCard bookCoverUrl={image} bookData={book} />
-          </div>
-        );
-      });
+      const booksMapping = await getContentByCategory('book');
       setContentDisplayed(booksMapping);
       setBooks(booksMapping);
     }
@@ -69,15 +56,7 @@ export default function Home() {
     if (quotes) {
       setContentDisplayed(quotes);
     } else {
-      const quotesMapping = Object.values(
-        await getContentByCategory('quote')
-      ).map((quote: any, key) => {
-        return (
-          <div key={key} className="-mt-5">
-            <QuoteCard quoteData={quote} />
-          </div>
-        );
-      });
+      const quotesMapping = await getContentByCategory('quote');
       setContentDisplayed(quotesMapping);
       setQuotes(quotesMapping);
     }
@@ -87,17 +66,7 @@ export default function Home() {
     if (videos) {
       setContentDisplayed(videos);
     } else {
-      const videosMapping = Object.values(
-        await getContentByCategory('video')
-      ).map((video: any, key) => {
-        const validUrl = video.link.replace('watch?v=', 'embed/');
-        const videoUrl = `${validUrl}?controls=0`;
-        return (
-          <div key={key} className="-mt-5">
-            <VideoCard videoUrl={videoUrl} videoData={video} />
-          </div>
-        );
-      });
+      const videosMapping = await getContentByCategory('video');
       setContentDisplayed(videosMapping);
       setVideos(videosMapping);
     }
@@ -105,6 +74,7 @@ export default function Home() {
 
   // Getting the Right Content
   function filterContent(contentChosen: string) {
+    setContentChosen(contentChosen);
     switch (contentChosen) {
       case 'popularContent':
         return getPopularContent();
