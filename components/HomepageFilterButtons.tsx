@@ -1,16 +1,11 @@
 import React from 'react';
 
-export default function HomepageFilterButtons({
-  changeContentType,
-  clickable,
-}: any) {
+export default function HomepageFilterButtons({ filterContent }: any) {
   return (
     <div className="mt-8 mb-16 bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[700px]">
       <button
         onClick={() => {
-          if (clickable) {
-            changeContentType('popular');
-          }
+          filterContent('popularContent');
         }}
         className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
       >
@@ -19,9 +14,7 @@ export default function HomepageFilterButtons({
 
       <button
         onClick={() => {
-          if (clickable) {
-            changeContentType('newContent');
-          }
+          filterContent('newContent');
         }}
         className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
       >
@@ -30,9 +23,7 @@ export default function HomepageFilterButtons({
 
       <button
         onClick={() => {
-          if (clickable) {
-            changeContentType('books');
-          }
+          filterContent('book');
         }}
         className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
       >
@@ -41,9 +32,7 @@ export default function HomepageFilterButtons({
 
       <button
         onClick={() => {
-          if (clickable) {
-            changeContentType('videos');
-          }
+          filterContent('video');
         }}
         className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
       >
@@ -52,9 +41,7 @@ export default function HomepageFilterButtons({
 
       <button
         onClick={() => {
-          if (clickable) {
-            changeContentType('quotes');
-          }
+          filterContent('quote');
         }}
         className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
       >
