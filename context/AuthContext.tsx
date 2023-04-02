@@ -32,20 +32,28 @@ export const AuthProvider = ({ children }: any) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', JSON.stringify(token));
     setUser(user);
-    setToken(token);
+    // setToken(token);
     router.push('/');
   };
 
   const getToken = () => {
-    const token: any = localStorage.getItem('token');
-    const userToken = token && JSON.parse(token);
-    return userToken;
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('token') !== 'undefined') {
+        const token: any = localStorage.getItem('token');
+        const userToken = JSON.parse(token);
+        return userToken;
+      }
+    }
   };
 
   const getUser = () => {
-    const userToken: any = localStorage.getItem('user');
-    const userData = userToken && JSON.parse(userToken);
-    return userData;
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('user') !== 'undefined') {
+        const userToken: any = localStorage.getItem('user');
+        const userData = JSON.parse(userToken);
+        return userData;
+      }
+    }
   };
 
   const login = (email: string, password: string) => {

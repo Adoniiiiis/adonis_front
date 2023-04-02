@@ -4,7 +4,7 @@ import Ranking from './Ranking';
 
 export default function VideoCard({ videoUrl, videoData }: any) {
   const category = 'video';
-  const { id, youtuber, ranking } = videoData;
+  const { id, author, ranking } = videoData;
   const [currentRanking, setCurrentRanking] = useState<number>(ranking);
   const originalValue = ranking;
   const [isUpdating, setIsUpdating] = useState(false);
@@ -33,7 +33,7 @@ export default function VideoCard({ videoUrl, videoData }: any) {
         <div className="flex-col mt-[13px] ml-[15px] md:-mt-[160px] md:ml-[300px]">
           <div className="flex -mt-[7px]">
             <p className="text-gray-500 text-[0.8em]">Youtuber:</p>
-            <p className="text-[0.8em] ml-[5px]">{youtuber}</p>
+            <p className="text-[0.8em] ml-[5px]">{author}</p>
           </div>
           <div className="flex mt-[2px]">
             <p className="text-gray-500 text-[0.8em]">Genre:</p>

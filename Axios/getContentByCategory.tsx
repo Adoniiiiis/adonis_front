@@ -9,39 +9,35 @@ export default function getContentByCategory(categoryName: string) {
     const request = axios({
       method: 'GET',
       url: `api/getContentByCategory/${categoryName}`,
+    }).then((res) => {
+      const contentMapping = Object.values(res.data.content).map(
+        (el: any, key) => {
+          if (categoryName === 'book') {
+            return (
+              <div key={key} className="-mt-5">
+                <BookCard bookCoverUrl={image} bookData={el} />
+              </div>
+            );
+          } else if (categoryName === 'quote') {
+            return (
+              <div key={key} className="-mt-5">
+                <QuoteCard quoteData={el} />
+              </div>
+            );
+          } else if (categoryName === 'video') {
+            const validUrl = el.link.replace('watch?v=', 'embed/');
+            const videoUrl = `${validUrl}?controls=0`;
+            return (
+              <div key={key} className="-mt-5">
+                <VideoCard videoUrl={videoUrl} videoData={el} />
+              </div>
+            );
+          }
+        }
+      );
+      return contentMapping;
     });
-    const content = request.then((res) => res.data.content);
-
-    if (categoryName === 'book') {
-      const contentMapping = Object.values(content).map((book: any, key) => {
-        return (
-          <div key={key} className="-mt-5">
-            <BookCard bookCoverUrl={image} bookData={book} />
-          </div>
-        );
-      });
-      return contentMapping;
-    } else if (categoryName === 'quote') {
-      const contentMapping = Object.values(content).map((quote: any, key) => {
-        return (
-          <div key={key} className="-mt-5">
-            <QuoteCard quoteData={quote} />
-          </div>
-        );
-      });
-      return contentMapping;
-    } else if (categoryName === 'video') {
-      const contentMapping = Object.values(content).map((video: any, key) => {
-        const validUrl = video.link.replace('watch?v=', 'embed/');
-        const videoUrl = `${validUrl}?controls=0`;
-        return (
-          <div key={key} className="-mt-5">
-            <VideoCard videoUrl={videoUrl} videoData={video} />
-          </div>
-        );
-      });
-      return contentMapping;
-    }
+    return request;
   } catch (err: any) {
     const error = err.message;
     return error;

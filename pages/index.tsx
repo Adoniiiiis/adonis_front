@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
-import HomepageSqueletons from '@/components/homepageSqueletons';
 import { useEffect, useState } from 'react';
 import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
+import HomepageSqueletons from '@/components/HomepageSqueletons';
 
 export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
@@ -18,9 +18,13 @@ export default function Home() {
 
   useEffect(() => {
     if (!contentChosen) {
-      filterContent('popular');
+      filterContent('popularContent');
     }
   }, []);
+
+  useEffect(() => {
+    console.log(contentChosen);
+  }, [contentChosen]);
 
   const getPopularContent = async () => {
     if (popularContent) {
