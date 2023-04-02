@@ -22,10 +22,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(contentChosen);
-  }, [contentChosen]);
-
   const getPopularContent = async () => {
     if (popularContent) {
       setContentDisplayed(popularContent);
@@ -38,7 +34,7 @@ export default function Home() {
 
   const getNewContent = async () => {
     if (newContent) {
-      setNewContent(newContent);
+      setContentDisplayed(newContent);
     } else {
       const newContent = await GetNewContentAxios();
       setContentDisplayed(newContent);

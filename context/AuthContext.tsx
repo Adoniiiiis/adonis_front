@@ -5,6 +5,8 @@ import RegisterAxios from '@/Axios/RegisterAxios';
 import { RegisterType } from '@/Types/RegisterType';
 import Axios from 'axios';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { ADD_USER, LOGOUT_USER } from '@/Redux/Reducers/UserSlice';
 
 const AuthContext = createContext({});
 
@@ -12,7 +14,8 @@ export const AuthProvider = ({ children }: any) => {
   const router = useRouter();
   const [user, setUser] = useState<object | null>(null);
   const [errors, setErrors] = useState<any>(null);
-  // const [token, setToken] = useState<any>(null);
+  const [token, setToken] = useState<any>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     function authRedirect() {
@@ -32,27 +35,22 @@ export const AuthProvider = ({ children }: any) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', JSON.stringify(token));
     setUser(user);
-    // setToken(token);
     router.push('/');
   };
 
   const getToken = () => {
     if (typeof window !== 'undefined') {
-      if (localStorage.getItem('token') !== 'undefined') {
-        const token: any = localStorage.getItem('token');
-        const userToken = JSON.parse(token);
-        return userToken;
-      }
+      const token: any = localStorage.getItem('token');
+      const userToken = JSON.parse(token);
+      return userToken;
     }
   };
 
   const getUser = () => {
     if (typeof window !== 'undefined') {
-      if (localStorage.getItem('user') !== 'undefined') {
-        const userToken: any = localStorage.getItem('user');
-        const userData = JSON.parse(userToken);
-        return userData;
-      }
+      const userToken: any = localStorage.getItem('user');
+      const userData = JSON.parse(userToken);
+      return userData;
     }
   };
 

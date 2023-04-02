@@ -12,8 +12,6 @@ export default function Profile() {
     setUserData(getUser());
   }, []);
 
-  console.log(getUser());
-
   return (
     <>
       <Head>
