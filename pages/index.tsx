@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
-import HomepageSqueletons from '@/components/homepageSqueletons';
+import HomepageSqueletons from '@/components/HomepageSqueletons';
 import { useEffect, useState } from 'react';
 import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
