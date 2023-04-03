@@ -40,17 +40,21 @@ export const AuthProvider = ({ children }: any) => {
 
   const getToken = () => {
     if (typeof window !== 'undefined') {
-      const token: any = localStorage.getItem('token');
-      const userToken = JSON.parse(token);
-      return userToken;
+      if (localStorage.getItem('token') != 'undefined') {
+        const token: any = localStorage.getItem('token');
+        const userToken = JSON.parse(token);
+        return userToken;
+      }
     }
   };
 
   const getUser = () => {
     if (typeof window !== 'undefined') {
-      const userToken: any = localStorage.getItem('user');
-      const userData = JSON.parse(userToken);
-      return userData;
+      if (localStorage.getItem('user') != 'undefined' || null) {
+        const userToken: any = localStorage.getItem('user');
+        const userData = JSON.parse(userToken);
+        return userData;
+      }
     }
   };
 
@@ -83,7 +87,7 @@ export const AuthProvider = ({ children }: any) => {
               } else {
                 const notify = () => toast.success('Compte créé avec succès!');
                 notify();
-                saveTokenAndRedirect(res.user, res.access_token);
+                router.push('/login');
               }
             });
           } else {
