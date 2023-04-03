@@ -5,8 +5,7 @@ import Ranking from './Ranking';
 export default function QuoteCard({ quoteData }: any) {
   const category = 'quote';
   const { id, quote, author, ranking } = quoteData;
-  const [currentRanking, setCurrentRanking] = useState<number>(ranking);
-  const originalValue = ranking;
+  const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Updating client and server side values for the ranking
@@ -24,7 +23,7 @@ export default function QuoteCard({ quoteData }: any) {
   return (
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
-        {currentRanking}
+        {currentRanking ? currentRanking : ranking}
       </div>
       <div className="flex-col w-full mt-[50px]">
         <h1 className="italic flex justify-center mb-3 text-[1.050em] pl-5 pr-5">
@@ -41,7 +40,7 @@ export default function QuoteCard({ quoteData }: any) {
       </div>
       <Ranking
         handleArrowClick={handleArrowClick}
-        originalValue={originalValue}
+        originalValue={ranking}
         isUpdating={isUpdating}
       />
     </div>

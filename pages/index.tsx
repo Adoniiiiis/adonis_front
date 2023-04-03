@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
+import useAuth from '@/context/AuthContext';
 
 export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
@@ -15,10 +16,12 @@ export default function Home() {
   const [books, setBooks] = useState<any>(null);
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
+  const { getUser }: any = useAuth();
+  const user = getUser();
 
   useEffect(() => {
-    if (!contentChosen) {
-      filterContent('popular');
+    if (!contentChosen && user.id) {
+      filterContent('popularContent');
     }
   }, []);
 
@@ -26,7 +29,7 @@ export default function Home() {
     if (popularContent) {
       setContentDisplayed(popularContent);
     } else {
-      const popularContent = await GetPopularContentAxios();
+      const popularContent = await GetPopularContentAxios(user.id);
       setContentDisplayed(popularContent);
       setPopularContent(popularContent);
     }
@@ -34,7 +37,7 @@ export default function Home() {
 
   const getNewContent = async () => {
     if (newContent) {
-      setNewContent(newContent);
+      setContentDisplayed(newContent);
     } else {
       const newContent = await GetNewContentAxios();
       setContentDisplayed(newContent);
