@@ -93,37 +93,37 @@ export default function Home() {
     fetchNewContent();
 
     // Filtering Books, Quotes and Videos
-    GetFilteredContentAxios().then((res: any) => {
-      setBooks(
-        Object.values(res.books).map((book: any, key) => {
-          return (
-            <div key={key} className="-mt-5">
-              <BookCard bookCoverUrl={image} bookData={book} />
-            </div>
-          );
-        })
-      );
-      setQuotes(
-        Object.values(res.quotes).map((quote: any, key) => {
-          return (
-            <div key={key} className="-mt-5">
-              <QuoteCard quoteData={quote} />
-            </div>
-          );
-        })
-      );
-      setVideos(
-        Object.values(res.videos).map((video: any, key) => {
-          const validUrl = video.link.replace('watch?v=', 'embed/');
-          const videoUrl = `${validUrl}?controls=0`;
-          return (
-            <div key={key} className="-mt-5">
-              <VideoCard videoUrl={videoUrl} videoData={video} />
-            </div>
-          );
-        })
-      );
-    });
+    // GetFilteredContentAxios().then((res: any) => {
+    //   setBooks(
+    //     Object.values(res.books).map((book: any, key) => {
+    //       return (
+    //         <div key={key} className="-mt-5">
+    //           <BookCard bookCoverUrl={image} bookData={book} />
+    //         </div>
+    //       );
+    //     })
+    //   );
+    //   setQuotes(
+    //     Object.values(res.quotes).map((quote: any, key) => {
+    //       return (
+    //         <div key={key} className="-mt-5">
+    //           <QuoteCard quoteData={quote} />
+    //         </div>
+    //       );
+    //     })
+    //   );
+    //   setVideos(
+    //     Object.values(res.videos).map((video: any, key) => {
+    //       const validUrl = video.link.replace('watch?v=', 'embed/');
+    //       const videoUrl = `${validUrl}?controls=0`;
+    //       return (
+    //         <div key={key} className="-mt-5">
+    //           <VideoCard videoUrl={videoUrl} videoData={video} />
+    //         </div>
+    //       );
+    //     })
+    //   );
+    // });
   }, []);
 
   return (

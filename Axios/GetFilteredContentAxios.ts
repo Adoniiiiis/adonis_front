@@ -4,7 +4,7 @@ export default function GetFilteredContentAxios() {
   try {
     const request = axios({
       method: 'GET',
-      url: 'api/getHomepageSortedContent',
+      url: 'api/getNewContent',
     });
     const response = request.then((res) => res.data);
     return response;
