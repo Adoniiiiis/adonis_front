@@ -5,10 +5,7 @@ export default function GetPopularContentAxios(userId: number) {
   try {
     const request = axios({
       method: 'GET',
-      url: 'api/getPopularContent',
-      data: {
-        userId: userId,
-      },
+      url: `api/getPopularContent/${userId}`,
     });
     const response = request.then((res) =>
       FilterContentResponse(res.data.content)

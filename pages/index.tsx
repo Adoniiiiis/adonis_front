@@ -39,7 +39,7 @@ export default function Home() {
     if (newContent) {
       setContentDisplayed(newContent);
     } else {
-      const newContent = await GetNewContentAxios();
+      const newContent = await GetNewContentAxios(user.id);
       setContentDisplayed(newContent);
       setNewContent(newContent);
     }
@@ -49,7 +49,7 @@ export default function Home() {
     if (books) {
       setContentDisplayed(books);
     } else {
-      const booksMapping = await getContentByCategory('book');
+      const booksMapping = await getContentByCategory('book', user.id);
       setContentDisplayed(booksMapping);
       setBooks(booksMapping);
     }
@@ -59,7 +59,7 @@ export default function Home() {
     if (quotes) {
       setContentDisplayed(quotes);
     } else {
-      const quotesMapping = await getContentByCategory('quote');
+      const quotesMapping = await getContentByCategory('quote', user.id);
       setContentDisplayed(quotesMapping);
       setQuotes(quotesMapping);
     }
@@ -69,7 +69,7 @@ export default function Home() {
     if (videos) {
       setContentDisplayed(videos);
     } else {
-      const videosMapping = await getContentByCategory('video');
+      const videosMapping = await getContentByCategory('video', user.id);
       setContentDisplayed(videosMapping);
       setVideos(videosMapping);
     }

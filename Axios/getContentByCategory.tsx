@@ -1,11 +1,14 @@
 import { axios } from './AxiosSetup';
 import FilterContentResponse from './FilterContentResponse';
 
-export default function getContentByCategory(categoryName: string) {
+export default function getContentByCategory(
+  categoryName: string,
+  userId: number
+) {
   try {
     const request = axios({
       method: 'GET',
-      url: `api/getContentByCategory/${categoryName}`,
+      url: `api/getContentByCategory/${categoryName}/${userId}`,
     });
     const response = request.then((res) =>
       FilterContentResponse(res.data.content)
