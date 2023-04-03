@@ -2,7 +2,7 @@ import { axios } from './AxiosSetup';
 
 export default function UpdateRankingAxios(
   postId: number,
-  category: string,
+  userId: number,
   serverSideNewValue: number
 ) {
   try {
@@ -11,7 +11,7 @@ export default function UpdateRankingAxios(
       url: 'api/ranking',
       data: {
         postId: postId,
-        category: category,
+        userId: userId,
         newValue: serverSideNewValue,
       },
     });
