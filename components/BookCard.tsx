@@ -1,23 +1,25 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Ranking from './Ranking';
+import useAuth from '@/context/AuthContext';
 
 export default function BookCard({ bookCoverUrl, bookData }: any) {
-  const category = 'book';
   const { id, title, subtitle, author, ranking } = bookData;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const { getUser }: any = useAuth();
+  const user = getUser();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
     clientSideNewValue: number,
     serverSideNewValue: number
   ) => {
-    if (!isUpdating) {
+    if (!isUpdating && user.id) {
       setIsUpdating(true);
       setCurrentRanking(clientSideNewValue);
-      setIsUpdating(await UpdateRankingAxios(id, category, serverSideNewValue));
+      setIsUpdating(await UpdateRankingAxios(id, user.id, serverSideNewValue));
     }
   };
 
