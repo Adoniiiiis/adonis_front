@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
+import HomepageSqueletons from '@/components/HomepageSqueletons';
 import { useEffect, useState } from 'react';
 import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
-import HomepageSqueletons from '@/components/HomepageSqueletons';
 import useAuth from '@/context/AuthContext';
 
 export default function Home() {
