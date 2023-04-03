@@ -1,130 +1,93 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import BookCard from '@/components/BookCard';
-import image from '../public/images/book-cover-platon.jpg';
-import VideoCard from '@/components/VideoCard';
-import QuoteCard from '@/components/QuoteCard';
-import { useEffect, useState, Suspense, use } from 'react';
 import HomepageFilterButtons from '@/components/HomepageFilterButtons';
-import { Skeleton } from '@mui/material';
+import HomepageSqueletons from '@/components/HomepageSqueletons';
+import { useEffect, useState } from 'react';
+import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
-import GetFilteredContentAxios from '@/Axios/GetFilteredContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 
 export default function Home() {
-  const [popular, setPopular] = useState<any>(null);
+  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
+  const [contentChosen, setContentChosen] = useState<any>(null);
+  const [popularContent, setPopularContent] = useState<any>(null);
+  const [newContent, setNewContent] = useState<any>(null);
   const [books, setBooks] = useState<any>(null);
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
-  const [filterButtons, setFilterButtons] = useState<any>(null);
-  const [newContent, setNewContent] = useState<any>(null);
-  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
 
-  // Filtering by Popular, Book, Video or Quote
-  const changeContentType = (contentType: string) => {
-    if (popular) {
-      switch (contentType) {
-        case 'books':
-          return setContentDisplayed(books);
-        case 'videos':
-          return setContentDisplayed(videos);
-        case 'quotes':
-          return setContentDisplayed(quotes);
-        case 'newContent':
-          return setContentDisplayed(newContent);
-        case 'popular':
-          return setContentDisplayed(popular);
-      }
+  useEffect(() => {
+    if (!contentChosen) {
+      filterContent('popular');
+    }
+  }, []);
+
+  const getPopularContent = async () => {
+    if (popularContent) {
+      setContentDisplayed(popularContent);
+    } else {
+      const popularContent = await GetPopularContentAxios();
+      setContentDisplayed(popularContent);
+      setPopularContent(popularContent);
     }
   };
 
-  useEffect(() => {
-    popular && setContentDisplayed(popular);
-  }, [popular]);
-
-  // Setting Buttons to Filter by Popular, Book, Video or Quote
-  useEffect(() => {
-    if (books && videos && quotes && newContent) {
-      setFilterButtons(
-        <HomepageFilterButtons
-          changeContentType={changeContentType}
-          clickable={true}
-        />
-      );
+  const getNewContent = async () => {
+    if (newContent) {
+      setNewContent(newContent);
     } else {
-      setFilterButtons(
-        <HomepageFilterButtons
-          changeContentType={changeContentType}
-          clickable={false}
-        />
-      );
+      const newContent = await GetNewContentAxios();
+      setContentDisplayed(newContent);
+      setNewContent(newContent);
     }
-  }, [books, videos, quotes, newContent]);
+  };
 
-  // Displaying Squeletons while Data is Loading
-  function getSqueletonDisplay() {
-    let squeletonDisplay = [];
-    for (let i = 0; i < 4; i++) {
-      squeletonDisplay.push(
-        <div key={i} className="mb-8 -mt-5">
-          <Skeleton
-            variant="rectangular"
-            width={700}
-            height={200}
-            className="rounded-lg"
-          />
-        </div>
-      );
+  const getBooks = async () => {
+    if (books) {
+      setContentDisplayed(books);
+    } else {
+      const booksMapping = await getContentByCategory('book');
+      setContentDisplayed(booksMapping);
+      setBooks(booksMapping);
     }
-    return squeletonDisplay;
+  };
+
+  const getQuotes = async () => {
+    if (quotes) {
+      setContentDisplayed(quotes);
+    } else {
+      const quotesMapping = await getContentByCategory('quote');
+      setContentDisplayed(quotesMapping);
+      setQuotes(quotesMapping);
+    }
+  };
+
+  const getVideos = async () => {
+    if (videos) {
+      setContentDisplayed(videos);
+    } else {
+      const videosMapping = await getContentByCategory('video');
+      setContentDisplayed(videosMapping);
+      setVideos(videosMapping);
+    }
+  };
+
+  // Getting the Right Content
+  function filterContent(contentChosen: string) {
+    setContentChosen(contentChosen);
+    switch (contentChosen) {
+      case 'popularContent':
+        return getPopularContent();
+      case 'newContent':
+        return getNewContent();
+      case 'book':
+        return getBooks();
+      case 'quote':
+        return getQuotes();
+      case 'video':
+        return getVideos();
+    }
   }
-
-  useEffect(() => {
-    // Getting Popular Content
-    const fetchPopularContent = async () => {
-      setPopular(await GetPopularContentAxios());
-    };
-    fetchPopularContent();
-
-    // Getting New Content
-    const fetchNewContent = async () => {
-      setNewContent(await GetNewContentAxios());
-    };
-    fetchNewContent();
-
-    // Filtering Books, Quotes and Videos
-    // GetFilteredContentAxios().then((res: any) => {
-    //   setBooks(
-    //     Object.values(res.books).map((book: any, key) => {
-    //       return (
-    //         <div key={key} className="-mt-5">
-    //           <BookCard bookCoverUrl={image} bookData={book} />
-    //         </div>
-    //       );
-    //     })
-    //   );
-    //   setQuotes(
-    //     Object.values(res.quotes).map((quote: any, key) => {
-    //       return (
-    //         <div key={key} className="-mt-5">
-    //           <QuoteCard quoteData={quote} />
-    //         </div>
-    //       );
-    //     })
-    //   );
-    //   setVideos(
-    //     Object.values(res.videos).map((video: any, key) => {
-    //       const validUrl = video.link.replace('watch?v=', 'embed/');
-    //       const videoUrl = `${validUrl}?controls=0`;
-    //       return (
-    //         <div key={key} className="-mt-5">
-    //           <VideoCard videoUrl={videoUrl} videoData={video} />
-    //         </div>
-    //       );
-    //     })
-    //   );
-    // });
-  }, []);
 
   return (
     <>
@@ -138,9 +101,9 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              {filterButtons}
+              <HomepageFilterButtons filterContent={filterContent} />
               <div className="-mt-10">
-                {contentDisplayed ? contentDisplayed : getSqueletonDisplay()}
+                {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
               </div>
             </div>
           </div>
