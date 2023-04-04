@@ -7,6 +7,7 @@ import getContentByCategory from '@/Axios/getContentByCategory';
 import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 import useAuth from '@/context/AuthContext';
+import FilterContentResponse from '@/Axios/FilterContentResponse';
 
 export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
@@ -19,6 +20,7 @@ export default function Home() {
   const { getUser }: any = useAuth();
   const user = getUser();
 
+  // Displaying Popular Content by Default
   useEffect(() => {
     if (!contentChosen && user.id) {
       filterContent('popularContent');
@@ -29,7 +31,9 @@ export default function Home() {
     if (popularContent) {
       setContentDisplayed(popularContent);
     } else {
-      const popularContent = await GetPopularContentAxios(user.id);
+      const popularContent = FilterContentResponse(
+        await GetPopularContentAxios(user.id)
+      );
       setContentDisplayed(popularContent);
       setPopularContent(popularContent);
     }
@@ -39,7 +43,9 @@ export default function Home() {
     if (newContent) {
       setContentDisplayed(newContent);
     } else {
-      const newContent = await GetNewContentAxios(user.id);
+      const newContent = FilterContentResponse(
+        await GetNewContentAxios(user.id)
+      );
       setContentDisplayed(newContent);
       setNewContent(newContent);
     }
@@ -49,7 +55,9 @@ export default function Home() {
     if (books) {
       setContentDisplayed(books);
     } else {
-      const booksMapping = await getContentByCategory('book', user.id);
+      const booksMapping = FilterContentResponse(
+        await getContentByCategory('book', user.id)
+      );
       setContentDisplayed(booksMapping);
       setBooks(booksMapping);
     }
@@ -59,7 +67,9 @@ export default function Home() {
     if (quotes) {
       setContentDisplayed(quotes);
     } else {
-      const quotesMapping = await getContentByCategory('quote', user.id);
+      const quotesMapping = FilterContentResponse(
+        await getContentByCategory('quote', user.id)
+      );
       setContentDisplayed(quotesMapping);
       setQuotes(quotesMapping);
     }
@@ -69,13 +79,15 @@ export default function Home() {
     if (videos) {
       setContentDisplayed(videos);
     } else {
-      const videosMapping = await getContentByCategory('video', user.id);
+      const videosMapping = FilterContentResponse(
+        await getContentByCategory('video', user.id)
+      );
       setContentDisplayed(videosMapping);
       setVideos(videosMapping);
     }
   };
 
-  // Getting the Right Content
+  // The User Choose what Content to Display
   function filterContent(contentChosen: string) {
     setContentChosen(contentChosen);
     switch (contentChosen) {
@@ -105,8 +117,10 @@ export default function Home() {
           <div className="flex justify-center">
             <div className="flex-col">
               <HomepageFilterButtons filterContent={filterContent} />
-              <div className="-mt-10">
-                {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
+              <div className="-mt-7 flex justify-center">
+                <div className="flex-col">
+                  {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
+                </div>
               </div>
             </div>
           </div>

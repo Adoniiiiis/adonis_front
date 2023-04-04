@@ -10,9 +10,7 @@ export default function getContentByCategory(
       method: 'GET',
       url: `api/getContentByCategory/${categoryName}/${userId}`,
     });
-    const response = request.then((res) =>
-      FilterContentResponse(res.data.content)
-    );
+    const response = request.then((res) => res.data.content);
     return response;
   } catch (err: any) {
     const error = err.message;

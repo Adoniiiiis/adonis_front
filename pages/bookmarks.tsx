@@ -5,28 +5,49 @@ import GetBookmarkedContentAxios from '@/Axios/GetBookmarkedContentAxios';
 import useAuth from '@/context/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_BOOKMARKS } from '@/Redux/Reducers/BookmarksSlice';
+import FilterContentResponse from '@/Axios/FilterContentResponse';
 
-export default function Favorites() {
+export default function Bookmarks() {
   const [bookmarkContent, setBookmarkContent] = useState<any>(null);
+  const [bookmarkDisplay, setBookmarkDisplay] = useState<any>(null);
   const { getUser }: any = useAuth();
   const user = getUser();
   const dispatch = useDispatch();
   const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
 
+  const noBookmarks = (
+    <p className="mt-8">Vous n'avez aucun favoris pour le moment.</p>
+  );
+
+  // Getting All Bookmarks from Database or Redux
   useEffect(() => {
     if (user.id) {
       const fetchBookmarkContent = async () => {
         if (bookmarkRedux) {
-          setBookmarkContent(bookmarkRedux);
+          setBookmarkContent(FilterContentResponse(bookmarkRedux));
         } else {
           const bookmarks = await GetBookmarkedContentAxios(user.id);
-          setBookmarkContent(bookmarks);
+          const mappedBookmarks = FilterContentResponse(bookmarks);
+          setBookmarkContent(mappedBookmarks);
           dispatch(ADD_BOOKMARKS(bookmarks));
         }
       };
       fetchBookmarkContent();
     }
   }, []);
+
+  // Handling Bookmarks Loading, Display and NoContent
+  useEffect(() => {
+    if (bookmarkContent) {
+      if (bookmarkContent.length > 0) {
+        setBookmarkDisplay(bookmarkContent);
+      } else {
+        setBookmarkDisplay(noBookmarks);
+      }
+    } else {
+      setBookmarkDisplay('Chargement...');
+    }
+  }, [bookmarkContent]);
 
   return (
     <>
@@ -39,7 +60,7 @@ export default function Favorites() {
       <main>
         <DefaultLayout>
           <div className="flex justify-center">
-            <div className="flex-col mt-10">{bookmarkContent}</div>
+            <div className="flex-col mt-10">{bookmarkDisplay}</div>
           </div>
         </DefaultLayout>
       </main>

@@ -2,10 +2,16 @@ import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
+import BookmarkHeart from './BookmarkHeart';
+import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
+import { useDispatch } from 'react-redux';
 
 export default function QuoteCard({ quoteData }: any) {
-  const { id, quote, author, ranking } = quoteData;
+  const { id, quote, author, ranking, isBookmarked } = quoteData;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
+  const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
+    useState<boolean>(isBookmarked);
+  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const { getUser }: any = useAuth();
   const user = getUser();
@@ -22,10 +28,24 @@ export default function QuoteCard({ quoteData }: any) {
     }
   };
 
+  // Add or Remove a Post from Bookmarks
+  const handleBookmarkClick = async () => {
+    if (!isBookmarkUpdating && user.id) {
+      setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
+      setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
+    }
+  };
+
   return (
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
-        {currentRanking ? currentRanking : ranking}
+        <div className="flex flex-col justify-between items-center">
+          {currentRanking ? currentRanking : ranking}
+          <BookmarkHeart
+            isCurrentlyBookmarked={isCurrentlyBookmarked}
+            handleBookmarkClick={handleBookmarkClick}
+          />
+        </div>
       </div>
       <div className="flex-col w-full mt-[50px]">
         <h1 className="italic flex justify-center mb-3 text-[1.050em] pl-5 pr-5">
