@@ -2,10 +2,15 @@ import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
+import BookmarkHeart from './BookmarkHeart';
+import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 
 export default function VideoCard({ videoUrl, videoData }: any) {
-  const { id, author, ranking } = videoData;
+  const { id, author, ranking, isBookmarked } = videoData;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
+  const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
+    useState<boolean>(isBookmarked);
+  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const { getUser }: any = useAuth();
   const user = getUser();
@@ -22,10 +27,24 @@ export default function VideoCard({ videoUrl, videoData }: any) {
     }
   };
 
+  // Add or Remove a Post from Bookmarks
+  const handleBookmarkClick = async () => {
+    if (!isBookmarkUpdating && user.id) {
+      setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
+      setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
+    }
+  };
+
   return (
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[245px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
-        {currentRanking ? currentRanking : ranking}
+        <div className="flex flex-col justify-between items-center">
+          {currentRanking ? currentRanking : ranking}
+          <BookmarkHeart
+            isCurrentlyBookmarked={isCurrentlyBookmarked}
+            handleBookmarkClick={handleBookmarkClick}
+          />
+        </div>
       </div>
       <div className="md:flex flex-col w-full">
         <div className="mt-[12px] ml-[15px] relative">

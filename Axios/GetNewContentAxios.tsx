@@ -7,9 +7,7 @@ export default function GetNewContentAxios(userId: number) {
       method: 'GET',
       url: `api/getNewContent/${userId}`,
     });
-    const response = request.then((res) =>
-      FilterContentResponse(res.data.content)
-    );
+    const response = request.then((res) => res.data.content);
     return response;
   } catch (err: any) {
     const error = err.message;

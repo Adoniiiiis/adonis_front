@@ -6,8 +6,6 @@ export default function GetBookmarkedContentAxios(userId: number) {
     method: 'GET',
     url: `/api/bookmarks/${userId}`,
   });
-  const response = request.then((res) =>
-    FilterContentResponse(res.data.content)
-  );
+  const response = request.then((res) => res.data.content);
   return response;
 }
