@@ -4,8 +4,8 @@ export default function Error400() {
   return (
     <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-white w-full">
       <div className="text-center">
-        <div className="inline-flex rounded-full bg-yellow-100 p-4">
-          <div className="rounded-full stroke-yellow-600 bg-yellow-200 p-4">
+        <div className="inline-flex rounded-full bg-cyan-100 p-4">
+          <div className="rounded-full stroke-cyan-500 bg-cyan-200 p-4">
             <svg
               className="w-16 h-16"
               viewBox="0 0 28 28"

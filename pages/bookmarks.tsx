@@ -60,7 +60,10 @@ export default function Bookmarks() {
       <main>
         <DefaultLayout>
           <div className="flex justify-center">
-            <div className="flex-col mt-10">{bookmarkDisplay}</div>
+            <div className="flex-col">
+              <h1 className="mb-8 mt-10 text-[1.1em]">Mes favoris</h1>
+              {bookmarkDisplay}
+            </div>
           </div>
         </DefaultLayout>
       </main>
