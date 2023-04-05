@@ -3,10 +3,11 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import ProfileMenu from '@/components/ProfileMenu';
 import useAuth from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
+import { userType } from '@/Types/UserType';
 
 export default function Profile() {
   const { getUser }: any = useAuth();
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<userType | null>(null);
 
   useEffect(() => {
     setUserData(getUser());

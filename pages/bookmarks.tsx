@@ -6,6 +6,7 @@ import useAuth from '@/context/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_BOOKMARKS } from '@/Redux/Reducers/BookmarksSlice';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
+import { bookmarkReduxType } from '@/Types/bookmarkReduxType';
 
 export default function Bookmarks() {
   const [bookmarkContent, setBookmarkContent] = useState<any>(null);
@@ -13,7 +14,9 @@ export default function Bookmarks() {
   const { getUser }: any = useAuth();
   const user = getUser();
   const dispatch = useDispatch();
-  const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
+  const bookmarkRedux = useSelector(
+    (state: bookmarkReduxType) => state.bookmarks.bookmarks
+  );
 
   const noBookmarks = (
     <p className="mt-8">Vous n'avez aucun favoris pour le moment.</p>
@@ -61,7 +64,9 @@ export default function Bookmarks() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <h1 className="mb-8 mt-10 text-[1.1em]">Mes favoris</h1>
+              {bookmarkContent && bookmarkContent.length > 0 && (
+                <h1 className="mb-8 mt-10 text-[1.1em]">Mes favoris</h1>
+              )}
               {bookmarkDisplay}
             </div>
           </div>

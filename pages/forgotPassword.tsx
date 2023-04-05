@@ -2,8 +2,8 @@ import ForgotPasswordAxios from '@/Axios/ForgotPasswordAxios';
 import React, { useState, useEffect } from 'react';
 
 export default function forgotPassword() {
-  const [email, setEmail] = useState('');
-  const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [isBtnDisplayed, setIsBtnDisplayed] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

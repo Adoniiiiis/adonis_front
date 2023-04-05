@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function HomepageFilterButtons({ filterContent }: any) {
+type filterContent = {
+  filterContent: (contentType: string) => void;
+};
+
+export default function HomepageFilterButtons({
+  filterContent,
+}: filterContent) {
   return (
     <div className="mt-8 mb-16 bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[700px]">
       <button

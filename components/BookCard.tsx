@@ -7,16 +7,18 @@ import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import BookmarkHeart from './BookmarkHeart';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
+import { userType } from '@/Types/UserType';
+import { bookType } from '@/Types/BookType';
 
-export default function BookCard({ bookCoverUrl, bookData }: any) {
+export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   const { id, title, subtitle, author, ranking, isBookmarked } = bookData;
-  const [currentRanking, setCurrentRanking] = useState<any>(null);
+  const [currentRanking, setCurrentRanking] = useState<number | null>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
-  const user = getUser();
+  const user: userType = getUser();
   const dispatch = useDispatch();
   const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
 
