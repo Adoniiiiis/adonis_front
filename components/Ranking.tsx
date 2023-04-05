@@ -7,11 +7,17 @@ import arrowActiveImage from '../public/images/arrowActive.png';
 import doubleArrowActiveImage from '../public/images/doubleArrowActive.png';
 import tripleArrowActiveImage from '../public/images/tripleArrowActive.png';
 
+type rankingType = {
+  originalValue: number;
+  handleArrowClick: (a: number, b: number) => void;
+  isUpdating: boolean;
+};
+
 export default function Ranking({
   handleArrowClick,
   originalValue,
   isUpdating,
-}: any) {
+}: rankingType) {
   const [currentlyActive, setCurrentlyActive] = useState<string>('');
 
   // Clicking on an unactive arrow

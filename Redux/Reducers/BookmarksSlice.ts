@@ -1,3 +1,4 @@
+import { contentType } from '@/Types/ContentType';
 import { createSlice } from '@reduxjs/toolkit';
 
 export const bookmarksSlice = createSlice({

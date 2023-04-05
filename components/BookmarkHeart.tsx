@@ -1,10 +1,15 @@
 import React from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
+type bookmarkHeart = {
+  isCurrentlyBookmarked: boolean;
+  handleBookmarkClick: () => void;
+};
+
 export default function BookmarkHeart({
   isCurrentlyBookmarked,
   handleBookmarkClick,
-}: any) {
+}: bookmarkHeart) {
   return isCurrentlyBookmarked ? (
     <BsHeartFill
       onClick={() => handleBookmarkClick()}

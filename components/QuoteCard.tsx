@@ -4,17 +4,18 @@ import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
-import { useDispatch } from 'react-redux';
+import { userType } from '@/Types/UserType';
+import { quoteType } from '@/Types/QuoteType';
 
-export default function QuoteCard({ quoteData }: any) {
+export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked } = quoteData;
-  const [currentRanking, setCurrentRanking] = useState<any>(null);
+  const [currentRanking, setCurrentRanking] = useState<number | null>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
-  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
-  const user = getUser();
+  const user: userType = getUser();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (

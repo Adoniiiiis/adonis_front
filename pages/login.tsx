@@ -3,9 +3,9 @@ import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
 
 export default function login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login, errors }: any = useAuth();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const { login, errors } = useAuth();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

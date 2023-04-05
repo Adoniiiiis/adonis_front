@@ -8,6 +8,7 @@ import GetPopularContentAxios from '@/Axios/GetPopularContentAxios';
 import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 import useAuth from '@/context/AuthContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
+import { userType } from '@/Types/UserType';
 
 export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
@@ -18,7 +19,7 @@ export default function Home() {
   const [videos, setVideos] = useState<any>(null);
   const [quotes, setQuotes] = useState<any>(null);
   const { getUser }: any = useAuth();
-  const user = getUser();
+  const user: userType = getUser();
 
   // Displaying Popular Content by Default
   useEffect(() => {

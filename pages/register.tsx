@@ -12,9 +12,9 @@ export default function register() {
     terms: false,
   };
 
-  const { register, errors }: any = useAuth();
+  const { register, errors } = useAuth();
   const [data, setData] = useState(initialData);
-  const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [isTermsChecked, setIsTermsChecked] = useState<boolean>(false);
 
   useEffect(() => {
     setData({ ...data, terms: isTermsChecked });
