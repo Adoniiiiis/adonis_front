@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 
 export default function resetPassword() {
-  const [password, setPassword] = useState<string>('');
-  const [password_confirmation, setConfirmPassword] = useState<string>('');
-  const [isBtnDisplayed, setIsBtnDisplayed] = useState<boolean>(false);
+  const [password, setPassword] = useState('');
+  const [password_confirmation, setConfirmPassword] = useState('');
+  const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
   const router = useRouter();
-  const token: any = router.query['token][email'];
+  const token: any = '2745247el';
   const email: any = router.query.email;
 
   const handleSubmit = (e: React.FormEvent): void => {

@@ -24,11 +24,13 @@ const CATEGORIES: { displayName: string; id: string }[] = [
     id: 'quotes',
   },
 ];
+type changeContentType = {
+  changeContentType: (contentType: string) => void;
+};
 
 export default function HomepageFilterButtons({
   changeContentType,
-  clickable,
-}: any) {
+}: changeContentType) {
   return (
     <div className="mt-8 mb-16 flex justify-between bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[700px]">
       <div>
@@ -36,9 +38,7 @@ export default function HomepageFilterButtons({
           <button
             key={el.id}
             onClick={() => {
-              if (clickable) {
-                changeContentType(el.id);
-              }
+              changeContentType(el.id);
             }}
             className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
           >

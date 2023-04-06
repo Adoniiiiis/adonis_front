@@ -43,7 +43,7 @@ const listPages = [
   },
   {
     name: 'Favoris',
-    routeName: '/favorites',
+    routeName: '/bookmarks',
     icon: {
       default: <BsBookmark color="white" size={32} />,
       active: (

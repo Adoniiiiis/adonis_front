@@ -4,14 +4,29 @@ import { useRouter } from 'next/router';
 import RegisterAxios from '@/Axios/RegisterAxios';
 import { RegisterType } from '@/Types/RegisterType';
 import Axios from 'axios';
+import { toast } from 'react-toastify';
+import { loginResponseType } from '@/Types/LoginResponseType';
+import { registerResponseType } from '@/Types/RegisterResponseType';
+import { userType } from '@/Types/UserType';
+import { useDispatch } from 'react-redux';
+import { ADD_USER } from '@/Redux/Reducers/UserSlice';
 
-const AuthContext = createContext({});
+type AuthContextType = {
+  getToken: () => string;
+  getUser: () => userType;
+  errors: string | null;
+  login: (email: string, password: string) => void;
+  register: (data: RegisterType, isTermsChecked: boolean) => void;
+  logout: () => void;
+};
+
+const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: any) => {
   const router = useRouter();
   const [user, setUser] = useState<object | null>(null);
-  const [errors, setErrors] = useState<any>(null);
-  const [token, setToken] = useState<any>(null);
+  const [errors, setErrors] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     function authRedirect() {
@@ -31,25 +46,36 @@ export const AuthProvider = ({ children }: any) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', JSON.stringify(token));
     setUser(user);
-    setToken(token);
     router.push('/');
   };
 
   const getToken = () => {
-    const token: any = localStorage.getItem('token');
-    const userToken = JSON.parse(token);
-    return userToken;
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('token') != 'undefined') {
+        const token: any = localStorage.getItem('token');
+        const userToken = JSON.parse(token);
+        return userToken;
+      }
+    }
   };
 
   const getUser = () => {
-    const userToken: any = localStorage.getItem('user');
-    const userData = JSON.parse(userToken);
-    return userData;
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('user') != 'undefined' || null) {
+        const userToken: any = localStorage.getItem('user');
+        const userData = JSON.parse(userToken);
+        return userData;
+      }
+    }
   };
 
   const login = (email: string, password: string) => {
-    LoginAxios(email, password).then((res: any) => {
+    LoginAxios(email, password).then((res: loginResponseType) => {
       if (res.status === 'success') {
+        const notify: any = () =>
+          toast.success(`Bienvenue ${res.user.username}!`);
+        notify();
+        dispatch(ADD_USER(res.user));
         saveTokenAndRedirect(res.user, res.access_token);
       } else {
         setErrors(res.message);
@@ -68,11 +94,14 @@ export const AuthProvider = ({ children }: any) => {
       if (data.password.length >= 3) {
         if (data.password === data.confirm_password) {
           if (isTermsChecked) {
-            RegisterAxios(data).then((res: any) => {
+            RegisterAxios(data).then((res: registerResponseType) => {
               if (res && res.status === 'error') {
                 setErrors(res.message);
               } else {
-                saveTokenAndRedirect(res.user, res.access_token);
+                const notify = () => toast.success('Compte créé avec succès!');
+                notify();
+                dispatch(ADD_USER(res.user));
+                router.push('/login');
               }
             });
           } else {
@@ -101,6 +130,8 @@ export const AuthProvider = ({ children }: any) => {
     logoutAxios.post('/logout').then(() => {
       localStorage.clear();
       setUser(null);
+      const notify = () => toast.success('Vous êtes déconnecté');
+      notify();
       router.push('/login');
     });
   };

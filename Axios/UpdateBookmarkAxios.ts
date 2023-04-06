@@ -1,18 +1,13 @@
 import { axios } from './AxiosSetup';
 
-export default function UpdateRankingAxios(
-  postId: number,
-  userId: number,
-  serverSideNewValue: number
-) {
+export default function UpdateBookmarkAxios(postId: number, userId: number) {
   try {
     const request = axios({
       method: 'POST',
-      url: 'api/ranking',
+      url: 'api/updateBookmark',
       data: {
         postId: postId,
         userId: userId,
-        newValue: serverSideNewValue,
       },
     });
     const isUpdating = request.then(() => {

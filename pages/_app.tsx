@@ -4,8 +4,10 @@ import { Provider } from 'react-redux';
 import { store } from './../Redux/Store';
 import { AuthProvider } from '@/context/AuthContext';
 import { CookiesProvider } from 'react-cookie';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './../utils/muiTheme';
+import 'react-toastify/dist/ReactToastify.css';
+import ToastifyContainer from '@/components/ToastifyContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <CookiesProvider>
           <AuthProvider>
             <Component {...pageProps} />
+            <ToastifyContainer />
           </AuthProvider>
         </CookiesProvider>
       </Provider>

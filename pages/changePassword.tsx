@@ -1,4 +1,5 @@
 import ChangePasswordAxios from '@/Axios/ChangePasswordAxios';
+import { reduxUserType } from '@/Types/ReduxUserType';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ export default function resetPassword() {
   const [password, setPassword] = useState('');
   const [password_confirmation, setConfirmPassword] = useState('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
-  const userId: number = useSelector((state: any) => state.user.user.id);
+  const userId: number = useSelector((state: reduxUserType) => state.user.id);
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent): void => {

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import arrowImage from '../public/images/arrow.png';
 import doubleArrowImage from '../public/images/doubleArrow.png';
 import tripleArrowImage from '../public/images/tripleArrow.png';
@@ -7,44 +7,30 @@ import arrowActiveImage from '../public/images/arrowActive.png';
 import doubleArrowActiveImage from '../public/images/doubleArrowActive.png';
 import tripleArrowActiveImage from '../public/images/tripleArrowActive.png';
 
+type rankingType = {
+  originalValue: number;
+  handleArrowClick: (a: number, b: number) => void;
+  isUpdating: boolean;
+};
+
 export default function Ranking({
   handleArrowClick,
   originalValue,
   isUpdating,
-}: any) {
+}: rankingType) {
   const [currentlyActive, setCurrentlyActive] = useState<string>('');
-  const [previousArrowValue, setPreviousArrowValue] = useState<number>(0);
-
-  console.log(isUpdating);
 
   // Clicking on an unactive arrow
   function handleClickOnUnactive(e: any, arrowValue: number) {
     const clientSideNewValue = originalValue + arrowValue;
-    // If an arrow was already active
-    if (currentlyActive != '') {
-      const serverSideNewValue = oppositeOf(previousArrowValue) + arrowValue;
-      handleArrowClick(clientSideNewValue, serverSideNewValue);
-      // If no arrow was already active
-    } else {
-      const serverSideNewValue = arrowValue;
-      handleArrowClick(clientSideNewValue, serverSideNewValue);
-    }
+    handleArrowClick(clientSideNewValue, arrowValue);
     setCurrentlyActive(e.target.id);
   }
 
   // Clicking on an active arrow
-  function handleClickOnActive(e: any, arrowValue: number) {
-    handleArrowClick(originalValue, oppositeOf(arrowValue));
+  function handleClickOnActive(e: any) {
+    handleArrowClick(originalValue, 0);
     e.target.id === currentlyActive && setCurrentlyActive('');
-  }
-
-  // Getting the value to cancel previous ranking update
-  function oppositeOf(arrowValue: number) {
-    if (arrowValue > 0) {
-      return -Math.abs(arrowValue);
-    } else {
-      return Math.abs(arrowValue);
-    }
   }
 
   const tripleArrow = {
@@ -53,9 +39,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = 3;
           if (!isUpdating) {
-            setPreviousArrowValue(3);
             currentlyActive === 'tripleArrowUp'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
@@ -76,9 +61,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = -3;
           if (!isUpdating) {
-            setPreviousArrowValue(-3);
             currentlyActive === 'tripleArrowDown'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
@@ -102,9 +86,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = 2;
           if (!isUpdating) {
-            setPreviousArrowValue(2);
             currentlyActive === 'doubleArrowUp'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
@@ -125,9 +108,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = -2;
           if (!isUpdating) {
-            setPreviousArrowValue(-2);
             currentlyActive === 'doubleArrowDown'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
@@ -151,9 +133,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = 1;
           if (!isUpdating) {
-            setPreviousArrowValue(1);
             currentlyActive === 'arrowUp'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
@@ -170,9 +151,8 @@ export default function Ranking({
         onClick={(e: any) => {
           const arrowValue = -1;
           if (!isUpdating) {
-            setPreviousArrowValue(-1);
             currentlyActive === 'arrowDown'
-              ? handleClickOnActive(e, arrowValue)
+              ? handleClickOnActive(e)
               : handleClickOnUnactive(e, arrowValue);
           }
         }}
