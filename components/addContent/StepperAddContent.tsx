@@ -149,9 +149,8 @@ const steps = [
   'Valider la création',
 ];
 
-export default function StepperAddContent() {
-  const [step, setStep] = useState(0);
-
+export default function StepperAddContent(props: { step: number }) {
+  const { step } = props;
   return (
     <Stack sx={{ width: '100%' }} spacing={4}>
       <Stepper

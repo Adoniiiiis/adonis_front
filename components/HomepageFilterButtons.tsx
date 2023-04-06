@@ -56,7 +56,7 @@ export default function HomepageFilterButtons({ filterContent }: any) {
       </div>
       <Button
         onClick={() => push('/addContent')}
-        className="bg-cyan-500 hover:bg-cyan-600 font-semibold"
+        className="bg-cyan-500 hover:bg-cyan-600 font-semibold text-white"
         variant="contained"
         endIcon={<AddIcon />}
       >
