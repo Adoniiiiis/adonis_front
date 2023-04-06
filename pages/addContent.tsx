@@ -64,56 +64,37 @@ export default function AddContent() {
     tagPage: null,
   });
 
-  const validate = () => {
+  const validate = async () => {
     if (step === 0) {
       setFinalObject({ ...finalObject, category });
-      setStep(step + 1);
     } else if (step === 1) {
-      if (finalObject.category === categories[0].id) {
-        setFinalObject({
-          ...finalObject,
-          author,
-          title,
-          subtitle,
-          link,
-          tagTime,
-        });
-        setStep(step + 1);
-      } else if (finalObject.category === categories[1].id) {
-        setFinalObject({
-          ...finalObject,
-          author,
-          title,
-          subtitle,
-          quote,
-        });
-        setStep(step + 1);
-      } else if (finalObject.category === categories[2].id) {
-        setFinalObject({
-          ...finalObject,
-          author,
-          title,
-          subtitle,
-          tagPage,
-        });
-        setStep(step + 1);
-      }
+      setFinalObject({
+        ...finalObject,
+        author: author ?? null,
+        title: title ?? null,
+        subtitle: subtitle ?? null,
+        tagPage: tagPage ?? null,
+        tagTime: tagTime ?? null,
+        quote: quote ?? null,
+        link: link ?? null,
+      });
     } else if (step === 2) {
       setLoading(true);
-      CreateContent(user.id, finalObject)
-        .then((res: any) => {
-          console.log(res);
-          toast.success('Votre contenu a bien été ajouté !');
-          router.push('/');
-        })
-        .catch((err: any) => {
-          console.log(err);
-          toast.error(
-            "Une erreur est survenue lors de l'ajout de votre contenu."
-          );
-        })
-        .finally(() => setLoading(false));
+      try {
+        const res = await CreateContent(user.id, finalObject);
+        console.log(res);
+        toast.success('Votre contenu a bien été ajouté !');
+        router.push('/');
+      } catch (err) {
+        console.log(err);
+        toast.error(
+          "Une erreur est survenue lors de l'ajout de votre contenu."
+        );
+      } finally {
+        setLoading(false);
+      }
     }
+    setStep(step + 1);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -139,191 +120,74 @@ export default function AddContent() {
           </Select>
         </div>
       );
-    } else if (step === 1) {
-      if (finalObject.category === categories[0].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              onChange={(e) => setAuthor(e.target.value)}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
+    } else if (step === 1 || step === 2) {
+      return (
+        <div className="grid grid-cols-2 gap-x-4 gap-y-10">
+          {finalObject.category !== categories[1].id && (
             <TextField
               onChange={(e) => setTitle(e.target.value)}
               label="Titre"
               variant="outlined"
               required
+              disabled={step === 2}
             />
-            <TextField
-              onChange={(e) => setLink(e.target.value)}
-              label="Url"
-              variant="outlined"
-              required
-            />
-            <TextField
-              onChange={(e) => setSubtitle(e.target.value)}
-              label="Sous-titre"
-              variant="outlined"
-            />
-            <TextField
-              onChange={(e) => setTagTime(e.target.value)}
-              label="Moment de la vidéo (timecode)"
-              variant="outlined"
-            />
-          </div>
-        );
-      } else if (finalObject.category === categories[1].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              onChange={(e) => setAuthor(e.target.value)}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
+          )}
+          {finalObject.category === categories[1].id && (
             <TextField
               onChange={(e) => setQuote(e.target.value)}
               label="Citation"
               variant="outlined"
               required
+              disabled={step === 2}
             />
-            <TextField
-              onChange={(e) => setSubtitle(e.target.value)}
-              label="Sous-titre"
-              variant="outlined"
-            />
-          </div>
-        );
-      } else if (finalObject.category === categories[2].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              onChange={(e) => setAuthor(e.target.value)}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
-            <TextField
-              onChange={(e) => setTitle(e.target.value)}
-              label="Titre"
-              variant="outlined"
-              required
-            />
-            <TextField
-              onChange={(e) => setSubtitle(e.target.value)}
-              label="Sous-titre"
-              variant="outlined"
-            />
+          )}
+          <TextField
+            onChange={(e) => setAuthor(e.target.value)}
+            label="Auteur"
+            variant="outlined"
+            required
+            disabled={step === 2}
+          />
+          {finalObject.category === categories[0].id && (
+            <>
+              <TextField
+                onChange={(e) => setLink(e.target.value)}
+                label="Url"
+                variant="outlined"
+                required
+                disabled={step === 2}
+              />
+              <TextField
+                onChange={(e) => setTagTime(e.target.value)}
+                label="Moment de la vidéo (timecode)"
+                className={`${
+                  step === 2 && !finalObject.tagTime && 'opacity-50'
+                }`}
+                variant="outlined"
+                disabled={step === 2}
+              />
+            </>
+          )}
+          {finalObject.category === categories[2].id && (
             <TextField
               onChange={(e) => setTagPage(e.target.value)}
+              className={`${
+                step === 2 && !finalObject.tagPage && 'opacity-50'
+              }`}
               label="Page importante"
               variant="outlined"
+              disabled={step === 2}
             />
-          </div>
-        );
-      }
-    } else if (step === 2) {
-      if (finalObject.category === categories[0].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              disabled
-              value={finalObject.author}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.title}
-              label="Titre"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.link}
-              label="Url"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.subtitle}
-              className={`${finalObject.subtitle || 'opacity-50'}`}
-              label="Sous-titre"
-              variant="outlined"
-            />
-            <TextField
-              disabled
-              value={finalObject.tagTime}
-              className={`${finalObject.tagTime || 'opacity-50'}`}
-              label="Moment de la vidéo (timecode)"
-              variant="outlined"
-            />
-          </div>
-        );
-      } else if (finalObject.category === categories[1].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              disabled
-              value={finalObject.author}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.quote}
-              label="Citation"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.subtitle}
-              className={`${finalObject.subtitle || 'opacity-50'}`}
-              label="Sous-titre"
-              variant="outlined"
-            />
-          </div>
-        );
-      } else if (finalObject.category === categories[2].id) {
-        return (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-            <TextField
-              disabled
-              value={finalObject.author}
-              label="Auteur"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.title}
-              label="Titre"
-              variant="outlined"
-              required
-            />
-            <TextField
-              disabled
-              value={finalObject.subtitle}
-              className={`${finalObject.subtitle || 'opacity-50'}`}
-              label="Sous-titre"
-              variant="outlined"
-            />
-            <TextField
-              disabled
-              value={finalObject.tagPage}
-              className={`${finalObject.tagPage || 'opacity-50'}`}
-              label="Page importante"
-              variant="outlined"
-            />
-          </div>
-        );
-      }
+          )}
+          <TextField
+            onChange={(e) => setSubtitle(e.target.value)}
+            label="Sous-titre"
+            variant="outlined"
+            className={`${step === 2 && !finalObject.subtitle && 'opacity-50'}`}
+            disabled={step === 2}
+          />
+        </div>
+      );
     }
   };
 
