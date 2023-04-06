@@ -24,7 +24,7 @@ export default function Home() {
   // Displaying Popular Content by Default
   useEffect(() => {
     if (!contentChosen && user.id) {
-      filterContent('popularContent');
+      changeContentType('popularContent');
     }
   }, []);
 
@@ -89,9 +89,9 @@ export default function Home() {
   };
 
   // The User Choose what Content to Display
-  function filterContent(contentChosen: string) {
-    setContentChosen(contentChosen);
-    switch (contentChosen) {
+  function changeContentType(contentTypeChosen: string) {
+    setContentChosen(contentTypeChosen);
+    switch (contentTypeChosen) {
       case 'popularContent':
         return getPopularContent();
       case 'newContent':
