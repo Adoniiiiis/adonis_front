@@ -112,7 +112,7 @@ const Navbar: FC = () => {
       <div
         onMouseOver={() => setDesktopNavbarFull(true)}
         onMouseOut={() => setDesktopNavbarFull(false)}
-        className={`lg:flex hidden flex-col font-medium bg-zinc-800 rounded-r-[5px] justify-center gap-y-8 ${
+        className={`lg:flex shrink-0 hidden flex-col font-medium bg-zinc-800 rounded-r-[5px] justify-center gap-y-8 ${
           desktopNavbarFull ? 'w-56' : 'w-20'
         } transition-all ease-in-out h-screen overflow-hidden text-white`}
       >
