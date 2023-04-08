@@ -117,7 +117,7 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <HomepageFilterButtons filterContent={filterContent} />
+              <HomepageFilterButtons changeContentType={changeContentType} />
               <div className="-mt-7 flex justify-center">
                 <div className="flex-col">
                   {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
