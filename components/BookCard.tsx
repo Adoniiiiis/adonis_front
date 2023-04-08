@@ -11,8 +11,9 @@ import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
 
 export default function BookCard({ bookCoverUrl, bookData }: bookType) {
-  const { id, title, subtitle, author, ranking, isBookmarked } = bookData;
-  const [currentRanking, setCurrentRanking] = useState<number | null>(null);
+  const { id, title, subtitle, author, ranking, isBookmarked, userRating } =
+    bookData;
+  const [currentRanking, setCurrentRanking] = useState<number | null>(ranking);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -49,7 +50,7 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-[15px] rounded-l-md">
         <div className="flex flex-col justify-between items-center">
-          {currentRanking ? currentRanking : ranking}
+          {currentRanking}
           <BookmarkHeart
             isCurrentlyBookmarked={isCurrentlyBookmarked}
             handleBookmarkClick={handleBookmarkClick}
@@ -81,6 +82,7 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
         handleArrowClick={handleArrowClick}
         originalValue={ranking}
         isUpdating={isUpdating}
+        userRating={userRating}
       />
     </div>
   );

@@ -1,5 +1,4 @@
 import { axios } from './AxiosSetup';
-import FilterContentResponse from './FilterContentResponse';
 
 export default function GetBookmarkedContentAxios(userId: number) {
   const request = axios({
