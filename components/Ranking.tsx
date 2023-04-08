@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import arrowImage from '../public/images/arrow.png';
 import doubleArrowImage from '../public/images/doubleArrow.png';
 import tripleArrowImage from '../public/images/tripleArrow.png';
@@ -17,17 +17,26 @@ export default function Ranking({
   const [currentlyActive, setCurrentlyActive] = useState<number | null>(
     userRating
   );
+  const [clientSideValue, setClientSideValue] = useState(originalValue);
+
+  useEffect(() => {
+    if (userRating != null) {
+      setClientSideValue(originalValue - userRating);
+    }
+  }, []);
 
   // Clicking on an unactive arrow
   function handleClickOnUnactive(arrowValue: number) {
-    const clientSideNewValue = originalValue + arrowValue;
-    handleArrowClick(clientSideNewValue, arrowValue);
+    handleArrowClick(clientSideValue + arrowValue, arrowValue);
     setCurrentlyActive(arrowValue);
   }
 
   // Clicking on an active arrow
   function handleClickOnActive() {
-    handleArrowClick(originalValue, 0);
+    userRating != null
+      ? handleArrowClick(clientSideValue, 0)
+      : handleArrowClick(originalValue, 0);
+
     setCurrentlyActive(null);
   }
 

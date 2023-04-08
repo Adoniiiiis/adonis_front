@@ -9,7 +9,7 @@ import { videoType } from '@/Types/VideoType';
 
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
-  const [currentRanking, setCurrentRanking] = useState<number | null>(null);
+  const [currentRanking, setCurrentRanking] = useState<number | null>(ranking);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
   const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
