@@ -6,50 +6,43 @@ import tripleArrowImage from '../public/images/tripleArrow.png';
 import arrowActiveImage from '../public/images/arrowActive.png';
 import doubleArrowActiveImage from '../public/images/doubleArrowActive.png';
 import tripleArrowActiveImage from '../public/images/tripleArrowActive.png';
-
-type rankingType = {
-  originalValue: number;
-  handleArrowClick: (a: number, b: number) => void;
-  isUpdating: boolean;
-};
+import { rankingType } from '@/Types/RankingType';
 
 export default function Ranking({
   handleArrowClick,
   originalValue,
   isUpdating,
+  userRating,
 }: rankingType) {
-  const [currentlyActive, setCurrentlyActive] = useState<string>('');
+  const [currentlyActive, setCurrentlyActive] = useState<number | null>(
+    userRating
+  );
 
   // Clicking on an unactive arrow
-  function handleClickOnUnactive(e: any, arrowValue: number) {
+  function handleClickOnUnactive(arrowValue: number) {
     const clientSideNewValue = originalValue + arrowValue;
     handleArrowClick(clientSideNewValue, arrowValue);
-    setCurrentlyActive(e.target.id);
+    setCurrentlyActive(arrowValue);
   }
 
   // Clicking on an active arrow
-  function handleClickOnActive(e: any) {
+  function handleClickOnActive() {
     handleArrowClick(originalValue, 0);
-    e.target.id === currentlyActive && setCurrentlyActive('');
+    setCurrentlyActive(null);
   }
 
   const tripleArrow = {
     up: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = 3;
           if (!isUpdating) {
-            currentlyActive === 'tripleArrowUp'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="tripleArrowUp"
-        src={
-          currentlyActive === 'tripleArrowUp'
-            ? tripleArrowActiveImage
-            : tripleArrowImage
-        }
+        src={currentlyActive === 3 ? tripleArrowActiveImage : tripleArrowImage}
         height={26}
         width={26}
         alt="tripleArrowUp"
@@ -58,20 +51,15 @@ export default function Ranking({
     ),
     down: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = -3;
           if (!isUpdating) {
-            currentlyActive === 'tripleArrowDown'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="tripleArrowDown"
-        src={
-          currentlyActive === 'tripleArrowDown'
-            ? tripleArrowActiveImage
-            : tripleArrowImage
-        }
+        src={currentlyActive === -3 ? tripleArrowActiveImage : tripleArrowImage}
         height={26}
         width={26}
         alt="tripleArrowDown"
@@ -83,20 +71,15 @@ export default function Ranking({
   const doubleArrow = {
     up: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = 2;
           if (!isUpdating) {
-            currentlyActive === 'doubleArrowUp'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="doubleArrowUp"
-        src={
-          currentlyActive === 'doubleArrowUp'
-            ? doubleArrowActiveImage
-            : doubleArrowImage
-        }
+        src={currentlyActive === 2 ? doubleArrowActiveImage : doubleArrowImage}
         height={26}
         width={26}
         alt="doubleArrowUp"
@@ -105,20 +88,15 @@ export default function Ranking({
     ),
     down: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = -2;
           if (!isUpdating) {
-            currentlyActive === 'doubleArrowDown'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="doubleArrowDown"
-        src={
-          currentlyActive === 'doubleArrowDown'
-            ? doubleArrowActiveImage
-            : doubleArrowImage
-        }
+        src={currentlyActive === -2 ? doubleArrowActiveImage : doubleArrowImage}
         height={26}
         width={26}
         alt="doubleArrowDown"
@@ -130,16 +108,15 @@ export default function Ranking({
   const arrow = {
     up: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = 1;
           if (!isUpdating) {
-            currentlyActive === 'arrowUp'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="arrowUp"
-        src={currentlyActive === 'arrowUp' ? arrowActiveImage : arrowImage}
+        src={currentlyActive === 1 ? arrowActiveImage : arrowImage}
         height={26}
         width={26}
         alt="arrowUp"
@@ -148,16 +125,15 @@ export default function Ranking({
     ),
     down: (
       <Image
-        onClick={(e: any) => {
+        onClick={() => {
           const arrowValue = -1;
           if (!isUpdating) {
-            currentlyActive === 'arrowDown'
-              ? handleClickOnActive(e)
-              : handleClickOnUnactive(e, arrowValue);
+            currentlyActive === arrowValue
+              ? handleClickOnActive()
+              : handleClickOnUnactive(arrowValue);
           }
         }}
-        id="arrowDown"
-        src={currentlyActive === 'arrowDown' ? arrowActiveImage : arrowImage}
+        src={currentlyActive === -1 ? arrowActiveImage : arrowImage}
         height={26}
         width={26}
         alt="arrowDown"

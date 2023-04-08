@@ -134,7 +134,7 @@ export default function AddContent() {
           )}
           {finalObject.category === categories[1].id && (
             <TextField
-              onChange={(e) => setQuote(e.target.value)}
+              onChange={(e) => setQuote(`"${e.target.value}"`)}
               label="Citation"
               variant="outlined"
               required
@@ -193,7 +193,7 @@ export default function AddContent() {
 
   return (
     <DefaultLayout>
-      <div className="h-full flex flex-col">
+      <div className="p-10 rounded h-full flex flex-col bg-zinc-100">
         <StepperAddContent step={step} />
         <div className="px-20 mt-20 h-full">
           <FormControl

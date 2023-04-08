@@ -8,7 +8,7 @@ import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
 
 export default function QuoteCard({ quoteData }: quoteType) {
-  const { id, quote, author, ranking, isBookmarked } = quoteData;
+  const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
   const [currentRanking, setCurrentRanking] = useState<number | null>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
@@ -65,6 +65,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
         handleArrowClick={handleArrowClick}
         originalValue={ranking}
         isUpdating={isUpdating}
+        userRating={userRating}
       />
     </div>
   );

@@ -11,7 +11,8 @@ import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
 
 export default function BookCard({ bookCoverUrl, bookData }: bookType) {
-  const { id, title, subtitle, author, ranking, isBookmarked } = bookData;
+  const { id, title, subtitle, author, ranking, isBookmarked, userRating } =
+    bookData;
   const [currentRanking, setCurrentRanking] = useState<number | null>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
@@ -81,6 +82,7 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
         handleArrowClick={handleArrowClick}
         originalValue={ranking}
         isUpdating={isUpdating}
+        userRating={userRating}
       />
     </div>
   );

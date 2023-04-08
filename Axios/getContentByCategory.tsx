@@ -1,5 +1,4 @@
 import { axios } from './AxiosSetup';
-import FilterContentResponse from './FilterContentResponse';
 
 export default function getContentByCategory(
   categoryName: string,

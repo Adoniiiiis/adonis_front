@@ -5,5 +5,6 @@ export type videoType = {
     author: string;
     ranking: number;
     isBookmarked: boolean;
+    userRating: number | null;
   };
 };
