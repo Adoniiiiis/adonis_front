@@ -1,30 +1,8 @@
 import { Button } from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/navigation';
-
-const CATEGORIES: { displayName: string; id: string }[] = [
-  {
-    displayName: 'Populaires',
-    id: 'popular',
-  },
-  {
-    displayName: 'Nouveaux',
-    id: 'newContent',
-  },
-  {
-    displayName: 'Livres',
-    id: 'books',
-  },
-  {
-    displayName: 'Vidéos',
-    id: 'videos',
-  },
-  {
-    displayName: 'Citations',
-    id: 'quotes',
-  },
-];
+import { languageStrings } from '@/utils/languageStrings';
 
 type changeContentType = {
   changeContentType: (contentType: string) => void;
@@ -34,6 +12,34 @@ export default function HomepageFilterButtons({
   changeContentType,
 }: changeContentType) {
   const { push } = useRouter();
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
+
+  const CATEGORIES: { displayName: string; id: string }[] = [
+    {
+      displayName: langStrings && langStrings.popular,
+      id: 'popular',
+    },
+    {
+      displayName: langStrings && langStrings.new,
+      id: 'newContent',
+    },
+    {
+      displayName: langStrings && langStrings.books,
+      id: 'books',
+    },
+    {
+      displayName: langStrings && langStrings.videos,
+      id: 'videos',
+    },
+    {
+      displayName: langStrings && langStrings.quotes,
+      id: 'quotes',
+    },
+  ];
 
   return (
     <div className="mt-8 mb-16 flex justify-between bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[700px]">
@@ -56,7 +62,7 @@ export default function HomepageFilterButtons({
         variant="contained"
         endIcon={<AddIcon />}
       >
-        Ajouter
+        {langStrings && langStrings.add}
       </Button>
     </div>
   );

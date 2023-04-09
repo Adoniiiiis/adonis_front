@@ -1,6 +1,6 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
 import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
+import { languageStrings } from '@/utils/languageStrings';
 
 export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   const { id, title, subtitle, author, ranking, isBookmarked, userRating } =
@@ -22,6 +23,11 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   const user: userType = getUser();
   const dispatch = useDispatch();
   const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -68,11 +74,15 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
           <p className="mt-1 text-gray-500 text-[0.8em]">{author}</p>
           <div className="flex md:w-full md:h-full md:justify-end md:items-end md:mt-[30px] md:pr-[20px] mt-1">
             <div className="flex">
-              <p className="text-gray-500 text-[0.8em]">Année:</p>
+              <p className="text-gray-500 text-[0.8em]">
+                {langStrings && langStrings.year}:
+              </p>
               <p className="text-[0.8em] ml-[5px]">2020</p>
             </div>
             <div className="flex ml-2">
-              <p className="text-gray-500 text-[0.8em]">Langue:</p>
+              <p className="text-gray-500 text-[0.8em]">
+                {langStrings && langStrings.language}:
+              </p>
               <p className="text-[0.8em] ml-[5px]">FR</p>
             </div>
           </div>

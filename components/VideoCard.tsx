@@ -1,11 +1,12 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { videoType } from '@/Types/VideoType';
+import { languageStrings } from '@/utils/languageStrings';
 
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
@@ -16,6 +17,11 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -54,11 +60,15 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
         </div>
         <div className="flex-col mt-[13px] ml-[15px] md:-mt-[160px] md:ml-[300px]">
           <div className="flex -mt-[7px]">
-            <p className="text-gray-500 text-[0.8em]">Youtuber:</p>
+            <p className="text-gray-500 text-[0.8em]">
+              {langStrings && langStrings.youtuber}:
+            </p>
             <p className="text-[0.8em] ml-[5px]">{author}</p>
           </div>
           <div className="flex mt-[2px]">
-            <p className="text-gray-500 text-[0.8em]">Genre:</p>
+            <p className="text-gray-500 text-[0.8em]">
+              {langStrings && langStrings.category}:
+            </p>
             <p className="text-[0.8em] ml-[5px]">Développement personnel</p>
           </div>
         </div>
