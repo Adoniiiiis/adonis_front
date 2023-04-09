@@ -39,6 +39,7 @@ export const languageStrings = new LocalizedStrings({
     toastRegister: 'Your account has been created successfully!',
     toastContentAdded: 'Your content has been added successfully!',
     toastLogout: 'You are logged out',
+    myProfile: 'My profile',
   },
   fr: {
     title: 'Titre',
@@ -78,5 +79,6 @@ export const languageStrings = new LocalizedStrings({
     toastRegister: 'Votre compte a été créé avec succès!',
     toastContentAdded: 'Votre contenu a bien été ajouté !',
     toastLogout: 'Vous êtes déconnecté',
+    myProfile: 'Mon profil',
   },
 });

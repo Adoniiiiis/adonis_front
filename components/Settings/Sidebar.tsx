@@ -10,17 +10,17 @@ export default function Sidebar() {
     {
       name: 'Profil',
       routeName: '/settings',
-      icon: <BsPersonCircle size={20} />,
+      icon: <BsPersonCircle size={18} />,
     },
     {
-      name: 'New password',
+      name: 'Mot de passe',
       routeName: '/settings/new-password',
-      icon: <BsShieldLock size={20} />,
+      icon: <BsShieldLock size={18} />,
     },
     {
       name: 'Appearance',
       routeName: '/settings/appearance',
-      icon: <BsBrush size={18} />,
+      icon: <BsBrush size={16} />,
     },
   ];
 
@@ -39,7 +39,7 @@ export default function Sidebar() {
             pathname === el.routeName && 'bg-gray-100 rounded-r-md'
           }`}
         >
-          <div className="mt-[3px]">{el.icon}</div>
+          <div className="mt-[4px]">{el.icon}</div>
           <div className="ml-2">{el.name}</div>
         </div>
       </div>

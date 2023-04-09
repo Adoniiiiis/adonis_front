@@ -13,7 +13,7 @@ const SettingsLayout: FC<TypeProps> = ({ children }) => {
       <div className="flex justify-center w-screen h-screen bg-gray-300">
         <div className="flex w-[95%] h-[92%] mt-6 bg-white">
           <Sidebar />
-          <div className="mt-4">{children}</div>
+          <div className="mt-7">{children}</div>
         </div>
       </div>
     </div>

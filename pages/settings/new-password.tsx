@@ -49,7 +49,7 @@ export default function NewPassword() {
       type="submit"
       className="cursor-pointer w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
     >
-      Changer mon mot de passe
+      Modifier
     </button>
   ) : (
     <button
@@ -57,7 +57,7 @@ export default function NewPassword() {
       className="cursor-not-allowed disabled:opacity-50 w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       disabled
     >
-      Changer mon mot de passe
+      Modifier
     </button>
   );
 
@@ -65,7 +65,7 @@ export default function NewPassword() {
     <SettingsLayout>
       <section>
         <div className="flex flex-col">
-          <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-4 mt-4">
+          <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-4">
             Changer mon mot de passe
           </h1>
           <form
@@ -105,7 +105,6 @@ export default function NewPassword() {
                 placeholder="******"
               />
             </div>
-
             {submitBtn}
           </form>
         </div>
