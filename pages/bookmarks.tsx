@@ -62,7 +62,7 @@ export default function Bookmarks() {
       </Head>
       <main>
         <DefaultLayout>
-          <div className="flex justify-center">
+          <div className="flex justify-center m-10 p-10 ">
             <div className="flex-col">
               {bookmarkContent && bookmarkContent.length > 0 && (
                 <h1 className="mb-8 mt-10 text-[1.1em]">Mes favoris</h1>

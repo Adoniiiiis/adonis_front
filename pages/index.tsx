@@ -116,7 +116,7 @@ export default function Home() {
       </Head>
       <main>
         <DefaultLayout>
-          <div className="flex justify-center">
+          <div className="flex justify-center m-10 p-10">
             <div className="flex-col">
               <HomepageFilterButtons changeContentType={changeContentType} />
               <div className="-mt-7 flex justify-center">

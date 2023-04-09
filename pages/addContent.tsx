@@ -88,7 +88,7 @@ export default function AddContent() {
       try {
         const res = await CreateContent(user.id, finalObject);
         console.log(res);
-        toast.success('Votre contenu a bien été ajouté !');
+        toast.success(langStrings && langStrings.toastContentAdded);
         router.push('/');
       } catch (err) {
         console.log(err);
