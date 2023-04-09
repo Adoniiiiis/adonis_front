@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 
 const Navbar: FC = () => {
   const router = useRouter();
-  const [desktopNavbarFull, setDesktopNavbarFull] = useState(false);
+  const [desktopNavbarFull, setDesktopNavbarFull] = useState<boolean>(false);
   const [langStrings, setLangStrings] = useState<any>(null);
 
   useEffect(() => {
