@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import colors from 'tailwindcss/colors';
+import { languageStrings } from '@/utils/languageStrings';
 import {
   BsHouseDoor,
   BsHouseDoorFill,
@@ -12,68 +13,73 @@ import {
 } from 'react-icons/bs';
 import { useRouter } from 'next/router';
 
-const listPages = [
-  {
-    name: 'Paramètres',
-    routeName: '/parameters',
-    icon: {
-      default: <BsGear color="white" size={32} />,
-      active: (
-        <BsGearFill
-          className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
-          color={colors.cyan[400]}
-          size={32}
-        />
-      ),
-    },
-  },
-  {
-    name: 'Accueil',
-    routeName: '/',
-    icon: {
-      default: <BsHouseDoor color="white" size={32} />,
-      active: (
-        <BsHouseDoorFill
-          className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
-          color={colors.cyan[400]}
-          size={32}
-        />
-      ),
-    },
-  },
-  {
-    name: 'Favoris',
-    routeName: '/bookmarks',
-    icon: {
-      default: <BsBookmark color="white" size={32} />,
-      active: (
-        <BsBookmarkFill
-          className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
-          color={colors.cyan[400]}
-          size={32}
-        />
-      ),
-    },
-  },
-  {
-    name: 'Profil',
-    routeName: '/profile',
-    icon: {
-      default: <BsPerson color="white" size={32} />,
-      active: (
-        <BsFillPersonFill
-          className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
-          color={colors.cyan[400]}
-          size={32}
-        />
-      ),
-    },
-  },
-];
-
 const Navbar: FC = () => {
   const router = useRouter();
   const [desktopNavbarFull, setDesktopNavbarFull] = useState(true);
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
+
+  const listPages = [
+    {
+      name: langStrings && langStrings.settings,
+      routeName: '/settings',
+      icon: {
+        default: <BsGear color="white" size={32} />,
+        active: (
+          <BsGearFill
+            className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
+            color={colors.cyan[400]}
+            size={32}
+          />
+        ),
+      },
+    },
+    {
+      name: langStrings && langStrings.homepage,
+      routeName: '/',
+      icon: {
+        default: <BsHouseDoor color="white" size={32} />,
+        active: (
+          <BsHouseDoorFill
+            className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
+            color={colors.cyan[400]}
+            size={32}
+          />
+        ),
+      },
+    },
+    {
+      name: langStrings && langStrings.bookmarks,
+      routeName: '/bookmarks',
+      icon: {
+        default: <BsBookmark color="white" size={32} />,
+        active: (
+          <BsBookmarkFill
+            className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
+            color={colors.cyan[400]}
+            size={32}
+          />
+        ),
+      },
+    },
+    {
+      name: langStrings && langStrings.profile,
+      routeName: '/profile',
+      icon: {
+        default: <BsPerson color="white" size={32} />,
+        active: (
+          <BsFillPersonFill
+            className="drop-shadow-[0_0px_12px_rgba(34,211,238,.5)]"
+            color={colors.cyan[400]}
+            size={32}
+          />
+        ),
+      },
+    },
+  ];
 
   return (
     <>
@@ -129,7 +135,7 @@ const Navbar: FC = () => {
                     desktopNavbarFull || 'opacity-0'
                   }`}
                 >
-                  {el.name.toUpperCase()}
+                  {langStrings && el.name.toUpperCase()}
                 </div>
               </div>
             ) : (
@@ -143,7 +149,7 @@ const Navbar: FC = () => {
                     desktopNavbarFull || 'opacity-0'
                   }`}
                 >
-                  {el.name.toUpperCase()}
+                  {langStrings && el.name.toUpperCase()}
                 </div>
               </div>
             )}

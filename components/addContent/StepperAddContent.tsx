@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
@@ -12,7 +12,7 @@ import StepConnector, {
   stepConnectorClasses,
 } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
-import { useState } from 'react';
+import { languageStrings } from '@/utils/languageStrings';
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -143,13 +143,19 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = [
-  'Choix de la catégorie',
-  'Remplir les informations',
-  'Valider la création',
-];
-
 export default function StepperAddContent(props: { step: number }) {
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
+
+  const steps = [
+    langStrings && langStrings.addContentStepperStep1,
+    langStrings && langStrings.addContentStepperStep2,
+    langStrings && langStrings.addContentStepperStep3,
+  ];
+
   const { step } = props;
   return (
     <Stack sx={{ width: '100%' }} spacing={4}>

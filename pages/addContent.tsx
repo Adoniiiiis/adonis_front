@@ -1,32 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import StepperAddContent from '@/components/addContent/StepperAddContent';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Button, Divider, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import CreateContent from '@/Axios/CreateContent';
 import useAuth from '@/context/AuthContext';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-
-const categories = [
-  {
-    displayName: 'Vidéos',
-    id: 'video',
-  },
-  {
-    displayName: 'Citations',
-    id: 'quote',
-  },
-  {
-    displayName: 'Livres',
-    id: 'book',
-  },
-];
+import { languageStrings } from '@/utils/languageStrings';
 
 interface FinalObject {
   category: string | null;
@@ -63,6 +48,26 @@ export default function AddContent() {
     tagTime: null,
     tagPage: null,
   });
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
+
+  const categories = [
+    {
+      displayName: langStrings && langStrings.videos,
+      id: 'video',
+    },
+    {
+      displayName: langStrings && langStrings.quotes,
+      id: 'quote',
+    },
+    {
+      displayName: langStrings && langStrings.books,
+      id: 'book',
+    },
+  ];
 
   const validate = async () => {
     if (step === 0) {
@@ -105,11 +110,13 @@ export default function AddContent() {
     if (step === 0) {
       return (
         <div id="step-0" className="grid grid-cols-2">
-          <InputLabel id="demo-simple-select-label">Categorie</InputLabel>
+          <InputLabel id="demo-simple-select-label">
+            {langStrings && langStrings.contentType}
+          </InputLabel>
           <Select
             className="col-span-2"
             value={category}
-            label="Categorie"
+            label={langStrings && langStrings.contentType}
             onChange={handleChange}
           >
             {categories.map((el) => (
@@ -126,7 +133,7 @@ export default function AddContent() {
           {finalObject.category !== categories[1].id && (
             <TextField
               onChange={(e) => setTitle(e.target.value)}
-              label="Titre"
+              label={langStrings && langStrings.title}
               variant="outlined"
               required
               disabled={step === 2}
@@ -135,7 +142,7 @@ export default function AddContent() {
           {finalObject.category === categories[1].id && (
             <TextField
               onChange={(e) => setQuote(`"${e.target.value}"`)}
-              label="Citation"
+              label={langStrings && langStrings.quote}
               variant="outlined"
               required
               disabled={step === 2}
@@ -143,7 +150,7 @@ export default function AddContent() {
           )}
           <TextField
             onChange={(e) => setAuthor(e.target.value)}
-            label="Auteur"
+            label={langStrings && langStrings.author}
             variant="outlined"
             required
             disabled={step === 2}
@@ -159,7 +166,7 @@ export default function AddContent() {
               />
               <TextField
                 onChange={(e) => setTagTime(e.target.value)}
-                label="Moment de la vidéo (timecode)"
+                label={langStrings && langStrings.timecode}
                 className={`${
                   step === 2 && !finalObject.tagTime && 'opacity-50'
                 }`}
@@ -174,14 +181,14 @@ export default function AddContent() {
               className={`${
                 step === 2 && !finalObject.tagPage && 'opacity-50'
               }`}
-              label="Page importante"
+              label={langStrings && langStrings.importantPage}
               variant="outlined"
               disabled={step === 2}
             />
           )}
           <TextField
             onChange={(e) => setSubtitle(e.target.value)}
-            label="Sous-titre"
+            label={langStrings && langStrings.subtitle}
             variant="outlined"
             className={`${step === 2 && !finalObject.subtitle && 'opacity-50'}`}
             disabled={step === 2}
@@ -232,7 +239,7 @@ export default function AddContent() {
                   variant="contained"
                   loading={loading}
                 >
-                  Valider
+                  {langStrings && langStrings.validate}
                 </LoadingButton>
               </div>
             </div>

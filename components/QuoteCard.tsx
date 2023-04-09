@@ -1,11 +1,12 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
+import { languageStrings } from '@/utils/languageStrings';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
@@ -16,6 +17,11 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -53,11 +59,15 @@ export default function QuoteCard({ quoteData }: quoteType) {
           {quote}
         </h1>
         <div className="flex justify-center items-center mb-2">
-          <p className="text-gray-500 text-[0.8em]">Auteur:</p>
+          <p className="text-gray-500 text-[0.8em]">
+            {langStrings && langStrings.author}:
+          </p>
           <p className="text-[0.8em] ml-[5px]">{author}</p>
         </div>
         <div className="flex justify-center">
-          <p className="text-gray-500 text-[0.8em]">Livre:</p>
+          <p className="text-gray-500 text-[0.8em]">
+            {langStrings && langStrings.book}:
+          </p>
           <p className="text-[0.8em] ml-[5px]">Pas de livre omg</p>
         </div>
       </div>
