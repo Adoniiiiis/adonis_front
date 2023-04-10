@@ -1,11 +1,9 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { BsPersonCircle, BsBrush, BsShieldLock } from 'react-icons/bs';
-import { useTheme } from '@mui/material/styles';
 
 export default function Sidebar() {
   const { push, pathname } = useRouter();
-  const theme = useTheme();
   const settingsSubPages = [
     {
       name: 'Profil',

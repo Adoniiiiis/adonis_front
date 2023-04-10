@@ -2,18 +2,55 @@ import React, { useEffect, useState } from 'react';
 import { languageStrings } from '@/utils/languageStrings';
 import Head from 'next/head';
 import useAuth from '@/context/AuthContext';
+import ChangeProfileContentAxios from '@/Axios/ChangeProfileContentAxios';
+import { profileDataType } from '@/Types/ProfileDataType';
+import { toast } from 'react-toastify';
 
 export default function ProfileContent() {
   const [langStrings, setLangStrings] = useState<any>(null);
   const { getUser } = useAuth();
   const user = getUser();
+  const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(true);
+  const [profileData, setProfileData] = useState<profileDataType>({
+    id: user && user.id,
+    name: user && user.name,
+    email: user && user.email,
+    username: user && user.username,
+  });
+
+  function checkIfDataChanged() {
+    const didItChange =
+      profileData.name != user.name ||
+      profileData.email != user.email ||
+      profileData.username != user.username
+        ? true
+        : false;
+    return didItChange;
+  }
 
   useEffect(() => {
     setLangStrings(languageStrings);
   }, [languageStrings]);
 
-  const handleInputChange = (e: any) => {};
-  const handleSubmit = (e: any) => {};
+  useEffect(() => {
+    profileData.email != '' && checkIfDataChanged()
+      ? setIsBtnDisabled(false)
+      : setIsBtnDisabled(true);
+  }, [profileData]);
+
+  const handleInputChange = (e: any) => {
+    setProfileData({ ...profileData, [e.target.id]: e.target.value });
+  };
+
+  console.log(profileData);
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    ChangeProfileContentAxios(profileData);
+    localStorage.setItem('user', JSON.stringify(profileData));
+    toast.success('Vos informations ont bien été changées');
+    setIsBtnDisabled(true);
+  };
 
   return (
     <>
@@ -45,11 +82,10 @@ export default function ProfileContent() {
                 type="text"
                 name="name"
                 id="name"
-                value={user && user.name}
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={profileData.name || ''}
+                className="w-[300px] bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-            <div></div>
             <div>
               <label
                 htmlFor="email"
@@ -62,8 +98,8 @@ export default function ProfileContent() {
                 type="email"
                 name="email"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={user && user.email}
+                className="w-[300px] bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={profileData.email || ''}
               />
             </div>
             <div>
@@ -78,13 +114,18 @@ export default function ProfileContent() {
                 type="text"
                 name="username"
                 id="username"
-                value={user && user.username}
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={profileData.username || ''}
+                className="-mb-1 w-[300px] bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
             <button
+              disabled={isBtnDisabled}
               type="submit"
-              className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              className={`${
+                isBtnDisabled
+                  ? 'bg-primary-600 bg-opacity-50 cursor-not-allowed'
+                  : 'bg-primary-600 hover:bg-primary-700 cursor-pointer dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+              } w-[300px] text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
             >
               Enregistrer
             </button>
