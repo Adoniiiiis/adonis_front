@@ -34,7 +34,8 @@ export default function Sidebar() {
             pathname != el.routeName && push(el.routeName);
           }}
           className={`flex w-full mr-8 p-2 pr-8 pl-[14px] cursor-pointer ${
-            pathname === el.routeName && 'bg-gray-100 rounded-r-md'
+            pathname === el.routeName &&
+            'bg-gray-100 dark:bg-gray-900 rounded-r-md'
           }`}
         >
           <div className="mt-[4px]">{el.icon}</div>

@@ -16,6 +16,15 @@ export default function register() {
   const [data, setData] = useState(initialData);
   const [isTermsChecked, setIsTermsChecked] = useState<boolean>(false);
 
+  // Activating darkmode if already chosen before
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.getItem('theme') &&
+        localStorage.getItem('theme') === 'dark' &&
+        document.getElementsByTagName('html')[0].classList.add('dark');
+    }
+  }, []);
+
   useEffect(() => {
     setData({ ...data, terms: isTermsChecked });
   }, [isTermsChecked]);

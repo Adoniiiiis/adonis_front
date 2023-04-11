@@ -19,7 +19,9 @@ export default function Bookmarks() {
   );
 
   const noBookmarks = (
-    <p className="mt-8">Vous n'avez aucun favoris pour le moment.</p>
+    <p className="mt-4 dark:text-white">
+      Vous n'avez aucun favoris pour le moment.
+    </p>
   );
 
   // Getting All Bookmarks from Database or Redux
@@ -48,7 +50,7 @@ export default function Bookmarks() {
         setBookmarkDisplay(noBookmarks);
       }
     } else {
-      setBookmarkDisplay('Chargement...');
+      setBookmarkDisplay(<p className="mt-4 dark:text-white">Chargement...</p>);
     }
   }, [bookmarkContent]);
 
@@ -62,10 +64,12 @@ export default function Bookmarks() {
       </Head>
       <main>
         <DefaultLayout>
-          <div className="flex justify-center m-10 p-10 ">
+          <div className="flex justify-center m-10 p-10">
             <div className="flex-col">
               {bookmarkContent && bookmarkContent.length > 0 && (
-                <h1 className="mb-8 mt-10 text-[1.1em]">Mes favoris</h1>
+                <h1 className="mb-8 mt-10 text-[1.1em] dark:text-white">
+                  Mes favoris
+                </h1>
               )}
               {bookmarkDisplay}
             </div>

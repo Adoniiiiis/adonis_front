@@ -29,15 +29,6 @@ export default function Home() {
     }
   }, []);
 
-  // Activating darkmode if already chosen before
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.getItem('theme') &&
-        localStorage.getItem('theme') === 'dark' &&
-        document.getElementsByTagName('html')[0].classList.add('dark');
-    }
-  }, []);
-
   const getPopularContent = async () => {
     if (popularContent) {
       setContentDisplayed(popularContent);

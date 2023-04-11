@@ -27,7 +27,7 @@ export default function Profile() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-gray-300 h-[100vh]">
+      <main className="[100vh]">
         <DefaultLayout>
           <div className="flex justify-center 2xl:mr-[50px]">
             <div className="h-full bg-gray-300 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
