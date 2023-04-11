@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
+import useDark from '@/hooks/useDark';
 
 export default function register() {
   const initialData = {
@@ -17,13 +18,7 @@ export default function register() {
   const [isTermsChecked, setIsTermsChecked] = useState<boolean>(false);
 
   // Activating darkmode if already chosen before
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.getItem('theme') &&
-        localStorage.getItem('theme') === 'dark' &&
-        document.getElementsByTagName('html')[0].classList.add('dark');
-    }
-  }, []);
+  useDark();
 
   useEffect(() => {
     setData({ ...data, terms: isTermsChecked });

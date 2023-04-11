@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
+import useDark from '@/hooks/useDark';
 
 export default function login() {
   const [email, setEmail] = useState<string>('');
@@ -8,13 +9,7 @@ export default function login() {
   const { login, errors } = useAuth();
 
   // Activating darkmode if already chosen before
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.getItem('theme') &&
-        localStorage.getItem('theme') === 'dark' &&
-        document.getElementsByTagName('html')[0].classList.add('dark');
-    }
-  }, []);
+  useDark();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

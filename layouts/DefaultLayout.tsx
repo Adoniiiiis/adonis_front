@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
-import React, { FC, useEffect } from 'react';
+import useDark from '@/hooks/useDark';
+import React, { FC } from 'react';
 
 type TypeProps = {
   children: JSX.Element;
@@ -7,13 +8,7 @@ type TypeProps = {
 
 const DefaultLayout: FC<TypeProps> = ({ children }) => {
   // Activating darkmode if already chosen before
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.getItem('theme') &&
-        localStorage.getItem('theme') === 'dark' &&
-        document.getElementsByTagName('html')[0].classList.add('dark');
-    }
-  }, []);
+  useDark();
 
   return (
     <div className="flex flex-row min-h-screen bg-zinc-300 dark:bg-gray-900">
