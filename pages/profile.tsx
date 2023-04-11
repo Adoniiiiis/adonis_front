@@ -4,16 +4,12 @@ import ProfileMenu from '@/components/ProfileMenu';
 import useAuth from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { userType } from '@/Types/UserType';
-import { languageStrings } from '@/utils/languageStrings';
+import useLang from '@/hooks/useLang';
 
 export default function Profile() {
   const { getUser }: any = useAuth();
   const [userData, setUserData] = useState<userType | null>(null);
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   useEffect(() => {
     setUserData(getUser());
@@ -27,10 +23,10 @@ export default function Profile() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-gray-300 h-[100vh]">
+      <main className="[100vh]">
         <DefaultLayout>
-          <div className="flex justify-center 2xl:mr-[50px]">
-            <div className="h-full bg-gray-300 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
+          <div className="flex justify-center 2xl:mr-[50px] mt-8">
+            <div className="h-full bg-gray-300 dark:bg-gray-800 dark:border dark:border-gray-700 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
               <div className="bg-white rounded-lg shadow-xl pb-8">
                 <div className="w-full h-[250px]">
                   <img

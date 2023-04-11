@@ -6,7 +6,7 @@ import BookmarkHeart from './BookmarkHeart';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { videoType } from '@/Types/VideoType';
-import { languageStrings } from '@/utils/languageStrings';
+import useLang from '@/hooks/useLang';
 
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
@@ -17,11 +17,7 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (

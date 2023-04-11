@@ -29,7 +29,8 @@ export default function resetPassword() {
     if (
       password !== '' &&
       password_confirmation !== '' &&
-      password === password_confirmation
+      password === password_confirmation &&
+      password.length >= 3
     ) {
       setIsBtnDisplayed(true);
     } else {
@@ -40,17 +41,17 @@ export default function resetPassword() {
   const submitBtn = isBtnDisplayed ? (
     <button
       type="submit"
-      className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      className="cursor-pointer w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
     >
-      Changer mon mot de passe
+      Modifier
     </button>
   ) : (
     <button
       type="button"
-      className="disabled:opacity-50 w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      className="cursor-not-allowed disabled:opacity-50 w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       disabled
     >
-      Changer mon mot de passe
+      Modifier
     </button>
   );
 
@@ -79,7 +80,7 @@ export default function resetPassword() {
                   name="password"
                   id="password"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="yesmangaming@outlook.fr"
+                  placeholder="******"
                 />
               </div>
 
@@ -96,7 +97,7 @@ export default function resetPassword() {
                   name="confirm_password"
                   id="confirm_password"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="yesmangaming@outlook.fr"
+                  placeholder="******"
                 />
               </div>
 

@@ -12,20 +12,18 @@ import {
   BsGearFill,
 } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import useLang from '@/hooks/useLang';
 
 const Navbar: FC = () => {
   const router = useRouter();
-  const [desktopNavbarFull, setDesktopNavbarFull] = useState(true);
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const [desktopNavbarFull, setDesktopNavbarFull] = useState<boolean>(false);
+  const langStrings = useLang();
 
   const listPages = [
     {
       name: langStrings && langStrings.settings,
       routeName: '/settings',
+      routeSubNames: ['/settings/new-password', '/settings/appearance'],
       icon: {
         default: <BsGear color="white" size={32} />,
         active: (
@@ -87,7 +85,8 @@ const Navbar: FC = () => {
       <div className="lg:hidden flex flex-row bg-zinc-800 rounded-full fixed bottom-8 justify-around w-80 h-14 left-1/2 -translate-x-1/2 overflow-hidden">
         {listPages.map((el, i) => (
           <>
-            {el.routeName === router.pathname ? (
+            {router.pathname === el.routeName ||
+            (el.routeSubNames && el.routeSubNames.includes(router.pathname)) ? (
               <>
                 <div
                   className={`h-1.5 w-1.5 absolute rounded-full bottom-1 transition-all ease-in-out bg-cyan-400 ${
@@ -124,7 +123,8 @@ const Navbar: FC = () => {
       >
         {listPages.map((el, i) => (
           <>
-            {el.routeName === router.pathname ? (
+            {router.pathname === el.routeName ||
+            (el.routeSubNames && el.routeSubNames.includes(router.pathname)) ? (
               <div className="flex flex-row cursor-pointer pl-6 relative">
                 <div
                   className={`h-full py-[25px] bottom-[-6px] w-1 hidden lg:block absolute rounded-[5px] left-0 transition-all duration-300 bg-cyan-400`}

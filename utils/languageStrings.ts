@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization';
 
 export const languageStrings = new LocalizedStrings({
-  fr: {
+  en: {
     title: 'Title',
     subtitle: 'Subtitle',
     author: 'Author',
@@ -34,8 +34,14 @@ export const languageStrings = new LocalizedStrings({
     username: 'Username',
     email: 'Email address',
     profileAddedContent: 'Added content',
+    toastPasswordChange: 'Your password has been modified successfully!',
+    toastLogin: 'Welcome back',
+    toastRegister: 'Your account has been created successfully!',
+    toastContentAdded: 'Your content has been added successfully!',
+    toastLogout: 'You are logged out',
+    myProfile: 'My profile',
   },
-  en: {
+  fr: {
     title: 'Titre',
     subtitle: 'Sous-titre',
     author: 'Auteur',
@@ -68,5 +74,11 @@ export const languageStrings = new LocalizedStrings({
     username: "Nom d'utilisateur",
     email: 'Addresse email',
     profileAddedContent: 'Contenu ajouté',
+    toastPasswordChange: 'Votre mot de passe a été modifié avec succès!',
+    toastLogin: 'Bienvenue',
+    toastRegister: 'Votre compte a été créé avec succès!',
+    toastContentAdded: 'Votre contenu a bien été ajouté !',
+    toastLogout: 'Vous êtes déconnecté',
+    myProfile: 'Mon profil',
   },
 });

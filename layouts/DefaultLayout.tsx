@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import { Container } from '@mui/material';
+import useDark from '@/hooks/useDark';
 import React, { FC } from 'react';
 
 type TypeProps = {
@@ -7,10 +7,13 @@ type TypeProps = {
 };
 
 const DefaultLayout: FC<TypeProps> = ({ children }) => {
+  // Activating darkmode if already chosen before
+  useDark();
+
   return (
-    <div className="flex flex-row min-h-screen bg-gray-300">
+    <div className="flex flex-row min-h-screen bg-zinc-300 dark:bg-gray-900">
       <Navbar />
-      <div className="m-10 p-10 rounded w-full bg-zinc-300">{children}</div>
+      <div className="w-full bg-zinc-300 dark:bg-gray-900">{children}</div>
     </div>
   );
 };

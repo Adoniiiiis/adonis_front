@@ -50,7 +50,7 @@ export default function HomepageFilterButtons({
             onClick={() => {
               changeContentType(el.id);
             }}
-            className="mr-4 p-2 hover:bg-gray-400 hover:rounded-full"
+            className="mr-4 p-2 hover:bg-gray-200 hover:rounded-full"
           >
             {el.displayName}
           </button>
@@ -58,7 +58,7 @@ export default function HomepageFilterButtons({
       </div>
       <Button
         onClick={() => push('/addContent')}
-        className="bg-cyan-500 hover:bg-cyan-600 font-semibold text-white"
+        className="bg-blue-600 hover:bg-blue-700 font-semibold text-white"
         variant="contained"
         endIcon={<AddIcon />}
       >

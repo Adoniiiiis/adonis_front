@@ -10,6 +10,7 @@ import { registerResponseType } from '@/Types/RegisterResponseType';
 import { userType } from '@/Types/UserType';
 import { useDispatch } from 'react-redux';
 import { ADD_USER } from '@/Redux/Reducers/UserSlice';
+import { languageStrings } from '@/utils/languageStrings';
 
 type AuthContextType = {
   getToken: () => string;
@@ -27,6 +28,11 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<object | null>(null);
   const [errors, setErrors] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const [langStrings, setLangStrings] = useState<any>(null);
+
+  useEffect(() => {
+    setLangStrings(languageStrings);
+  }, [languageStrings]);
 
   useEffect(() => {
     function authRedirect() {
@@ -72,9 +78,9 @@ export const AuthProvider = ({ children }: any) => {
   const login = (email: string, password: string) => {
     LoginAxios(email, password).then((res: loginResponseType) => {
       if (res.status === 'success') {
-        const notify: any = () =>
-          toast.success(`Bienvenue ${res.user.username}!`);
-        notify();
+        toast.success(
+          `${langStrings && langStrings.toastLogin} ${res.user.username}!`
+        );
         dispatch(ADD_USER(res.user));
         saveTokenAndRedirect(res.user, res.access_token);
       } else {
@@ -98,8 +104,7 @@ export const AuthProvider = ({ children }: any) => {
               if (res && res.status === 'error') {
                 setErrors(res.message);
               } else {
-                const notify = () => toast.success('Compte créé avec succès!');
-                notify();
+                toast.success(langStrings && langStrings.toastRegister);
                 dispatch(ADD_USER(res.user));
                 router.push('/login');
               }
@@ -130,8 +135,7 @@ export const AuthProvider = ({ children }: any) => {
     logoutAxios.post('/logout').then(() => {
       localStorage.clear();
       setUser(null);
-      const notify = () => toast.success('Vous êtes déconnecté');
-      notify();
+      toast.success(langStrings && langStrings.toastLogout);
       router.push('/login');
     });
   };

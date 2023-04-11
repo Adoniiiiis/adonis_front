@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
+import useDark from '@/hooks/useDark';
 
 export default function login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { login, errors } = useAuth();
+
+  // Activating darkmode if already chosen before
+  useDark();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
