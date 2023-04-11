@@ -1,27 +1,28 @@
 import ChangePasswordAxios from '@/Axios/ChangePasswordAxios';
-import { reduxUserType } from '@/Types/ReduxUserType';
+import useAuth from '@/context/AuthContext';
 import useLang from '@/hooks/useLang';
 import SettingsLayout from '@/layouts/SettingsLayout';
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 export default function NewPassword() {
   const [password, setPassword] = useState('');
   const [password_confirmation, setConfirmPassword] = useState('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);
-  const userId: number = useSelector((state: reduxUserType) => state.user.id);
+  const { getUser } = useAuth();
+  const user = getUser();
   const langStrings = useLang();
 
-  const handleSubmit = (e: React.FormEvent): void => {
+  const handleSubmit = (e: any): void => {
     e.preventDefault();
     if (
       password !== '' &&
       password_confirmation !== '' &&
       password.length >= 3 &&
-      password === password_confirmation
+      password === password_confirmation &&
+      user
     ) {
-      ChangePasswordAxios(userId, password, password_confirmation).then(() => {
+      ChangePasswordAxios(user.id, password, password_confirmation).then(() => {
         toast.success(langStrings && langStrings.toastPasswordChange);
       });
     }

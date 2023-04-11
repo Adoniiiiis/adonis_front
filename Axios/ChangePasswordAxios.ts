@@ -6,7 +6,7 @@ export default function ChangePasswordAxios(
   password_confirmation: string
 ) {
   try {
-    axios({
+    const request = axios({
       method: 'POST',
       url: 'api/change-password',
       data: {
@@ -15,6 +15,7 @@ export default function ChangePasswordAxios(
         password_confirmation: password_confirmation,
       },
     });
+    return request;
   } catch (err: any) {
     const error = err.message;
     return error;
