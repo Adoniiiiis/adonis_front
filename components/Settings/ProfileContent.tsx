@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { languageStrings } from '@/utils/languageStrings';
 import Head from 'next/head';
 import useAuth from '@/context/AuthContext';
 import ChangeProfileContentAxios from '@/Axios/ChangeProfileContentAxios';
 import { profileDataType } from '@/Types/ProfileDataType';
 import { toast } from 'react-toastify';
+import useLang from '@/hooks/useLang';
 
 export default function ProfileContent() {
-  const [langStrings, setLangStrings] = useState<any>(null);
   const { getUser } = useAuth();
   const user = getUser();
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(true);
@@ -17,6 +16,7 @@ export default function ProfileContent() {
     email: user && user.email,
     username: user && user.username,
   });
+  const langStrings = useLang();
 
   function checkIfDataChanged() {
     const didItChange =
@@ -29,10 +29,6 @@ export default function ProfileContent() {
   }
 
   useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
-
-  useEffect(() => {
     profileData.email != '' && checkIfDataChanged()
       ? setIsBtnDisabled(false)
       : setIsBtnDisabled(true);
@@ -41,8 +37,6 @@ export default function ProfileContent() {
   const handleInputChange = (e: any) => {
     setProfileData({ ...profileData, [e.target.id]: e.target.value });
   };
-
-  console.log(profileData);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();

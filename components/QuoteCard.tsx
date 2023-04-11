@@ -1,12 +1,12 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
-import { languageStrings } from '@/utils/languageStrings';
+import useLang from '@/hooks/useLang';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
@@ -17,11 +17,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (

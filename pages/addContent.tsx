@@ -11,7 +11,7 @@ import useAuth from '@/context/AuthContext';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { languageStrings } from '@/utils/languageStrings';
+import useLang from '@/hooks/useLang';
 
 interface FinalObject {
   category: string | null;
@@ -48,11 +48,7 @@ export default function AddContent() {
     tagTime: null,
     tagPage: null,
   });
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   const categories = [
     {

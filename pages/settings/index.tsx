@@ -1,16 +1,10 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import { languageStrings } from '@/utils/languageStrings';
 import ProfileContent from '@/components/Settings/ProfileContent';
 import SettingsLayout from '@/layouts/SettingsLayout';
+import useLang from '@/hooks/useLang';
 
 export default function Parameters() {
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
-
+  const langStrings = useLang();
   return (
     <>
       <Head>

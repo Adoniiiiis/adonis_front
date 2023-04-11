@@ -1,6 +1,6 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
 import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
-import { languageStrings } from '@/utils/languageStrings';
+import useLang from '@/hooks/useLang';
 
 export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   const { id, title, subtitle, author, ranking, isBookmarked, userRating } =
@@ -23,11 +23,7 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   const user: userType = getUser();
   const dispatch = useDispatch();
   const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -53,7 +49,7 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
   };
 
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
+    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 dark:border-gray-700 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-[15px] rounded-l-md">
         <div className="flex flex-col justify-between items-center">
           {currentRanking}

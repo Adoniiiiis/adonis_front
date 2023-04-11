@@ -12,15 +12,12 @@ import {
   BsGearFill,
 } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import useLang from '@/hooks/useLang';
 
 const Navbar: FC = () => {
   const router = useRouter();
   const [desktopNavbarFull, setDesktopNavbarFull] = useState<boolean>(false);
-  const [langStrings, setLangStrings] = useState<any>(null);
-
-  useEffect(() => {
-    setLangStrings(languageStrings);
-  }, [languageStrings]);
+  const langStrings = useLang();
 
   const listPages = [
     {
