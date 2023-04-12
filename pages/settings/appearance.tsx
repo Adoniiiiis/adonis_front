@@ -6,7 +6,7 @@ import React from 'react';
 export default function Appearance() {
   return (
     <SettingsLayout>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-2">
         <DarkmodeSwitch />
         <div className="mt-3">
           <LanguageSelect />
