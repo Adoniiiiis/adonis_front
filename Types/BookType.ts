@@ -1,12 +1,12 @@
 import { StaticImageData } from 'next/image';
 
 export type bookType = {
-  bookCoverUrl: StaticImageData;
   bookData: {
     id: number;
     title: string;
     subtitle: string;
     author: string;
+    book_cover: string;
     ranking: number;
     isBookmarked: boolean;
     userRating: number | null;
