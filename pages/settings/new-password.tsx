@@ -60,7 +60,7 @@ export default function NewPassword() {
 
   return (
     <SettingsLayout>
-      <section>
+      <section className="mt-3">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-4">
             Changer mon mot de passe

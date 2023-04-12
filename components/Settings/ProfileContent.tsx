@@ -54,8 +54,8 @@ export default function ProfileContent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section>
-        <div className="flex flex-col md:h-screen lg:py-0">
+      <section className="mt-3">
+        <div className="flex flex-col lg:py-0">
           <h1 className="mb-6 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             {langStrings && langStrings.myProfile}
           </h1>
