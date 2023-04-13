@@ -11,18 +11,22 @@ import FilterContentResponse from '@/Axios/FilterContentResponse';
 import { userType } from '@/Types/UserType';
 
 export default function Home() {
-  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [contentChosen, setContentChosen] = useState<any>(null);
-  const [totalPopularContent, setTotalPopularContent] = useState<any>(null);
-  const [paginatedPopularContent, setPaginatedPopularContent] =
-    useState<any>(null);
-  const [newContent, setNewContent] = useState<any>(null);
-  const [books, setBooks] = useState<any>(null);
-  const [videos, setVideos] = useState<any>(null);
-  const [quotes, setQuotes] = useState<any>(null);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const [contentDisplayed, setContentDisplayed] = useState<any>(null);
+  const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [totalPopularContent, setTotalPopularContent] = useState<any>(null);
+  const [popularContent, setPopularContent] = useState<any>(null);
+  const [totalNewContent, setTotalNewContent] = useState<any>(null);
+  const [newContent, setNewContent] = useState<any>(null);
+  const [totalBookContent, setTotalBookContent] = useState<any>(null);
+  const [books, setBooks] = useState<any>(null);
+  const [totalVideoContent, setTotalVideoContent] = useState<any>(null);
+  const [videos, setVideos] = useState<any>(null);
+  const [totalQuoteContent, setTotalQuoteContent] = useState<any>(null);
+  const [quotes, setQuotes] = useState<any>(null);
 
   // Displaying Popular Content by Default
   useEffect(() => {
@@ -35,31 +39,83 @@ export default function Home() {
     return array.slice((page_number - 1) * page_size, page_number * page_size);
   }
 
+  // Loading More Content On The Page
   const handleLoadMore = async () => {
-    const newPaginatedContent = paginate(
-      totalPopularContent,
-      3,
-      currentPage + 1
-    );
-    const arrayToPaginate = [...contentDisplayed, ...newPaginatedContent];
-    setContentDisplayed(arrayToPaginate);
-    setPaginatedPopularContent(arrayToPaginate);
+    const newPaginatedContent: any = updatePaginatedContent();
+    const newContentDisplayed = [...contentDisplayed, ...newPaginatedContent];
+    setContentDisplayed(newContentDisplayed);
+    storePaginatedContent(newContentDisplayed);
     setCurrentPage(currentPage + 1);
   };
 
+  // Updating The Paginated Content When Loading More
+  function updatePaginatedContent() {
+    switch (contentChosen) {
+      case 'popularContent':
+        return paginate(totalPopularContent, 3, currentPage + 1);
+      case 'newContent':
+        return paginate(totalNewContent, 3, currentPage + 1);
+      case 'book':
+        return paginate(totalBookContent, 3, currentPage + 1);
+      case 'quote':
+        return paginate(totalQuoteContent, 3, currentPage + 1);
+      case 'video':
+        return paginate(totalVideoContent, 3, currentPage + 1);
+    }
+  }
+
+  // Paginating The Received Content
+  function paginateContent(filteredContent: any) {
+    const paginatedContent = paginate(filteredContent, 3, currentPage);
+    setContentDisplayed(paginatedContent);
+    switch (contentChosen) {
+      case 'popularContent':
+        return (
+          setTotalPopularContent(filteredContent),
+          setPopularContent(paginatedContent)
+        );
+      case 'newContent':
+        return (
+          setTotalNewContent(filteredContent), setNewContent(paginatedContent)
+        );
+      case 'book':
+        return setTotalBookContent(filteredContent), setBooks(paginatedContent);
+      case 'quote':
+        return (
+          setTotalQuoteContent(filteredContent), setQuotes(paginatedContent)
+        );
+      case 'video':
+        return (
+          setTotalVideoContent(filteredContent), setVideos(paginatedContent)
+        );
+    }
+  }
+
+  // Storing The Paginated Content To Avoid Loading It Again
+  function storePaginatedContent(newPaginatedContent: any[]) {
+    switch (contentChosen) {
+      case 'popularContent':
+        return setPopularContent(newPaginatedContent);
+      case 'newContent':
+        return setNewContent(newPaginatedContent);
+      case 'book':
+        return setBooks(newPaginatedContent);
+      case 'quote':
+        return setQuotes(newPaginatedContent);
+      case 'video':
+        return setVideos(newPaginatedContent);
+    }
+  }
+
+  // Getting Contents
   const getPopularContent = async () => {
-    if (paginatedPopularContent) {
-      setContentDisplayed(paginatedPopularContent);
+    if (popularContent) {
+      setContentDisplayed(popularContent);
     } else {
-      const filteredPopularContent = FilterContentResponse(
+      const filteredContent = FilterContentResponse(
         await GetPopularContentAxios(user.id)
       );
-      setTotalPopularContent(filteredPopularContent);
-      console.log(filteredPopularContent);
-
-      const paginatedContent = paginate(filteredPopularContent, 3, currentPage);
-      setContentDisplayed(paginatedContent);
-      setPaginatedPopularContent(paginatedContent);
+      paginateContent(filteredContent);
     }
   };
 
@@ -67,11 +123,10 @@ export default function Home() {
     if (newContent) {
       setContentDisplayed(newContent);
     } else {
-      const newContent = FilterContentResponse(
+      const filteredContent = FilterContentResponse(
         await GetNewContentAxios(user.id)
       );
-      setContentDisplayed(newContent);
-      setNewContent(newContent);
+      paginateContent(filteredContent);
     }
   };
 
@@ -79,11 +134,10 @@ export default function Home() {
     if (books) {
       setContentDisplayed(books);
     } else {
-      const booksMapping = FilterContentResponse(
+      const filteredContent = FilterContentResponse(
         await getContentByCategory('book', user.id)
       );
-      setContentDisplayed(booksMapping);
-      setBooks(booksMapping);
+      paginateContent(filteredContent);
     }
   };
 
@@ -91,11 +145,10 @@ export default function Home() {
     if (quotes) {
       setContentDisplayed(quotes);
     } else {
-      const quotesMapping = FilterContentResponse(
+      const filteredContent = FilterContentResponse(
         await getContentByCategory('quote', user.id)
       );
-      setContentDisplayed(quotesMapping);
-      setQuotes(quotesMapping);
+      paginateContent(filteredContent);
     }
   };
 
@@ -103,15 +156,14 @@ export default function Home() {
     if (videos) {
       setContentDisplayed(videos);
     } else {
-      const videosMapping = FilterContentResponse(
+      const filteredContent = FilterContentResponse(
         await getContentByCategory('video', user.id)
       );
-      setContentDisplayed(videosMapping);
-      setVideos(videosMapping);
+      paginateContent(filteredContent);
     }
   };
 
-  // The User Choose what Content to Display
+  // The User Chooses what Content to Display
   function changeContentType(contentTypeChosen: string) {
     setContentChosen(contentTypeChosen);
     switch (contentTypeChosen) {
