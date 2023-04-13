@@ -28,15 +28,24 @@ export default function Home() {
     }
   }, []);
 
+  function paginate(contentArray: any[], pageSize: number, pageNumber: number) {
+    return contentArray.slice(
+      (pageNumber - 1) * pageSize,
+      pageNumber * pageSize
+    );
+  }
+
   const getPopularContent = async () => {
     if (popularContent) {
       setContentDisplayed(popularContent);
     } else {
-      const popularContent = FilterContentResponse(
+      const filteredPopularContent = FilterContentResponse(
         await GetPopularContentAxios(user.id)
       );
-      setContentDisplayed(popularContent);
-      setPopularContent(popularContent);
+      const paginatedPopularContent = paginate(filteredPopularContent, 5, 1);
+
+      setContentDisplayed(paginatedPopularContent);
+      setPopularContent(paginatedPopularContent);
     }
   };
 

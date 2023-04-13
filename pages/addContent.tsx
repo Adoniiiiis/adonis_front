@@ -128,15 +128,16 @@ export default function AddContent() {
     } else if (step === 1 || step === 2) {
       return (
         <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-          {finalObject.category !== categories[1].id && (
-            <TextField
-              onChange={(e) => setTitle(e.target.value)}
-              label={langStrings && langStrings.title}
-              variant="outlined"
-              required
-              disabled={step === 2}
-            />
-          )}
+          {finalObject.category !== categories[1].id &&
+            finalObject.category !== categories[0].id && (
+              <TextField
+                onChange={(e) => setTitle(e.target.value)}
+                label={langStrings && langStrings.title}
+                variant="outlined"
+                required
+                disabled={step === 2}
+              />
+            )}
           {finalObject.category === categories[1].id && (
             <TextField
               onChange={(e) => setQuote(`"${e.target.value}"`)}
@@ -238,7 +239,7 @@ export default function AddContent() {
                     (step === 0 && !category) ||
                     (step === 1 &&
                       finalObject.category === categories[0].id &&
-                      (!author || !title || !link)) ||
+                      (!author || !link)) ||
                     (step === 1 &&
                       finalObject.category === categories[1].id &&
                       (!author || !quote)) ||
