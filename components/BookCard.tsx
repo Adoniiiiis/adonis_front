@@ -1,5 +1,4 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import Image from 'next/image';
 import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
@@ -10,10 +9,19 @@ import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
 import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
 import useLang from '@/hooks/useLang';
+import Image from 'next/image';
 
-export default function BookCard({ bookCoverUrl, bookData }: bookType) {
-  const { id, title, subtitle, author, ranking, isBookmarked, userRating } =
-    bookData;
+export default function BookCard({ bookData }: bookType) {
+  const {
+    id,
+    title,
+    subtitle,
+    author,
+    book_cover,
+    ranking,
+    isBookmarked,
+    userRating,
+  } = bookData;
   const [currentRanking, setCurrentRanking] = useState<number | null>(ranking);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
@@ -61,7 +69,14 @@ export default function BookCard({ bookCoverUrl, bookData }: bookType) {
       </div>
       <div className="md:flex flex-col w-full">
         <div className="mt-[12px] ml-[15px] relative min-h-[175px] w-[120px]">
-          <Image layout={'fill'} src={bookCoverUrl} alt="bookCover" />
+          {book_cover && (
+            <Image
+              layout={'fill'}
+              loader={() => book_cover}
+              src={book_cover}
+              alt="bookCover"
+            />
+          )}
         </div>
         <div className="flex-col md:-mt-[175px] md:ml-[150px] ml-[15px] mt-[5px]">
           <h1 className="underline underline-offset-4">

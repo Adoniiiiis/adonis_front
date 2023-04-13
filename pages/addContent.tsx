@@ -22,6 +22,7 @@ interface FinalObject {
   link: string | null;
   tagTime: string | null;
   tagPage: string | null;
+  bookCover: File | null;
 }
 
 export default function AddContent() {
@@ -37,6 +38,7 @@ export default function AddContent() {
   const [link, setLink] = useState('');
   const [tagTime, setTagTime] = useState('');
   const [tagPage, setTagPage] = useState('');
+  const [bookCover, setBookCover] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [finalObject, setFinalObject] = useState<FinalObject>({
     category: null,
@@ -47,6 +49,7 @@ export default function AddContent() {
     link: null,
     tagTime: null,
     tagPage: null,
+    bookCover: null,
   });
   const langStrings = useLang();
 
@@ -78,16 +81,15 @@ export default function AddContent() {
         tagTime: tagTime ?? null,
         quote: quote ?? null,
         link: link ?? null,
+        bookCover: bookCover ?? null,
       });
     } else if (step === 2) {
       setLoading(true);
       try {
-        const res = await CreateContent(user.id, finalObject);
-        console.log(res);
+        await CreateContent(user.id, finalObject);
         toast.success(langStrings && langStrings.toastContentAdded);
         router.push('/');
       } catch (err) {
-        console.log(err);
         toast.error(
           "Une erreur est survenue lors de l'ajout de votre contenu."
         );
@@ -172,15 +174,30 @@ export default function AddContent() {
             </>
           )}
           {finalObject.category === categories[2].id && (
-            <TextField
-              onChange={(e) => setTagPage(e.target.value)}
-              className={`${
-                step === 2 && !finalObject.tagPage && 'opacity-50'
-              }`}
-              label={langStrings && langStrings.importantPage}
-              variant="outlined"
-              disabled={step === 2}
-            />
+            <>
+              <TextField
+                onChange={(e) => setTagPage(e.target.value)}
+                className={`${
+                  step === 2 && !finalObject.tagPage && 'opacity-50'
+                }`}
+                label={langStrings && langStrings.importantPage}
+                variant="outlined"
+                disabled={step === 2}
+              />
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                encType="multipart/form-data"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file: any = e.target.files;
+                    setBookCover(file[0]);
+                  }}
+                />
+              </form>
+            </>
           )}
           <TextField
             onChange={(e) => setSubtitle(e.target.value)}
