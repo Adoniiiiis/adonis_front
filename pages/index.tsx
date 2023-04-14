@@ -26,14 +26,14 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalContent, setTotalContent] = useState<any>(content);
   const [paginatedContent, setPaginatedContent] = useState<any>(content);
+  const [filteredContent, setFilteredContent] = useState<any>(null);
 
   // Displaying Popular Content by Default
   useEffect(() => {
-    if (!contentChosen && user.id) {
-      changeContentType('popularContent');
-    }
+    !contentChosen && user.id && changeContentType('popularContent');
   }, []);
 
+  // Getting Paginated Content For A Given Page
   function paginate(content: any[], page_size: number, page_number: number) {
     return content.slice(
       (page_number - 1) * page_size,
@@ -75,65 +75,71 @@ export default function Home() {
   }
 
   // Displaying And Storing Received Content
+  function handleReceivedContent() {
+    setTotalContent({ ...totalContent, [contentChosen]: filteredContent });
+    if (filteredContent.length <= 3) {
+      setContentDisplayed(filteredContent);
+      storeLoadedContent(filteredContent);
+    } else {
+      const paginatedContent: any = paginate(filteredContent, 3, currentPage);
+      console.log(paginatedContent);
+      setContentDisplayed(paginatedContent);
+      storeLoadedContent(paginatedContent);
+    }
+  }
+
   useEffect(() => {
-    const paginatedContent: any = loadPaginatedContent(currentPage);
-    setContentDisplayed(paginatedContent);
-    storeLoadedContent(paginatedContent);
-  }, [totalContent]);
+    filteredContent && handleReceivedContent();
+  }, [filteredContent]);
 
   // Getting Content
   const getPopularContent = async () => {
     if (paginatedContent.popularContent.length > 0) {
       setContentDisplayed(paginatedContent.popularContent);
     } else {
-      const filteredContent = FilterContentResponse(
-        await GetPopularContentAxios(user.id)
+      setFilteredContent(
+        FilterContentResponse(await GetPopularContentAxios(user.id))
       );
-      setTotalContent({ ...totalContent, popularContent: filteredContent });
     }
   };
 
   const getNewContent = async () => {
-    if (paginatedContent.newContent) {
+    if (paginatedContent.newContent.length > 0) {
       setContentDisplayed(paginatedContent.newContent);
     } else {
-      const filteredContent = FilterContentResponse(
-        await GetNewContentAxios(user.id)
+      setFilteredContent(
+        FilterContentResponse(await GetNewContentAxios(user.id))
       );
-      setTotalContent({ ...totalContent, newContent: filteredContent });
     }
   };
 
   const getBooks = async () => {
-    if (paginatedContent.books) {
+    if (paginatedContent.books.length > 0) {
       setContentDisplayed(paginatedContent.books);
     } else {
-      const filteredContent = FilterContentResponse(
-        await getContentByCategory('book', user.id)
+      setFilteredContent(
+        FilterContentResponse(await getContentByCategory('book', user.id))
       );
-      setTotalContent({ ...totalContent, books: filteredContent });
     }
   };
 
   const getQuotes = async () => {
-    if (paginatedContent.quotes) {
+    if (paginatedContent.quotes.length > 0) {
       setContentDisplayed(paginatedContent.quotes);
     } else {
-      const filteredContent = FilterContentResponse(
-        await getContentByCategory('quote', user.id)
+      setFilteredContent(
+        FilterContentResponse(await getContentByCategory('quote', user.id))
       );
-      setTotalContent({ ...totalContent, quotes: filteredContent });
     }
   };
 
   const getVideos = async () => {
-    if (paginatedContent.videos) {
+    if (paginatedContent.videos.length > 0) {
       setContentDisplayed(paginatedContent.videos);
     } else {
-      const filteredContent = FilterContentResponse(
-        await getContentByCategory('video', user.id)
+      setFilteredContent(
+        FilterContentResponse(await getContentByCategory('video', user.id))
       );
-      setTotalContent({ ...totalContent, videos: filteredContent });
     }
   };
 
@@ -145,11 +151,11 @@ export default function Home() {
         return getPopularContent();
       case 'newContent':
         return getNewContent();
-      case 'book':
+      case 'books':
         return getBooks();
-      case 'quote':
+      case 'quotes':
         return getQuotes();
-      case 'video':
+      case 'videos':
         return getVideos();
     }
   }

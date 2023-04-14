@@ -21,7 +21,7 @@ export default function HomepageFilterButtons({
   const CATEGORIES: { displayName: string; id: string }[] = [
     {
       displayName: langStrings && langStrings.popular,
-      id: 'popular',
+      id: 'popularContent',
     },
     {
       displayName: langStrings && langStrings.new,
