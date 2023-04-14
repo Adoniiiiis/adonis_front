@@ -7,26 +7,33 @@ import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { videoType } from '@/Types/VideoType';
 import useLang from '@/hooks/useLang';
+import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
-  const [currentRanking, setCurrentRanking] = useState<number | null>(ranking);
+  const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
   const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
   const langStrings = useLang();
+  const dispatch = useDispatch();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
-    clientSideNewValue: number,
+    clientSideNewValue: any,
     serverSideNewValue: number
   ) => {
     if (!isUpdating && user.id) {
       setIsUpdating(true);
-      setCurrentRanking(clientSideNewValue);
+      clientSideNewValue != 0
+        ? setCurrentRanking(clientSideNewValue)
+        : setCurrentRanking('zero');
+
       setIsUpdating(await UpdateRankingAxios(id, user.id, serverSideNewValue));
     }
   };
@@ -34,6 +41,9 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
     if (!isBookmarkUpdating && user.id) {
+      bookmarkRedux != null || undefined
+        ? dispatch(EDIT_BOOKMARK(id))
+        : dispatch(ADD_BOOKMARKS(videoData));
       setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
       setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
     }
@@ -43,7 +53,11 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[245px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         <div className="flex flex-col justify-between items-center">
-          {currentRanking ? currentRanking : ranking}
+          {currentRanking
+            ? currentRanking === 'zero'
+              ? 0
+              : currentRanking
+            : ranking}
           <BookmarkHeart
             isCurrentlyBookmarked={isCurrentlyBookmarked}
             handleBookmarkClick={handleBookmarkClick}

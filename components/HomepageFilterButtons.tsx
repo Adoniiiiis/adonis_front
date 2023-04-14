@@ -6,10 +6,12 @@ import { languageStrings } from '@/utils/languageStrings';
 
 type changeContentType = {
   changeContentType: (contentType: string) => void;
+  contentIsLoading: boolean;
 };
 
 export default function HomepageFilterButtons({
   changeContentType,
+  contentIsLoading,
 }: changeContentType) {
   const { push } = useRouter();
   const [langStrings, setLangStrings] = useState<any>(null);
@@ -48,7 +50,7 @@ export default function HomepageFilterButtons({
           <button
             key={el.id}
             onClick={() => {
-              changeContentType(el.id);
+              !contentIsLoading && changeContentType(el.id);
             }}
             className="mr-4 p-2 hover:bg-gray-200 hover:rounded-full"
           >

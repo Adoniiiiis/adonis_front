@@ -9,10 +9,12 @@ export default function HomepageSqueletons() {
       squeletonDisplay.push(
         <div key={i} className="mb-8 -mt-5">
           <Skeleton
+            sx={{ bgcolor: 'gray' }}
             variant="rectangular"
             width={700}
             height={200}
             className="rounded-lg"
+            animation="pulse"
           />
         </div>
       );

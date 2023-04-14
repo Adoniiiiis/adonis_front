@@ -9,6 +9,10 @@ import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 import useAuth from '@/context/AuthContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 import { userType } from '@/Types/UserType';
+import HomepageSpinner from '@/components/HomepageSpinner';
+import GetBookmarkedContentAxios from '@/Axios/GetBookmarkedContentAxios';
+import { useDispatch } from 'react-redux';
+import { ADD_BOOKMARKS } from '@/Redux/Reducers/BookmarksSlice';
 
 export default function Home() {
   const content = {
@@ -21,24 +25,36 @@ export default function Home() {
 
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const dispatch = useDispatch();
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalContent, setTotalContent] = useState<any>(content);
   const [paginatedContent, setPaginatedContent] = useState<any>(content);
   const [filteredContent, setFilteredContent] = useState<any>(null);
+  const [contentIsLoading, setContentIsLoading] = useState<boolean>(false);
 
-  // Displaying Popular Content by Default
+  // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
+    getBookmarksRedux();
     !contentChosen && user.id && changeContentType('popularContent');
   }, []);
 
+  const getBookmarksRedux = async () => {
+    const bookmarks = await GetBookmarkedContentAxios(user.id);
+    dispatch(ADD_BOOKMARKS(bookmarks));
+  };
+
   // Getting Paginated Content For A Given Page
   function paginate(content: any[], page_size: number, page_number: number) {
-    return content.slice(
-      (page_number - 1) * page_size,
-      page_number * page_size
-    );
+    if (content.length >= 3) {
+      return content.slice(
+        (page_number - 1) * page_size,
+        page_number * page_size
+      );
+    } else {
+      return content;
+    }
   }
 
   // Loading More Content On The Page
@@ -57,11 +73,11 @@ export default function Home() {
         return paginate(totalContent.popularContent, 3, page);
       case 'newContent':
         return paginate(totalContent.newContent, 3, page);
-      case 'book':
+      case 'books':
         return paginate(totalContent.books, 3, page);
-      case 'quote':
+      case 'quotes':
         return paginate(totalContent.quotes, 3, page);
-      case 'video':
+      case 'videos':
         return paginate(totalContent.videos, 3, page);
     }
   }
@@ -78,13 +94,14 @@ export default function Home() {
   function handleReceivedContent() {
     setTotalContent({ ...totalContent, [contentChosen]: filteredContent });
     if (filteredContent.length <= 3) {
-      setContentDisplayed(filteredContent);
       storeLoadedContent(filteredContent);
+      setContentIsLoading(false);
+      setContentDisplayed(filteredContent);
     } else {
       const paginatedContent: any = paginate(filteredContent, 3, currentPage);
-      console.log(paginatedContent);
-      setContentDisplayed(paginatedContent);
       storeLoadedContent(paginatedContent);
+      setContentIsLoading(false);
+      setContentDisplayed(paginatedContent);
     }
   }
 
@@ -97,6 +114,7 @@ export default function Home() {
     if (paginatedContent.popularContent.length > 0) {
       setContentDisplayed(paginatedContent.popularContent);
     } else {
+      setContentIsLoading(true);
       setFilteredContent(
         FilterContentResponse(await GetPopularContentAxios(user.id))
       );
@@ -107,6 +125,7 @@ export default function Home() {
     if (paginatedContent.newContent.length > 0) {
       setContentDisplayed(paginatedContent.newContent);
     } else {
+      setContentIsLoading(true);
       setFilteredContent(
         FilterContentResponse(await GetNewContentAxios(user.id))
       );
@@ -117,6 +136,7 @@ export default function Home() {
     if (paginatedContent.books.length > 0) {
       setContentDisplayed(paginatedContent.books);
     } else {
+      setContentIsLoading(true);
       setFilteredContent(
         FilterContentResponse(await getContentByCategory('book', user.id))
       );
@@ -127,6 +147,7 @@ export default function Home() {
     if (paginatedContent.quotes.length > 0) {
       setContentDisplayed(paginatedContent.quotes);
     } else {
+      setContentIsLoading(true);
       setFilteredContent(
         FilterContentResponse(await getContentByCategory('quote', user.id))
       );
@@ -137,6 +158,7 @@ export default function Home() {
     if (paginatedContent.videos.length > 0) {
       setContentDisplayed(paginatedContent.videos);
     } else {
+      setContentIsLoading(true);
       setFilteredContent(
         FilterContentResponse(await getContentByCategory('video', user.id))
       );
@@ -172,14 +194,26 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <HomepageFilterButtons changeContentType={changeContentType} />
+              <HomepageFilterButtons
+                changeContentType={changeContentType}
+                contentIsLoading={contentIsLoading}
+              />
               <div className="-mt-7 flex justify-center">
                 <div className="flex-col">
-                  {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
+                  {contentDisplayed && !contentIsLoading ? (
+                    contentDisplayed
+                  ) : contentDisplayed ? (
+                    <HomepageSpinner />
+                  ) : (
+                    <HomepageSqueletons />
+                  )}
                   <div className="w-full flex justify-center">
                     <button
+                      disabled={contentIsLoading ? true : false}
                       onClick={handleLoadMore}
-                      className="text-white p-2 bg-blue-600 mb-24 -mt-2"
+                      className={`text-white p-2 bg-blue-600 mb-24 -mt-2 ${
+                        contentIsLoading && 'opacity-50'
+                      }`}
                     >
                       Load more
                     </button>

@@ -17,27 +17,31 @@ export default function Ranking({
   const [currentlyActive, setCurrentlyActive] = useState<number | null>(
     userRating
   );
-  const [clientSideValue, setClientSideValue] = useState(originalValue);
-
-  useEffect(() => {
-    if (userRating != null) {
-      setClientSideValue(originalValue - userRating);
-    }
-  }, []);
 
   // Clicking on an unactive arrow
   function handleClickOnUnactive(arrowValue: number) {
-    handleArrowClick(clientSideValue + arrowValue, arrowValue);
-    setCurrentlyActive(arrowValue);
+    if (userRating != null) {
+      const newValue = originalValue - userRating;
+      const clientSideNewValue = newValue + arrowValue;
+      handleArrowClick(clientSideNewValue, arrowValue);
+      setCurrentlyActive(arrowValue);
+    } else {
+      const clientSideNewValue = originalValue + arrowValue;
+      handleArrowClick(clientSideNewValue, arrowValue);
+      setCurrentlyActive(arrowValue);
+    }
   }
 
   // Clicking on an active arrow
   function handleClickOnActive() {
-    userRating != null
-      ? handleArrowClick(clientSideValue, 0)
-      : handleArrowClick(originalValue, 0);
-
-    setCurrentlyActive(null);
+    if (userRating != null) {
+      const clientSideNewValue = originalValue - userRating;
+      handleArrowClick(clientSideNewValue, 0);
+      setCurrentlyActive(null);
+    } else {
+      handleArrowClick(originalValue, 0);
+      setCurrentlyActive(null);
+    }
   }
 
   const tripleArrow = {

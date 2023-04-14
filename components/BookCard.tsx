@@ -22,7 +22,7 @@ export default function BookCard({ bookData }: bookType) {
     isBookmarked,
     userRating,
   } = bookData;
-  const [currentRanking, setCurrentRanking] = useState<number | null>(ranking);
+  const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -35,12 +35,15 @@ export default function BookCard({ bookData }: bookType) {
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
-    clientSideNewValue: number,
+    clientSideNewValue: any,
     serverSideNewValue: number
   ) => {
     if (!isUpdating && user.id) {
       setIsUpdating(true);
-      setCurrentRanking(clientSideNewValue);
+      clientSideNewValue != 0
+        ? setCurrentRanking(clientSideNewValue)
+        : setCurrentRanking('zero');
+
       setIsUpdating(await UpdateRankingAxios(id, user.id, serverSideNewValue));
     }
   };
@@ -60,7 +63,11 @@ export default function BookCard({ bookData }: bookType) {
     <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 dark:border-gray-700 border-[1px]">
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-[15px] rounded-l-md">
         <div className="flex flex-col justify-between items-center">
-          {currentRanking}
+          {currentRanking
+            ? currentRanking === 'zero'
+              ? 0
+              : currentRanking
+            : ranking}
           <BookmarkHeart
             isCurrentlyBookmarked={isCurrentlyBookmarked}
             handleBookmarkClick={handleBookmarkClick}
