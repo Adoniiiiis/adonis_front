@@ -25,6 +25,7 @@ export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoadMoreBtnDisabled, setIsLoadMoreBtnDisabled] = useState(true);
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
@@ -51,11 +52,19 @@ export default function Home() {
       ...paginatedContent,
       [contentChosen]: newPaginatedData,
     });
-    setContentIsLoading(false);
   }
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
+    let totalLength: any = null;
+    Object.entries(totalContent).map((el: any) => {
+      if (el[0] === contentChosen) {
+        return (totalLength = el[1].length);
+      }
+    });
+    if (totalLength) {
+      checkIfEnoughContentToLoadMore(totalLength, contentDisplayed.length + 3);
+    }
     const newContent: any = getMorePaginatedContent();
     const newFilteredContent = FilterContentResponse(newContent);
     const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
@@ -65,102 +74,69 @@ export default function Home() {
 
   // Paginate more content
   function getMorePaginatedContent() {
-    // totalContent.map((el: any) => {
-    //   el === contentChosen && paginate(el, 3, currentPage + 1);
-    // });
-    switch (contentChosen) {
-      case 'popularContent':
-        return paginate(totalContent.popularContent, 3, currentPage + 1);
-      case 'newContent':
-        return paginate(totalContent.newContent, 3, currentPage + 1);
-      case 'books':
-        return paginate(totalContent.books, 3, currentPage + 1);
-      case 'quotes':
-        return paginate(totalContent.quotes, 3, currentPage + 1);
-      case 'videos':
-        return paginate(totalContent.videos, 3, currentPage + 1);
+    let newContent: any = null;
+    Object.entries(totalContent).map((el: any) => {
+      if (el[0] === contentChosen) {
+        return (newContent = paginate(el[1], 3, currentPage + 1));
+      }
+    });
+    if (newContent) {
+      return newContent;
     }
   }
 
-  // Getting Content
-  const getPopularContent = async (contentChosen: string) => {
-    if (paginatedContent.popularContent.length > 0) {
-      setContentDisplayed(
-        FilterContentResponse(paginatedContent.popularContent)
+  function checkIfEnoughContentToLoadMore(
+    totalLength: number,
+    paginatedLength: number
+  ) {
+    totalLength - paginatedLength >= 3
+      ? setIsLoadMoreBtnDisabled(false)
+      : setIsLoadMoreBtnDisabled(true);
+  }
+
+  const getPageContent = async (contentChosen: string) => {
+    let totalContentData: any = null;
+    Object.entries(totalContent).map((el) => {
+      if (el[0] === contentChosen) {
+        return (totalContentData = el[1]);
+      }
+    });
+    let paginatedContentData: any = null;
+    Object.entries(paginatedContent).map((el) => {
+      if (el[0] === contentChosen) {
+        return (paginatedContentData = el[1]);
+      }
+    });
+
+    if (paginatedContentData && paginatedContentData.length > 0) {
+      setContentDisplayed(FilterContentResponse(paginatedContentData));
+      checkIfEnoughContentToLoadMore(
+        totalContentData.length,
+        paginatedContentData.length
       );
     } else {
       setContentIsLoading(true);
-      const data = await GetPopularContentAxios(user.id);
+      let data: any = null;
+      if (contentChosen === 'popularContent') {
+        data = await GetPopularContentAxios(user.id);
+      } else if (contentChosen === 'newContent') {
+        data = await GetNewContentAxios(user.id);
+      } else {
+        data = await getContentByCategory(contentChosen, user.id);
+      }
       storeReceivedContent(data, contentChosen);
-      const paginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContent));
-    }
-  };
-
-  const getNewContent = async (contentChosen: string) => {
-    console.log(paginatedContent);
-    if (paginatedContent.newContent.length > 0) {
-      setContentDisplayed(FilterContentResponse(paginatedContent.newContent));
-    } else {
-      setContentIsLoading(true);
-      const data = await GetNewContentAxios(user.id);
-      storeReceivedContent(data, contentChosen);
-      const paginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContent));
-    }
-  };
-
-  const getBooks = async (contentChosen: string) => {
-    if (paginatedContent.books.length > 0) {
-      setContentDisplayed(FilterContentResponse(paginatedContent.books));
-    } else {
-      setContentIsLoading(true);
-      const data = await getContentByCategory('book', user.id);
-      storeReceivedContent(data, contentChosen);
-      const paginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContent));
-    }
-  };
-
-  const getQuotes = async (contentChosen: string) => {
-    if (paginatedContent.quotes.length > 0) {
-      setContentDisplayed(FilterContentResponse(paginatedContent.quotes));
-    } else {
-      setContentIsLoading(true);
-      const data = await getContentByCategory('quote', user.id);
-      storeReceivedContent(data, contentChosen);
-      const paginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContent));
-    }
-  };
-
-  const getVideos = async (contentChosen: string) => {
-    if (paginatedContent.videos.length > 0) {
-      setContentDisplayed(FilterContentResponse(paginatedContent.videos));
-    } else {
-      setContentIsLoading(true);
-      const data = await getContentByCategory('video', user.id);
-      storeReceivedContent(data, contentChosen);
-      const paginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContent));
+      const firstPaginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(firstPaginatedContent));
+      checkIfEnoughContentToLoadMore(data.length, firstPaginatedContent.length);
+      setContentIsLoading(false);
     }
   };
 
   // The User Chooses what Content to Display
   function changeContentType(contentTypeChosen: string) {
     setContentChosen(contentTypeChosen);
-    switch (contentTypeChosen) {
-      case 'popularContent':
-        return getPopularContent(contentTypeChosen);
-      case 'newContent':
-        return getNewContent(contentTypeChosen);
-      case 'books':
-        return getBooks(contentTypeChosen);
-      case 'quotes':
-        return getQuotes(contentTypeChosen);
-      case 'videos':
-        return getVideos(contentTypeChosen);
-    }
+    setCurrentPage(1);
+    getPageContent(contentTypeChosen);
   }
 
   return (
@@ -190,10 +166,12 @@ export default function Home() {
                   )}
                   <div className="w-full flex justify-center">
                     <button
-                      disabled={contentIsLoading ? true : false}
+                      disabled={contentIsLoading || isLoadMoreBtnDisabled}
                       onClick={LoadMoreContent}
                       className={`text-white p-2 bg-blue-600 mb-24 -mt-2 ${
-                        contentIsLoading && 'opacity-50'
+                        contentIsLoading || isLoadMoreBtnDisabled
+                          ? 'opacity-50 cursor-not-allowed'
+                          : 'opacity-100 cursor-pointer'
                       }`}
                     >
                       Load more

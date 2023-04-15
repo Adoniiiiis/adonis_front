@@ -31,15 +31,15 @@ export default function HomepageFilterButtons({
     },
     {
       displayName: langStrings && langStrings.books,
-      id: 'books',
+      id: 'book',
     },
     {
       displayName: langStrings && langStrings.videos,
-      id: 'videos',
+      id: 'video',
     },
     {
       displayName: langStrings && langStrings.quotes,
-      id: 'quotes',
+      id: 'quote',
     },
   ];
 
