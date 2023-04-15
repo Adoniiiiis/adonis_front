@@ -5,7 +5,7 @@ export default function HomepageSqueletons() {
   // Displaying Squeletons while Data is Loading
   function getSqueletonDisplay() {
     let squeletonDisplay = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       squeletonDisplay.push(
         <div key={i} className="mb-8 -mt-5">
           <Skeleton

@@ -44,26 +44,30 @@ export default function Home() {
   }
 
   // Store Received Content In Content Context
-  function storeReceivedContent(data: any) {
+  function storeReceivedContent(data: any, contentChosen: string) {
     setTotalContent({ ...totalContent, [contentChosen]: data });
-    const paginatedContent = paginate(data, 3, currentPage);
+    const newPaginatedData = paginate(data, 3, currentPage);
     setPaginatedContent({
       ...paginatedContent,
-      [contentChosen]: data,
+      [contentChosen]: newPaginatedData,
     });
     setContentIsLoading(false);
   }
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
-    const newPaginatedContent: any = getMorePaginatedContent();
-    const newContentDisplayed = [...contentDisplayed, ...newPaginatedContent];
+    const newContent: any = getMorePaginatedContent();
+    const newFilteredContent = FilterContentResponse(newContent);
+    const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
     setContentDisplayed(newContentDisplayed);
     setCurrentPage(currentPage + 1);
   };
 
   // Paginate more content
   function getMorePaginatedContent() {
+    // totalContent.map((el: any) => {
+    //   el === contentChosen && paginate(el, 3, currentPage + 1);
+    // });
     switch (contentChosen) {
       case 'popularContent':
         return paginate(totalContent.popularContent, 3, currentPage + 1);
@@ -79,7 +83,7 @@ export default function Home() {
   }
 
   // Getting Content
-  const getPopularContent = async () => {
+  const getPopularContent = async (contentChosen: string) => {
     if (paginatedContent.popularContent.length > 0) {
       setContentDisplayed(
         FilterContentResponse(paginatedContent.popularContent)
@@ -87,52 +91,58 @@ export default function Home() {
     } else {
       setContentIsLoading(true);
       const data = await GetPopularContentAxios(user.id);
-      storeReceivedContent(data);
-      setContentDisplayed(FilterContentResponse(data));
+      storeReceivedContent(data, contentChosen);
+      const paginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(paginatedContent));
     }
   };
 
-  const getNewContent = async () => {
+  const getNewContent = async (contentChosen: string) => {
+    console.log(paginatedContent);
     if (paginatedContent.newContent.length > 0) {
       setContentDisplayed(FilterContentResponse(paginatedContent.newContent));
     } else {
       setContentIsLoading(true);
       const data = await GetNewContentAxios(user.id);
-      storeReceivedContent(data);
-      setContentDisplayed(FilterContentResponse(data));
+      storeReceivedContent(data, contentChosen);
+      const paginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(paginatedContent));
     }
   };
 
-  const getBooks = async () => {
+  const getBooks = async (contentChosen: string) => {
     if (paginatedContent.books.length > 0) {
       setContentDisplayed(FilterContentResponse(paginatedContent.books));
     } else {
       setContentIsLoading(true);
       const data = await getContentByCategory('book', user.id);
-      storeReceivedContent(data);
-      setContentDisplayed(FilterContentResponse(data));
+      storeReceivedContent(data, contentChosen);
+      const paginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(paginatedContent));
     }
   };
 
-  const getQuotes = async () => {
+  const getQuotes = async (contentChosen: string) => {
     if (paginatedContent.quotes.length > 0) {
       setContentDisplayed(FilterContentResponse(paginatedContent.quotes));
     } else {
       setContentIsLoading(true);
       const data = await getContentByCategory('quote', user.id);
-      storeReceivedContent(data);
-      setContentDisplayed(FilterContentResponse(data));
+      storeReceivedContent(data, contentChosen);
+      const paginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(paginatedContent));
     }
   };
 
-  const getVideos = async () => {
+  const getVideos = async (contentChosen: string) => {
     if (paginatedContent.videos.length > 0) {
       setContentDisplayed(FilterContentResponse(paginatedContent.videos));
     } else {
       setContentIsLoading(true);
       const data = await getContentByCategory('video', user.id);
-      storeReceivedContent(data);
-      setContentDisplayed(FilterContentResponse(data));
+      storeReceivedContent(data, contentChosen);
+      const paginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(paginatedContent));
     }
   };
 
@@ -141,15 +151,15 @@ export default function Home() {
     setContentChosen(contentTypeChosen);
     switch (contentTypeChosen) {
       case 'popularContent':
-        return getPopularContent();
+        return getPopularContent(contentTypeChosen);
       case 'newContent':
-        return getNewContent();
+        return getNewContent(contentTypeChosen);
       case 'books':
-        return getBooks();
+        return getBooks(contentTypeChosen);
       case 'quotes':
-        return getQuotes();
+        return getQuotes(contentTypeChosen);
       case 'videos':
-        return getVideos();
+        return getVideos(contentTypeChosen);
     }
   }
 
