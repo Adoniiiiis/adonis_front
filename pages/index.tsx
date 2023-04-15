@@ -9,155 +9,134 @@ import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 import useAuth from '@/context/AuthContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 import { userType } from '@/Types/UserType';
+import HomepageSpinner from '@/components/HomepageSpinner';
+import useContent from '@/context/ContentContext';
 
 export default function Home() {
-  const content = {
-    popularContent: [],
-    newContent: [],
-    books: [],
-    quotes: [],
-    videos: [],
-  };
-
+  const {
+    totalContent,
+    setTotalContent,
+    paginatedContent,
+    setPaginatedContent,
+  } = useContent();
   const { getUser }: any = useAuth();
   const user: userType = getUser();
+  const [contentIsLoading, setContentIsLoading] = useState<boolean>(false);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalContent, setTotalContent] = useState<any>(content);
-  const [paginatedContent, setPaginatedContent] = useState<any>(content);
-  const [filteredContent, setFilteredContent] = useState<any>(null);
+  const [isLoadMoreBtnDisabled, setIsLoadMoreBtnDisabled] = useState(true);
 
-  // Displaying Popular Content by Default
+  // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
     !contentChosen && user.id && changeContentType('popularContent');
   }, []);
 
   // Getting Paginated Content For A Given Page
   function paginate(content: any[], page_size: number, page_number: number) {
-    return content.slice(
-      (page_number - 1) * page_size,
-      page_number * page_size
-    );
-  }
-
-  // Loading More Content On The Page
-  const handleLoadMore = async () => {
-    const newPaginatedContent: any = loadPaginatedContent(currentPage + 1);
-    const newContentDisplayed = [...contentDisplayed, ...newPaginatedContent];
-    setContentDisplayed(newContentDisplayed);
-    storeLoadedContent(newContentDisplayed);
-    setCurrentPage(currentPage + 1);
-  };
-
-  // Getting Paginated Content For A Given Page
-  function loadPaginatedContent(page: number) {
-    switch (contentChosen) {
-      case 'popularContent':
-        return paginate(totalContent.popularContent, 3, page);
-      case 'newContent':
-        return paginate(totalContent.newContent, 3, page);
-      case 'book':
-        return paginate(totalContent.books, 3, page);
-      case 'quote':
-        return paginate(totalContent.quotes, 3, page);
-      case 'video':
-        return paginate(totalContent.videos, 3, page);
+    if (content.length >= 3) {
+      return content.slice(
+        (page_number - 1) * page_size,
+        page_number * page_size
+      );
+    } else {
+      return content;
     }
   }
 
-  // Storing Currently Loaded Content To Avoid Loading It Again
-  function storeLoadedContent(newPaginatedContent: any) {
+  // Store Received Content In Content Context
+  function storeReceivedContent(data: any, contentChosen: string) {
+    setTotalContent({ ...totalContent, [contentChosen]: data });
+    const newPaginatedData = paginate(data, 3, currentPage);
     setPaginatedContent({
       ...paginatedContent,
-      [contentChosen]: newPaginatedContent,
+      [contentChosen]: newPaginatedData,
     });
   }
 
-  // Displaying And Storing Received Content
-  function handleReceivedContent() {
-    setTotalContent({ ...totalContent, [contentChosen]: filteredContent });
-    if (filteredContent.length <= 3) {
-      setContentDisplayed(filteredContent);
-      storeLoadedContent(filteredContent);
-    } else {
-      const paginatedContent: any = paginate(filteredContent, 3, currentPage);
-      console.log(paginatedContent);
-      setContentDisplayed(paginatedContent);
-      storeLoadedContent(paginatedContent);
+  // Loading More Content On The Page
+  const LoadMoreContent = async () => {
+    let totalLength: any = null;
+    Object.entries(totalContent).map((el: any) => {
+      if (el[0] === contentChosen) {
+        return (totalLength = el[1].length);
+      }
+    });
+    if (totalLength) {
+      checkIfEnoughContentToLoadMore(totalLength, contentDisplayed.length + 3);
+    }
+    const newContent: any = getMorePaginatedContent();
+    const newFilteredContent = FilterContentResponse(newContent);
+    const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
+    setContentDisplayed(newContentDisplayed);
+    setCurrentPage(currentPage + 1);
+  };
+
+  // Paginate more content
+  function getMorePaginatedContent() {
+    let newContent: any = null;
+    Object.entries(totalContent).map((el: any) => {
+      if (el[0] === contentChosen) {
+        return (newContent = paginate(el[1], 3, currentPage + 1));
+      }
+    });
+    if (newContent) {
+      return newContent;
     }
   }
 
-  useEffect(() => {
-    filteredContent && handleReceivedContent();
-  }, [filteredContent]);
+  function checkIfEnoughContentToLoadMore(
+    totalLength: number,
+    paginatedLength: number
+  ) {
+    totalLength - paginatedLength >= 3
+      ? setIsLoadMoreBtnDisabled(false)
+      : setIsLoadMoreBtnDisabled(true);
+  }
 
-  // Getting Content
-  const getPopularContent = async () => {
-    if (paginatedContent.popularContent.length > 0) {
-      setContentDisplayed(paginatedContent.popularContent);
-    } else {
-      setFilteredContent(
-        FilterContentResponse(await GetPopularContentAxios(user.id))
-      );
-    }
-  };
+  const getPageContent = async (contentChosen: string) => {
+    let totalContentData: any = null;
+    Object.entries(totalContent).map((el) => {
+      if (el[0] === contentChosen) {
+        return (totalContentData = el[1]);
+      }
+    });
+    let paginatedContentData: any = null;
+    Object.entries(paginatedContent).map((el) => {
+      if (el[0] === contentChosen) {
+        return (paginatedContentData = el[1]);
+      }
+    });
 
-  const getNewContent = async () => {
-    if (paginatedContent.newContent.length > 0) {
-      setContentDisplayed(paginatedContent.newContent);
-    } else {
-      setFilteredContent(
-        FilterContentResponse(await GetNewContentAxios(user.id))
+    if (paginatedContentData && paginatedContentData.length > 0) {
+      setContentDisplayed(FilterContentResponse(paginatedContentData));
+      checkIfEnoughContentToLoadMore(
+        totalContentData.length,
+        paginatedContentData.length
       );
-    }
-  };
-
-  const getBooks = async () => {
-    if (paginatedContent.books.length > 0) {
-      setContentDisplayed(paginatedContent.books);
     } else {
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('book', user.id))
-      );
-    }
-  };
-
-  const getQuotes = async () => {
-    if (paginatedContent.quotes.length > 0) {
-      setContentDisplayed(paginatedContent.quotes);
-    } else {
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('quote', user.id))
-      );
-    }
-  };
-
-  const getVideos = async () => {
-    if (paginatedContent.videos.length > 0) {
-      setContentDisplayed(paginatedContent.videos);
-    } else {
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('video', user.id))
-      );
+      setContentIsLoading(true);
+      let data: any = null;
+      if (contentChosen === 'popularContent') {
+        data = await GetPopularContentAxios(user.id);
+      } else if (contentChosen === 'newContent') {
+        data = await GetNewContentAxios(user.id);
+      } else {
+        data = await getContentByCategory(contentChosen, user.id);
+      }
+      storeReceivedContent(data, contentChosen);
+      const firstPaginatedContent: any = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(firstPaginatedContent));
+      checkIfEnoughContentToLoadMore(data.length, firstPaginatedContent.length);
+      setContentIsLoading(false);
     }
   };
 
   // The User Chooses what Content to Display
   function changeContentType(contentTypeChosen: string) {
     setContentChosen(contentTypeChosen);
-    switch (contentTypeChosen) {
-      case 'popularContent':
-        return getPopularContent();
-      case 'newContent':
-        return getNewContent();
-      case 'books':
-        return getBooks();
-      case 'quotes':
-        return getQuotes();
-      case 'videos':
-        return getVideos();
-    }
+    setCurrentPage(1);
+    getPageContent(contentTypeChosen);
   }
 
   return (
@@ -172,14 +151,28 @@ export default function Home() {
         <DefaultLayout>
           <div className="flex justify-center">
             <div className="flex-col">
-              <HomepageFilterButtons changeContentType={changeContentType} />
+              <HomepageFilterButtons
+                changeContentType={changeContentType}
+                contentIsLoading={contentIsLoading}
+              />
               <div className="-mt-7 flex justify-center">
                 <div className="flex-col">
-                  {contentDisplayed ? contentDisplayed : <HomepageSqueletons />}
+                  {contentDisplayed && !contentIsLoading ? (
+                    contentDisplayed
+                  ) : contentDisplayed ? (
+                    <HomepageSpinner />
+                  ) : (
+                    <HomepageSqueletons />
+                  )}
                   <div className="w-full flex justify-center">
                     <button
-                      onClick={handleLoadMore}
-                      className="text-white p-2 bg-blue-600 mb-24 -mt-2"
+                      disabled={contentIsLoading || isLoadMoreBtnDisabled}
+                      onClick={LoadMoreContent}
+                      className={`text-white p-2 bg-blue-600 mb-24 -mt-2 ${
+                        contentIsLoading || isLoadMoreBtnDisabled
+                          ? 'opacity-50 cursor-not-allowed'
+                          : 'opacity-100 cursor-pointer'
+                      }`}
                     >
                       Load more
                     </button>
