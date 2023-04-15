@@ -2,11 +2,11 @@ import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import { useState, useEffect } from 'react';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
-import useBookmark from '@/context/BookmarkContext';
+import useContent from '@/context/ContentContext';
 
 export default function Bookmarks() {
   const [bookmarkDisplay, setBookmarkDisplay] = useState<any>(null);
-  const { bookmarks } = useBookmark();
+  const { totalContent } = useContent();
 
   const noBookmarks = (
     <p className="mt-4 dark:text-white">
@@ -16,16 +16,19 @@ export default function Bookmarks() {
 
   // Handling Bookmarks Loading, Display and NoContent
   useEffect(() => {
-    if (bookmarks) {
-      if (bookmarks.length > 0) {
-        setBookmarkDisplay(FilterContentResponse(bookmarks));
+    if (totalContent) {
+      if (totalContent.popularContent.length > 0) {
+        const bookmarkedContents = totalContent.popularContent.filter(
+          (content: any) => content.isBookmarked != false
+        );
+        setBookmarkDisplay(FilterContentResponse(bookmarkedContents));
       } else {
         setBookmarkDisplay(noBookmarks);
       }
     } else {
       setBookmarkDisplay(<p className="mt-4 dark:text-white">Chargement...</p>);
     }
-  }, [bookmarks]);
+  }, [totalContent]);
 
   return (
     <>
@@ -39,7 +42,7 @@ export default function Bookmarks() {
         <DefaultLayout>
           <div className="flex justify-center m-10 p-10">
             <div className="flex-col">
-              {bookmarks && bookmarks.length > 0 && (
+              {bookmarkDisplay && bookmarkDisplay.length > 0 && (
                 <h1 className="mb-8 -mt-8 text-[1.1em] dark:text-white">
                   Mes favoris
                 </h1>

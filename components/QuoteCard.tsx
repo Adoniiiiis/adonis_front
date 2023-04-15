@@ -1,5 +1,5 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
@@ -7,19 +7,18 @@ import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
 import useLang from '@/hooks/useLang';
-import useBookmark from '@/context/BookmarkContext';
+import useContent from '@/context/ContentContext';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
-  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
   const langStrings = useLang();
-  const { addToBookmarks } = useBookmark();
+  const { updateBookmark } = useContent();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -37,9 +36,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
 
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
-    const newBookmark = [];
-    newBookmark.push(quoteData);
-    addToBookmarks(newBookmark);
+    updateBookmark(id);
     setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
     UpdateBookmarkAxios(id, user.id);
   };

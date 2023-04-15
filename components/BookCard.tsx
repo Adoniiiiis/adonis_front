@@ -4,13 +4,11 @@ import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import BookmarkHeart from './BookmarkHeart';
-import { useDispatch, useSelector } from 'react-redux';
-import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
 import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
 import useLang from '@/hooks/useLang';
 import Image from 'next/image';
-import useBookmark from '@/context/BookmarkContext';
+import useContent from '@/context/ContentContext';
 
 export default function BookCard({ bookData }: bookType) {
   const {
@@ -27,12 +25,10 @@ export default function BookCard({ bookData }: bookType) {
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  const [isBookmarkUpdating, setIsBookmarkUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const dispatch = useDispatch();
   const langStrings = useLang();
-  const { addToBookmarks } = useBookmark();
+  const { updateBookmark } = useContent();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -51,9 +47,7 @@ export default function BookCard({ bookData }: bookType) {
 
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
-    const newBookmark = [];
-    newBookmark.push(bookData);
-    addToBookmarks(newBookmark);
+    updateBookmark(id);
     setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
     UpdateBookmarkAxios(id, user.id);
   };
