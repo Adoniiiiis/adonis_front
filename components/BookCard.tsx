@@ -10,6 +10,7 @@ import { userType } from '@/Types/UserType';
 import { bookType } from '@/Types/BookType';
 import useLang from '@/hooks/useLang';
 import Image from 'next/image';
+import useBookmark from '@/context/BookmarkContext';
 
 export default function BookCard({ bookData }: bookType) {
   const {
@@ -30,8 +31,8 @@ export default function BookCard({ bookData }: bookType) {
   const { getUser }: any = useAuth();
   const user: userType = getUser();
   const dispatch = useDispatch();
-  const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
   const langStrings = useLang();
+  const { addToBookmarks } = useBookmark();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -50,13 +51,11 @@ export default function BookCard({ bookData }: bookType) {
 
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
-    if (!isBookmarkUpdating && user.id) {
-      bookmarkRedux != null || undefined
-        ? dispatch(EDIT_BOOKMARK(id))
-        : dispatch(ADD_BOOKMARKS(bookData));
-      setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
-      setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
-    }
+    const newBookmark = [];
+    newBookmark.push(bookData);
+    addToBookmarks(newBookmark);
+    setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
+    UpdateBookmarkAxios(id, user.id);
   };
 
   return (

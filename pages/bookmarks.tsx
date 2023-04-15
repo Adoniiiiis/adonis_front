@@ -1,22 +1,12 @@
 import Head from 'next/head';
 import DefaultLayout from '@/layouts/DefaultLayout';
 import { useState, useEffect } from 'react';
-import GetBookmarkedContentAxios from '@/Axios/GetBookmarkedContentAxios';
-import useAuth from '@/context/AuthContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { ADD_BOOKMARKS } from '@/Redux/Reducers/BookmarksSlice';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
-import { bookmarkReduxType } from '@/Types/bookmarkReduxType';
+import useBookmark from '@/context/BookmarkContext';
 
 export default function Bookmarks() {
-  const [bookmarkContent, setBookmarkContent] = useState<any>(null);
   const [bookmarkDisplay, setBookmarkDisplay] = useState<any>(null);
-  const { getUser }: any = useAuth();
-  const user = getUser();
-  const dispatch = useDispatch();
-  const bookmarkRedux = useSelector(
-    (state: bookmarkReduxType) => state.bookmarks.bookmarks
-  );
+  const { bookmarks } = useBookmark();
 
   const noBookmarks = (
     <p className="mt-4 dark:text-white">
@@ -24,35 +14,18 @@ export default function Bookmarks() {
     </p>
   );
 
-  // Getting All Bookmarks from Database or Redux
-  useEffect(() => {
-    if (user.id) {
-      const fetchBookmarkContent = async () => {
-        if (bookmarkRedux) {
-          setBookmarkContent(FilterContentResponse(bookmarkRedux));
-        } else {
-          const bookmarks = await GetBookmarkedContentAxios(user.id);
-          const mappedBookmarks = FilterContentResponse(bookmarks);
-          setBookmarkContent(mappedBookmarks);
-          dispatch(ADD_BOOKMARKS(bookmarks));
-        }
-      };
-      fetchBookmarkContent();
-    }
-  }, []);
-
   // Handling Bookmarks Loading, Display and NoContent
   useEffect(() => {
-    if (bookmarkContent) {
-      if (bookmarkContent.length > 0) {
-        setBookmarkDisplay(bookmarkContent);
+    if (bookmarks) {
+      if (bookmarks.length > 0) {
+        setBookmarkDisplay(FilterContentResponse(bookmarks));
       } else {
         setBookmarkDisplay(noBookmarks);
       }
     } else {
       setBookmarkDisplay(<p className="mt-4 dark:text-white">Chargement...</p>);
     }
-  }, [bookmarkContent]);
+  }, [bookmarks]);
 
   return (
     <>
@@ -66,8 +39,8 @@ export default function Bookmarks() {
         <DefaultLayout>
           <div className="flex justify-center m-10 p-10">
             <div className="flex-col">
-              {bookmarkContent && bookmarkContent.length > 0 && (
-                <h1 className="mb-8 mt-10 text-[1.1em] dark:text-white">
+              {bookmarks && bookmarks.length > 0 && (
+                <h1 className="mb-8 -mt-8 text-[1.1em] dark:text-white">
                   Mes favoris
                 </h1>
               )}

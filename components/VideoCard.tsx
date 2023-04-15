@@ -7,9 +7,7 @@ import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { videoType } from '@/Types/VideoType';
 import useLang from '@/hooks/useLang';
-import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
-import { useDispatch, useSelector } from 'react-redux';
-
+import useBookmark from '@/context/BookmarkContext';
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
@@ -19,9 +17,8 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
   const langStrings = useLang();
-  const dispatch = useDispatch();
+  const { addToBookmarks } = useBookmark();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -40,13 +37,11 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
 
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
-    if (!isBookmarkUpdating && user.id) {
-      bookmarkRedux != null || undefined
-        ? dispatch(EDIT_BOOKMARK(id))
-        : dispatch(ADD_BOOKMARKS(videoData));
-      setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
-      setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
-    }
+    const newBookmark = [];
+    newBookmark.push(videoData);
+    addToBookmarks(newBookmark);
+    setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
+    UpdateBookmarkAxios(id, user.id);
   };
 
   return (

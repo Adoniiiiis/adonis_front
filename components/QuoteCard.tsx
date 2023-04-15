@@ -7,12 +7,10 @@ import UpdateBookmarkAxios from '@/Axios/UpdateBookmarkAxios';
 import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
 import useLang from '@/hooks/useLang';
-import { useDispatch, useSelector } from 'react-redux';
-import { ADD_BOOKMARKS, EDIT_BOOKMARK } from '@/Redux/Reducers/BookmarksSlice';
+import useBookmark from '@/context/BookmarkContext';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
-  const dispatch = useDispatch();
   const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
@@ -20,8 +18,8 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const bookmarkRedux = useSelector((state: any) => state.bookmarks.bookmarks);
   const langStrings = useLang();
+  const { addToBookmarks } = useBookmark();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -33,20 +31,17 @@ export default function QuoteCard({ quoteData }: quoteType) {
       clientSideNewValue != 0
         ? setCurrentRanking(clientSideNewValue)
         : setCurrentRanking('zero');
-
       setIsUpdating(await UpdateRankingAxios(id, user.id, serverSideNewValue));
     }
   };
 
   // Add or Remove a Post from Bookmarks
   const handleBookmarkClick = async () => {
-    if (!isBookmarkUpdating && user.id) {
-      bookmarkRedux != null || undefined
-        ? dispatch(EDIT_BOOKMARK(id))
-        : dispatch(ADD_BOOKMARKS(quoteData));
-      setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
-      setIsBookmarkUpdating(await UpdateBookmarkAxios(id, user.id));
-    }
+    const newBookmark = [];
+    newBookmark.push(quoteData);
+    addToBookmarks(newBookmark);
+    setIsCurrentlyBookmarked(!isCurrentlyBookmarked);
+    UpdateBookmarkAxios(id, user.id);
   };
 
   return (

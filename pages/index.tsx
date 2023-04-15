@@ -10,9 +10,8 @@ import useAuth from '@/context/AuthContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 import { userType } from '@/Types/UserType';
 import HomepageSpinner from '@/components/HomepageSpinner';
-import GetBookmarkedContentAxios from '@/Axios/GetBookmarkedContentAxios';
 import { useDispatch } from 'react-redux';
-import { ADD_BOOKMARKS } from '@/Redux/Reducers/BookmarksSlice';
+import useBookmark from '@/context/BookmarkContext';
 
 export default function Home() {
   const content = {
@@ -23,9 +22,9 @@ export default function Home() {
     videos: [],
   };
 
+  const { addToBookmarks } = useBookmark();
   const { getUser }: any = useAuth();
   const user: userType = getUser();
-  const dispatch = useDispatch();
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -36,14 +35,8 @@ export default function Home() {
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
-    getBookmarksRedux();
     !contentChosen && user.id && changeContentType('popularContent');
   }, []);
-
-  const getBookmarksRedux = async () => {
-    const bookmarks = await GetBookmarkedContentAxios(user.id);
-    dispatch(ADD_BOOKMARKS(bookmarks));
-  };
 
   // Getting Paginated Content For A Given Page
   function paginate(content: any[], page_size: number, page_number: number) {
@@ -115,9 +108,13 @@ export default function Home() {
       setContentDisplayed(paginatedContent.popularContent);
     } else {
       setContentIsLoading(true);
-      setFilteredContent(
-        FilterContentResponse(await GetPopularContentAxios(user.id))
-      );
+      const data = await GetPopularContentAxios(user.id);
+      const newBookmarks: any = [];
+      data.map((el: any) => {
+        el.isBookmarked && newBookmarks.push(el);
+      });
+      addToBookmarks(newBookmarks);
+      setFilteredContent(FilterContentResponse(data));
     }
   };
 
@@ -125,10 +122,12 @@ export default function Home() {
     if (paginatedContent.newContent.length > 0) {
       setContentDisplayed(paginatedContent.newContent);
     } else {
-      setContentIsLoading(true);
-      setFilteredContent(
-        FilterContentResponse(await GetNewContentAxios(user.id))
-      );
+      const data = await GetNewContentAxios(user.id);
+      const newBookmarks: any = [];
+      data.map((el: any) => {
+        el.isBookmarked && newBookmarks.push(el);
+      });
+      setFilteredContent(FilterContentResponse(data));
     }
   };
 
@@ -136,10 +135,12 @@ export default function Home() {
     if (paginatedContent.books.length > 0) {
       setContentDisplayed(paginatedContent.books);
     } else {
-      setContentIsLoading(true);
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('book', user.id))
-      );
+      const data = await getContentByCategory('book', user.id);
+      const newBookmarks: any = [];
+      data.map((el: any) => {
+        el.isBookmarked && newBookmarks.push(el);
+      });
+      setFilteredContent(FilterContentResponse(data));
     }
   };
 
@@ -147,10 +148,12 @@ export default function Home() {
     if (paginatedContent.quotes.length > 0) {
       setContentDisplayed(paginatedContent.quotes);
     } else {
-      setContentIsLoading(true);
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('quote', user.id))
-      );
+      const data = await getContentByCategory('quote', user.id);
+      const newBookmarks: any = [];
+      data.map((el: any) => {
+        el.isBookmarked && newBookmarks.push(el);
+      });
+      setFilteredContent(FilterContentResponse(data));
     }
   };
 
@@ -158,10 +161,12 @@ export default function Home() {
     if (paginatedContent.videos.length > 0) {
       setContentDisplayed(paginatedContent.videos);
     } else {
-      setContentIsLoading(true);
-      setFilteredContent(
-        FilterContentResponse(await getContentByCategory('video', user.id))
-      );
+      const data = await getContentByCategory('video', user.id);
+      const newBookmarks: any = [];
+      data.map((el: any) => {
+        el.isBookmarked && newBookmarks.push(el);
+      });
+      setFilteredContent(FilterContentResponse(data));
     }
   };
 
