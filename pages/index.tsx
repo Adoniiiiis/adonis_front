@@ -13,12 +13,7 @@ import HomepageSpinner from '@/components/HomepageSpinner';
 import useContent from '@/context/ContentContext';
 
 export default function Home() {
-  const {
-    totalContent,
-    setTotalContent,
-    paginatedContent,
-    setPaginatedContent,
-  } = useContent();
+  const { contentData, setContentData } = useContent();
   const { getUser }: any = useAuth();
   const user: userType = getUser();
   const [contentIsLoading, setContentIsLoading] = useState<boolean>(false);
@@ -44,42 +39,34 @@ export default function Home() {
     }
   }
 
-  // Store Received Content In Content Context
-  function storeReceivedContent(data: any, contentChosen: string) {
-    setTotalContent({ ...totalContent, [contentChosen]: data });
-    const newPaginatedData = paginate(data, 3, currentPage);
-    setPaginatedContent({
-      ...paginatedContent,
-      [contentChosen]: newPaginatedData,
+  useEffect(() => {
+    let contentDataLength: any = null;
+    Object.entries(contentData).map((el: any) => {
+      if (el[0] === contentChosen) {
+        return (contentDataLength = el[1].length);
+      }
     });
-  }
+    if (contentDataLength) {
+      checkIfEnoughContentToLoadMore(
+        contentDataLength,
+        contentDisplayed.length
+      );
+    }
+  }, [contentDisplayed]);
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
-    let totalLength: any = null;
-    Object.entries(totalContent).map((el: any) => {
-      if (el[0] === contentChosen) {
-        return (totalLength = el[1].length);
-      }
-    });
-    if (totalLength) {
-      const newContent: any = getMorePaginatedContent();
-      const newFilteredContent = FilterContentResponse(newContent);
-      const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
-      setPaginatedContent({
-        ...paginatedContent,
-        [contentChosen]: newContentDisplayed,
-      });
-      setContentDisplayed(newContentDisplayed);
-      setCurrentPage(currentPage + 1);
-      checkIfEnoughContentToLoadMore(totalLength, contentDisplayed.length + 3);
-    }
+    const newContent: any = getMorePaginatedContent();
+    const newFilteredContent = FilterContentResponse(newContent);
+    const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
+    setContentDisplayed(newContentDisplayed);
+    setCurrentPage(currentPage + 1);
   };
 
   // Paginate more content
   function getMorePaginatedContent() {
     let newContent: any = null;
-    Object.entries(totalContent).map((el: any) => {
+    Object.entries(contentData).map((el: any) => {
       if (el[0] === contentChosen) {
         return (newContent = paginate(el[1], 3, currentPage + 1));
       }
@@ -90,29 +77,26 @@ export default function Home() {
   }
 
   function checkIfEnoughContentToLoadMore(
-    totalLength: number,
-    paginatedLength: number
+    contentDataLength: number,
+    contentDisplayedLength: number
   ) {
-    totalLength - paginatedLength >= 3
+    const remainingContentToDisplay =
+      contentDataLength - contentDisplayedLength;
+    remainingContentToDisplay >= 3
       ? setIsLoadMoreBtnDisabled(false)
       : setIsLoadMoreBtnDisabled(true);
   }
 
   const getPageContent = async (contentChosen: string) => {
-    let totalContentData: any = null;
-    Object.entries(totalContent).map((el) => {
+    let content: any = null;
+    Object.entries(contentData).map((el: any) => {
       if (el[0] === contentChosen && el[1].length > 0) {
-        return (totalContentData = el[1]);
+        return (content = el[1]);
       }
     });
-
-    if (totalContentData && totalContentData.length > 0) {
-      const paginatedContentData = paginate(totalContentData, 3, 1);
-      setContentDisplayed(FilterContentResponse(paginatedContentData));
-      checkIfEnoughContentToLoadMore(
-        totalContentData.length,
-        paginatedContentData.length
-      );
+    if (content && content.length > 0) {
+      const contentToDisplay = paginate(content, 3, 1);
+      setContentDisplayed(FilterContentResponse(contentToDisplay));
     } else {
       setContentIsLoading(true);
       let data: any = null;
@@ -123,10 +107,9 @@ export default function Home() {
       } else {
         data = await getContentByCategory(contentChosen, user.id);
       }
-      storeReceivedContent(data, contentChosen);
-      const firstPaginatedContent: any = paginate(data, 3, 1);
-      setContentDisplayed(FilterContentResponse(firstPaginatedContent));
-      checkIfEnoughContentToLoadMore(data.length, firstPaginatedContent.length);
+      setContentData({ ...contentData, [contentChosen]: data });
+      const contentToDisplay = paginate(data, 3, 1);
+      setContentDisplayed(FilterContentResponse(contentToDisplay));
       setContentIsLoading(false);
     }
   };
@@ -137,10 +120,6 @@ export default function Home() {
     setCurrentPage(1);
     getPageContent(contentTypeChosen);
   }
-
-  useEffect(() => {
-    console.log(totalContent);
-  }, [totalContent]);
 
   return (
     <div>

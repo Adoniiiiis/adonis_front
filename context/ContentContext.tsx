@@ -2,10 +2,8 @@ import { contentType } from '@/Types/ContentType';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 type ContentContextType = {
-  totalContent: contentType;
-  setTotalContent: any;
-  paginatedContent: contentType;
-  setPaginatedContent: any;
+  contentData: contentType;
+  setContentData: any;
   updateBookmark: (id: number) => void;
 };
 
@@ -19,11 +17,10 @@ export const ContentProvider = ({ children }: any) => {
     quotes: [],
     videos: [],
   };
-  const [totalContent, setTotalContent] = useState<any>(content);
-  const [paginatedContent, setPaginatedContent] = useState<any>(content);
+  const [contentData, setContentData] = useState<any>(content);
 
   function updateBookmark(id: any) {
-    Object.entries(totalContent).map((el: any) => {
+    Object.entries(contentData).map((el: any) => {
       if (el[1].length > 0) {
         const newContent = el[1].map((content: any) => {
           if (content.id === id) {
@@ -36,39 +33,16 @@ export const ContentProvider = ({ children }: any) => {
             return content;
           }
         });
-        newContent && setTotalContent({ ...totalContent, [el[0]]: newContent });
-      }
-    });
-    Object.entries(paginatedContent).map((el: any) => {
-      if (el[1].length > 0) {
-        const newContent = el[1].map((content: any) => {
-          if (content.id === id) {
-            if (content.isBookmarked) {
-              return { ...content, isBookmarked: false };
-            } else {
-              return { ...content, isBookmarked: true };
-            }
-          } else {
-            return content;
-          }
-        });
-        newContent &&
-          setPaginatedContent({ ...paginatedContent, [el[0]]: newContent });
+        newContent && setContentData({ ...contentData, [el[0]]: newContent });
       }
     });
   }
 
-  useEffect(() => {
-    console.log(paginatedContent);
-  }, [paginatedContent]);
-
   return (
     <ContentContext.Provider
       value={{
-        totalContent,
-        setTotalContent,
-        paginatedContent,
-        setPaginatedContent,
+        contentData,
+        setContentData,
         updateBookmark,
       }}
     >

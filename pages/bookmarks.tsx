@@ -6,7 +6,7 @@ import useContent from '@/context/ContentContext';
 
 export default function Bookmarks() {
   const [bookmarkDisplay, setBookmarkDisplay] = useState<any>(null);
-  const { totalContent } = useContent();
+  const { contentData } = useContent();
 
   const noBookmarks = (
     <p className="mt-4 dark:text-white">
@@ -16,9 +16,9 @@ export default function Bookmarks() {
 
   // Handling Bookmarks Loading, Display and NoContent
   useEffect(() => {
-    if (totalContent) {
-      if (totalContent.popularContent.length > 0) {
-        const bookmarkedContents = totalContent.popularContent.filter(
+    if (contentData) {
+      if (contentData.popularContent.length > 0) {
+        const bookmarkedContents = contentData.popularContent.filter(
           (content: any) => content.isBookmarked != false
         );
         setBookmarkDisplay(FilterContentResponse(bookmarkedContents));
@@ -28,7 +28,7 @@ export default function Bookmarks() {
     } else {
       setBookmarkDisplay(<p className="mt-4 dark:text-white">Chargement...</p>);
     }
-  }, [totalContent]);
+  }, [contentData]);
 
   return (
     <>
