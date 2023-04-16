@@ -1,9 +1,8 @@
 import BookCard from '@/components/BookCard';
 import QuoteCard from '@/components/QuoteCard';
 import VideoCard from '@/components/VideoCard';
-import { contentType } from '@/Types/ContentType';
 
-export default function FilterContentResponse(content: contentType) {
+export default function FilterContentResponse(content: any) {
   const filteredContent = Object.values(content).map((el: any, key) => {
     if (el.category === 'book') {
       return (

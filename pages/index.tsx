@@ -23,9 +23,9 @@ export default function Home() {
   const user: userType = getUser();
   const [contentIsLoading, setContentIsLoading] = useState<boolean>(false);
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
-  const [contentChosen, setContentChosen] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoadMoreBtnDisabled, setIsLoadMoreBtnDisabled] = useState(true);
+  const [contentChosen, setContentChosen] = useState<string | null>(null);
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
@@ -63,13 +63,13 @@ export default function Home() {
       }
     });
     if (totalLength) {
+      const newContent: any = getMorePaginatedContent();
+      const newFilteredContent = FilterContentResponse(newContent);
+      const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
+      setContentDisplayed(newContentDisplayed);
+      setCurrentPage(currentPage + 1);
       checkIfEnoughContentToLoadMore(totalLength, contentDisplayed.length + 3);
     }
-    const newContent: any = getMorePaginatedContent();
-    const newFilteredContent = FilterContentResponse(newContent);
-    const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
-    setContentDisplayed(newContentDisplayed);
-    setCurrentPage(currentPage + 1);
   };
 
   // Paginate more content
