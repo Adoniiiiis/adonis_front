@@ -21,6 +21,8 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoadMoreBtnDisabled, setIsLoadMoreBtnDisabled] = useState(true);
   const [contentChosen, setContentChosen] = useState<any>(null);
+  const [newLoadedContentIsLoading, setNewLoadedContentIsLoading] =
+    useState<boolean>(false);
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
@@ -56,11 +58,13 @@ export default function Home() {
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
+    setNewLoadedContentIsLoading(true);
     const newContent: any = getMorePaginatedContent();
     const newFilteredContent = FilterContentResponse(newContent);
     const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
     setContentDisplayed(newContentDisplayed);
     setCurrentPage(currentPage + 1);
+    setNewLoadedContentIsLoading(false);
   };
 
   // Paginate more content
@@ -148,7 +152,11 @@ export default function Home() {
                   )}
                   <div className="w-full flex justify-center">
                     <button
-                      disabled={contentIsLoading || isLoadMoreBtnDisabled}
+                      disabled={
+                        contentIsLoading ||
+                        isLoadMoreBtnDisabled ||
+                        newLoadedContentIsLoading
+                      }
                       onClick={LoadMoreContent}
                       className={`text-white p-2 bg-blue-600 mb-24 -mt-2 ${
                         contentIsLoading || isLoadMoreBtnDisabled

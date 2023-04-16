@@ -22,7 +22,7 @@ export const ContentProvider = ({ children }: any) => {
   function updateBookmark(id: any) {
     Object.entries(contentData).map((el: any) => {
       if (el[1].length > 0) {
-        const newContent = el[1].map((content: any) => {
+        const updatedData = el[1].map((content: any) => {
           if (content.id === id) {
             if (content.isBookmarked) {
               return { ...content, isBookmarked: false };
@@ -33,7 +33,7 @@ export const ContentProvider = ({ children }: any) => {
             return content;
           }
         });
-        newContent && setContentData({ ...contentData, [el[0]]: newContent });
+        updatedData && setContentData({ ...contentData, [el[0]]: updatedData });
       }
     });
   }
