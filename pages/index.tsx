@@ -25,7 +25,7 @@ export default function Home() {
   const [contentDisplayed, setContentDisplayed] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoadMoreBtnDisabled, setIsLoadMoreBtnDisabled] = useState(true);
-  const [contentChosen, setContentChosen] = useState<string | null>(null);
+  const [contentChosen, setContentChosen] = useState<any>(null);
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
@@ -66,6 +66,10 @@ export default function Home() {
       const newContent: any = getMorePaginatedContent();
       const newFilteredContent = FilterContentResponse(newContent);
       const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
+      setPaginatedContent({
+        ...paginatedContent,
+        [contentChosen]: newContentDisplayed,
+      });
       setContentDisplayed(newContentDisplayed);
       setCurrentPage(currentPage + 1);
       checkIfEnoughContentToLoadMore(totalLength, contentDisplayed.length + 3);
@@ -97,18 +101,13 @@ export default function Home() {
   const getPageContent = async (contentChosen: string) => {
     let totalContentData: any = null;
     Object.entries(totalContent).map((el) => {
-      if (el[0] === contentChosen) {
+      if (el[0] === contentChosen && el[1].length > 0) {
         return (totalContentData = el[1]);
       }
     });
-    let paginatedContentData: any = null;
-    Object.entries(paginatedContent).map((el) => {
-      if (el[0] === contentChosen) {
-        return (paginatedContentData = el[1]);
-      }
-    });
 
-    if (paginatedContentData && paginatedContentData.length > 0) {
+    if (totalContentData && totalContentData.length > 0) {
+      const paginatedContentData = paginate(totalContentData, 3, 1);
       setContentDisplayed(FilterContentResponse(paginatedContentData));
       checkIfEnoughContentToLoadMore(
         totalContentData.length,
@@ -138,6 +137,10 @@ export default function Home() {
     setCurrentPage(1);
     getPageContent(contentTypeChosen);
   }
+
+  useEffect(() => {
+    console.log(totalContent);
+  }, [totalContent]);
 
   return (
     <div>

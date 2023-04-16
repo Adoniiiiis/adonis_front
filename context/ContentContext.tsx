@@ -58,6 +58,10 @@ export const ContentProvider = ({ children }: any) => {
     });
   }
 
+  useEffect(() => {
+    console.log(paginatedContent);
+  }, [paginatedContent]);
+
   return (
     <ContentContext.Provider
       value={{
