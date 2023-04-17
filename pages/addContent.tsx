@@ -23,6 +23,7 @@ interface FinalObject {
   tagTime: string | null;
   tagPage: string | null;
   bookCover: File | null;
+  user_id: number | null;
 }
 
 export default function AddContent() {
@@ -50,6 +51,7 @@ export default function AddContent() {
     tagTime: null,
     tagPage: null,
     bookCover: null,
+    user_id: null,
   });
   const langStrings = useLang();
 
@@ -82,6 +84,7 @@ export default function AddContent() {
         quote: quote ?? null,
         link: link ?? null,
         bookCover: bookCover ?? null,
+        user_id: user.id,
       });
     } else if (step === 2) {
       setLoading(true);

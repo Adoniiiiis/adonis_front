@@ -1,9 +1,8 @@
-import { profileDataType } from '@/Types/ProfileDataType';
 import { axios } from './AxiosSetup';
 
 export default function DeleteContentAxios(userId: number, postId: number) {
   try {
-    axios({
+    const request = axios({
       method: 'POST',
       url: 'api/deleteContent',
       data: {
@@ -11,6 +10,7 @@ export default function DeleteContentAxios(userId: number, postId: number) {
         postId: postId,
       },
     });
+    return request;
   } catch (err: any) {
     const error = err.message;
     return error;

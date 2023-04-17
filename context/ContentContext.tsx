@@ -5,6 +5,7 @@ type ContentContextType = {
   contentData: contentType;
   setContentData: any;
   updateBookmark: (id: number) => void;
+  removeContent: (postId: number) => void;
 };
 
 const ContentContext = createContext({} as ContentContextType);
@@ -19,20 +20,29 @@ export const ContentProvider = ({ children }: any) => {
   };
   const [contentData, setContentData] = useState<any>(content);
 
-  function updateBookmark(id: any) {
+  function updateBookmark(id: number) {
     Object.entries(contentData).map((el: any) => {
       if (el[1].length > 0) {
-        const updatedData = el[1].map((content: any) => {
-          if (content.id === id) {
-            if (content.isBookmarked) {
-              return { ...content, isBookmarked: false };
+        const updatedData = el[1].map((post: any) => {
+          if (post.id === id) {
+            if (post.isBookmarked) {
+              return { ...post, isBookmarked: false };
             } else {
-              return { ...content, isBookmarked: true };
+              return { ...post, isBookmarked: true };
             }
           } else {
-            return content;
+            return post;
           }
         });
+        updatedData && setContentData({ ...contentData, [el[0]]: updatedData });
+      }
+    });
+  }
+
+  function removeContent(postId: number) {
+    Object.entries(contentData).map((el: any) => {
+      if (el[1].length > 0) {
+        const updatedData = el[1].filter((post: any) => post.id != postId);
         updatedData && setContentData({ ...contentData, [el[0]]: updatedData });
       }
     });
@@ -44,6 +54,7 @@ export const ContentProvider = ({ children }: any) => {
         contentData,
         setContentData,
         updateBookmark,
+        removeContent,
       }}
     >
       {children}

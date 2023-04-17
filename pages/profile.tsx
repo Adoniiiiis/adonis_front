@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { userType } from '@/Types/UserType';
 import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
-import { contentType } from '@/Types/ContentType';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 
 export default function Profile() {

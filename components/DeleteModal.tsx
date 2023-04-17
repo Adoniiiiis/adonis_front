@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteContentAxios from '@/Axios/DeleteContentAxios';
 import { toast } from 'react-toastify';
+import useContent from '@/context/ContentContext';
 
 export default function DeleteModal({
   userId,
@@ -14,6 +15,8 @@ export default function DeleteModal({
   isDeleteModalOpen,
   setIsDeleteModalOpen,
 }: any) {
+  const { removeContent } = useContent();
+
   const handleClose = () => {
     setIsDeleteModalOpen(false);
   };
@@ -23,11 +26,8 @@ export default function DeleteModal({
     DeleteContentAxios(userId, postId).then(() => {
       toast.success('Post supprimé avec succès!');
     });
+    removeContent(postId);
   };
-
-  useEffect(() => {
-    console.log(postId);
-  }, [postId]);
 
   return (
     <div>
