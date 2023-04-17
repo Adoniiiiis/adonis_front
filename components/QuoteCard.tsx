@@ -9,6 +9,8 @@ import { quoteType } from '@/Types/QuoteType';
 import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
 import { useRouter } from 'next/router';
+import { BsFillTrash3Fill } from 'react-icons/bs';
+import DeleteModal from './deleteModal';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
@@ -21,6 +23,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const langStrings = useLang();
   const { updateBookmark } = useContent();
   const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -56,12 +59,27 @@ export default function QuoteCard({ quoteData }: quoteType) {
               ? 0
               : currentRanking
             : ranking}
+          {router.pathname === '/profile' && (
+            <BsFillTrash3Fill
+              onClick={() => setIsDeleteModalOpen(true)}
+              size={25}
+              className="mt-[54px] cursor-pointer"
+            />
+          )}
           <BookmarkHeart
             isCurrentlyBookmarked={isCurrentlyBookmarked}
             handleBookmarkClick={handleBookmarkClick}
           />
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <DeleteModal
+          userId={user.id}
+          postId={id}
+          isDeleteModalOpen={isDeleteModalOpen}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+        />
+      )}
       <div className="flex-col w-full mt-[50px] pb-3">
         <h1 className="italic flex justify-center mb-3 text-[1.050em] pl-5 pr-5">
           {quote}

@@ -10,6 +10,8 @@ import useLang from '@/hooks/useLang';
 import Image from 'next/image';
 import useContent from '@/context/ContentContext';
 import { useRouter } from 'next/router';
+import { BsFillTrash3Fill } from 'react-icons/bs';
+import DeleteModal from './deleteModal';
 
 export default function BookCard({ bookData }: bookType) {
   const {
@@ -31,6 +33,7 @@ export default function BookCard({ bookData }: bookType) {
   const langStrings = useLang();
   const { updateBookmark } = useContent();
   const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -67,12 +70,27 @@ export default function BookCard({ bookData }: bookType) {
               ? 0
               : currentRanking
             : ranking}
+          {router.pathname === '/profile' && (
+            <BsFillTrash3Fill
+              onClick={() => setIsDeleteModalOpen(true)}
+              size={25}
+              className="mt-[54px] cursor-pointer"
+            />
+          )}
           <BookmarkHeart
             isCurrentlyBookmarked={isCurrentlyBookmarked}
             handleBookmarkClick={handleBookmarkClick}
           />
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <DeleteModal
+          userId={user.id}
+          postId={id}
+          isDeleteModalOpen={isDeleteModalOpen}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+        />
+      )}
       <div className="md:flex flex-col w-full">
         <div className="mt-[12px] ml-[15px] relative min-h-[175px] w-[120px]">
           {book_cover && (
