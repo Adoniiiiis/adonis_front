@@ -25,7 +25,10 @@ export default function Home() {
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
-    !contentChosen && user.id && changeContentType('popularContent');
+    !contentChosen &&
+      user.id &&
+      !contentIsLoading &&
+      changeContentType('popularContent');
   }, []);
 
   // Getting Paginated Content For A Given Page
@@ -57,7 +60,7 @@ export default function Home() {
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
-    if (!newLoadedContentIsLoading) {
+    if (!newLoadedContentIsLoading && contentDisplayed.length > 0) {
       setNewLoadedContentIsLoading(true);
       const newContent: any = getMorePaginatedContent();
       const newFilteredContent = FilterContentResponse(newContent);
@@ -68,13 +71,8 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    console.log(contentDisplayed);
-  }, [contentDisplayed]);
-
   // Paginate more content
   function getMorePaginatedContent() {
-    console.log('contentData', contentData);
     let newContent: any = null;
     Object.entries(contentData).map((el: any) => {
       if (el[0] === contentChosen) {
@@ -108,21 +106,27 @@ export default function Home() {
       const contentToDisplay = paginate(content, 5, 1);
       setContentDisplayed(FilterContentResponse(contentToDisplay));
     } else {
-      setContentIsLoading(true);
-      let data: any = null;
-      if (contentChosen === 'popularContent') {
-        data = await GetPopularContentAxios(user.id);
-      } else if (contentChosen === 'newContent') {
-        data = await GetNewContentAxios(user.id);
-      } else {
-        data = await getContentByCategory(contentChosen, user.id);
+      if (!contentIsLoading) {
+        let data: any = null;
+        if (contentChosen === 'popularContent') {
+          data = await GetPopularContentAxios(user.id);
+        } else if (contentChosen === 'newContent') {
+          data = await GetNewContentAxios(user.id);
+        } else {
+          data = await getContentByCategory(contentChosen, user.id);
+        }
+        console.log('fetching');
+        const contentToDisplay = paginate(data, 5, 1);
+        setContentDisplayed(FilterContentResponse(contentToDisplay));
+        setContentData({ ...contentData, [contentChosen]: data });
+        setContentIsLoading(false);
       }
-      setContentData({ ...contentData, [contentChosen]: data });
-      const contentToDisplay = paginate(data, 5, 1);
-      setContentDisplayed(FilterContentResponse(contentToDisplay));
-      setContentIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(contentIsLoading);
+  }, [contentIsLoading]);
 
   // The User Chooses what Content to Display
   function changeContentType(contentTypeChosen: string) {
