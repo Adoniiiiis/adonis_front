@@ -9,7 +9,6 @@ import GetNewContentAxios from '@/Axios/GetNewContentAxios';
 import useAuth from '@/context/AuthContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 import { userType } from '@/Types/UserType';
-import HomepageSpinner from '@/components/HomepageSpinner';
 import useContent from '@/context/ContentContext';
 
 export default function Home() {
@@ -58,21 +57,28 @@ export default function Home() {
 
   // Loading More Content On The Page
   const LoadMoreContent = async () => {
-    setNewLoadedContentIsLoading(true);
-    const newContent: any = getMorePaginatedContent();
-    const newFilteredContent = FilterContentResponse(newContent);
-    const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
-    setContentDisplayed(newContentDisplayed);
-    setCurrentPage(currentPage + 1);
-    setNewLoadedContentIsLoading(false);
+    if (!newLoadedContentIsLoading) {
+      setNewLoadedContentIsLoading(true);
+      const newContent: any = getMorePaginatedContent();
+      const newFilteredContent = FilterContentResponse(newContent);
+      const newContentDisplayed = [...contentDisplayed, ...newFilteredContent];
+      setContentDisplayed(newContentDisplayed);
+      setCurrentPage(currentPage + 1);
+      setNewLoadedContentIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    console.log(contentDisplayed);
+  }, [contentDisplayed]);
 
   // Paginate more content
   function getMorePaginatedContent() {
+    console.log('contentData', contentData);
     let newContent: any = null;
     Object.entries(contentData).map((el: any) => {
       if (el[0] === contentChosen) {
-        return (newContent = paginate(el[1], 3, currentPage + 1));
+        return (newContent = paginate(el[1], 5, currentPage + 1));
       }
     });
     if (newContent) {
@@ -86,7 +92,7 @@ export default function Home() {
   ) {
     const remainingContentToDisplay =
       contentDataLength - contentDisplayedLength;
-    remainingContentToDisplay >= 3
+    remainingContentToDisplay > 0
       ? setIsLoadMoreBtnDisabled(false)
       : setIsLoadMoreBtnDisabled(true);
   }
@@ -99,7 +105,7 @@ export default function Home() {
       }
     });
     if (content && content.length > 0) {
-      const contentToDisplay = paginate(content, 3, 1);
+      const contentToDisplay = paginate(content, 5, 1);
       setContentDisplayed(FilterContentResponse(contentToDisplay));
     } else {
       setContentIsLoading(true);
@@ -112,7 +118,7 @@ export default function Home() {
         data = await getContentByCategory(contentChosen, user.id);
       }
       setContentData({ ...contentData, [contentChosen]: data });
-      const contentToDisplay = paginate(data, 3, 1);
+      const contentToDisplay = paginate(data, 5, 1);
       setContentDisplayed(FilterContentResponse(contentToDisplay));
       setContentIsLoading(false);
     }
@@ -145,8 +151,6 @@ export default function Home() {
                 <div className="flex-col w-full">
                   {contentDisplayed && !contentIsLoading ? (
                     contentDisplayed
-                  ) : contentDisplayed ? (
-                    <HomepageSpinner />
                   ) : (
                     <HomepageSqueletons />
                   )}
