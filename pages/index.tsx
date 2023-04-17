@@ -142,7 +142,7 @@ export default function Home() {
                 contentIsLoading={contentIsLoading}
               />
               <div className="-mt-7 flex justify-center">
-                <div className="flex-col">
+                <div className="flex-col w-full">
                   {contentDisplayed && !contentIsLoading ? (
                     contentDisplayed
                   ) : contentDisplayed ? (

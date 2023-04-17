@@ -124,20 +124,19 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = () => {
-    const token = getToken();
-    const logoutAxios = Axios.create({
-      baseURL: 'http://localhost',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    logoutAxios.post('/logout').then(() => {
-      localStorage.clear();
-      setUser(null);
-      toast.success(langStrings && langStrings.toastLogout);
-      router.push('/login');
-    });
+    // const token = getToken();
+    // const logoutAxios = Axios.create({
+    //   baseURL: 'http://localhost',
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    // logoutAxios.post('/logout').then(() => {
+    localStorage.clear();
+    setUser(null);
+    toast.success(langStrings && langStrings.toastLogout);
+    router.push('/login');
+    // });
   };
 
   return (

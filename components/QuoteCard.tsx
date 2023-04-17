@@ -8,6 +8,7 @@ import { userType } from '@/Types/UserType';
 import { quoteType } from '@/Types/QuoteType';
 import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
+import { useRouter } from 'next/router';
 
 export default function QuoteCard({ quoteData }: quoteType) {
   const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
@@ -19,6 +20,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const user: userType = getUser();
   const langStrings = useLang();
   const { updateBookmark } = useContent();
+  const router = useRouter();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -42,7 +44,11 @@ export default function QuoteCard({ quoteData }: quoteType) {
   };
 
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[275px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
+    <div
+      className={`${
+        router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[100vw]'
+      }  min-h-[200px] min-w-[364px] bg-white flex justify-center mb-8 rounded-md border-gray-400 border-[1px]`}
+    >
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         <div className="flex flex-col justify-between items-center">
           {currentRanking
@@ -56,7 +62,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
           />
         </div>
       </div>
-      <div className="flex-col w-full mt-[50px]">
+      <div className="flex-col w-full mt-[50px] pb-3">
         <h1 className="italic flex justify-center mb-3 text-[1.050em] pl-5 pr-5">
           {quote}
         </h1>
@@ -73,12 +79,14 @@ export default function QuoteCard({ quoteData }: quoteType) {
           <p className="text-[0.8em] ml-[5px]">Pas de livre omg</p>
         </div>
       </div>
-      <Ranking
-        handleArrowClick={handleArrowClick}
-        originalValue={ranking}
-        isUpdating={isUpdating}
-        userRating={userRating}
-      />
+      <div className="m-0">
+        <Ranking
+          handleArrowClick={handleArrowClick}
+          originalValue={ranking}
+          isUpdating={isUpdating}
+          userRating={userRating}
+        />
+      </div>
     </div>
   );
 }

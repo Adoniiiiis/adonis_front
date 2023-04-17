@@ -8,6 +8,7 @@ import { userType } from '@/Types/UserType';
 import { videoType } from '@/Types/VideoType';
 import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
+import { useRouter } from 'next/router';
 
 export default function VideoCard({ videoUrl, videoData }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = videoData;
@@ -19,6 +20,7 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   const user: userType = getUser();
   const langStrings = useLang();
   const { updateBookmark } = useContent();
+  const router = useRouter();
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -43,7 +45,11 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
   };
 
   return (
-    <div className="md:w-[700px] md:h-[200px] w-[380px] h-[245px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]">
+    <div
+      className={`${
+        router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[100vw]'
+      } min-h-[200px] min-w-[364px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]`}
+    >
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         <div className="flex flex-col justify-between items-center">
           {currentRanking
@@ -58,11 +64,11 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
         </div>
       </div>
       <div className="md:flex flex-col w-full">
-        <div className="mt-[12px] ml-[15px] relative">
+        <div className="mt-[12px] md:ml-[15px] relative">
           <iframe width="275" height="175px" src={videoUrl}></iframe>
         </div>
         <div className="flex-col mt-[13px] ml-[15px] md:-mt-[160px] md:ml-[300px]">
-          <div className="flex -mt-[7px]">
+          <div className="flex -mt-[4px]">
             <p className="text-gray-500 text-[0.8em]">
               {langStrings && langStrings.youtuber}:
             </p>
@@ -72,16 +78,20 @@ export default function VideoCard({ videoUrl, videoData }: videoType) {
             <p className="text-gray-500 text-[0.8em]">
               {langStrings && langStrings.category}:
             </p>
-            <p className="text-[0.8em] ml-[5px]">Développement personnel</p>
+            <p className="text-[0.8em] ml-[5px] pb-3">
+              Développement personnel
+            </p>
           </div>
         </div>
       </div>
-      <Ranking
-        handleArrowClick={handleArrowClick}
-        originalValue={ranking}
-        isUpdating={isUpdating}
-        userRating={userRating}
-      />
+      <div className="m-0">
+        <Ranking
+          handleArrowClick={handleArrowClick}
+          originalValue={ranking}
+          isUpdating={isUpdating}
+          userRating={userRating}
+        />
+      </div>
     </div>
   );
 }

@@ -5,15 +5,33 @@ import useAuth from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { userType } from '@/Types/UserType';
 import useLang from '@/hooks/useLang';
+import useContent from '@/context/ContentContext';
+import { contentType } from '@/Types/ContentType';
+import FilterContentResponse from '@/Axios/FilterContentResponse';
 
 export default function Profile() {
   const { getUser }: any = useAuth();
   const [userData, setUserData] = useState<userType | null>(null);
   const langStrings = useLang();
+  const { contentData } = useContent();
+  const [userContents, setUserContents] = useState<any>();
 
   useEffect(() => {
     setUserData(getUser());
   }, []);
+
+  useEffect(() => {
+    if (contentData && userData) {
+      if (contentData.popularContent.length > 0 && userData.id) {
+        const userFilteredContent = FilterContentResponse(
+          contentData.popularContent.filter(
+            (content: any) => content.user_id === userData.id
+          )
+        );
+        setUserContents(userFilteredContent);
+      }
+    }
+  }, [contentData, userData]);
 
   return (
     <>
@@ -26,7 +44,7 @@ export default function Profile() {
       <main className="[100vh]">
         <DefaultLayout>
           <div className="flex justify-center 2xl:mr-[50px] mt-8">
-            <div className="h-full bg-gray-300 dark:bg-gray-800 dark:border dark:border-gray-700 p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
+            <div className="h-full bg-gray-300 dark:bg-gray-800 dark:border dark:border-gray-700 md:p-8 flex-col lg:w-[80vw] lg:max-w-[1330px] w-[100vw]">
               <div className="bg-white rounded-lg shadow-xl pb-8">
                 <div className="w-full h-[250px]">
                   <img
@@ -51,49 +69,48 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="lg:flex lg:w-full">
-                <div className="my-4 flex-col 2xl:flex-row lg:min-w-[40%]">
+              <div className="w-full">
+                <div className="my-4 flex flex-col 2xl:flex-row lg:min-w-[40%]">
                   <div className="lg:min-w-[100%] flex-col 2xl:w-1/3">
                     <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
                       <h4 className="text-xl text-gray-900 font-bold pb-3">
                         {langStrings && langStrings.personalInfos}
                       </h4>
-                      <ul className="mt-2 text-gray-700">
+                      <ul className="mt-2 text-gray-700 text-[0.7em] md:text-base">
                         <li className="flex border-y py-2">
                           <span className="font-bold w-40">
                             {langStrings && langStrings.fullName}:
                           </span>
-                          <span className="text-gray-700">
-                            {userData?.name}
-                          </span>
+                          <span>{userData?.name}</span>
                         </li>
                         <li className="flex border-y py-2">
                           <span className="font-bold w-40">
                             {langStrings && langStrings.username}:
                           </span>
-                          <span className="text-gray-700">
-                            {userData?.username}
-                          </span>
+                          <span>{userData?.username}</span>
                         </li>
                         <li className="flex border-b py-2">
                           <span className="font-bold w-40">
                             {langStrings && langStrings.email}:
                           </span>
-                          <span className="text-gray-700">
-                            {userData?.email}
-                          </span>
+                          <span>{userData?.email}</span>
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
 
-                <div className="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 lg:ml-[2%] lg:min-w-[58%]">
+                <div className="my-4 flex flex-col w-full justify-center 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 lg:min-w-[58%]">
                   <div className="lg:min-w-full flex flex-col 2xl:w-1/3 lg:min-h-full">
                     <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
-                      <h4 className="text-xl text-gray-900 font-bold pb-3">
+                      <h4 className="text-xl text-gray-900 font-bold pb-3 mb-14">
                         {langStrings && langStrings.profileAddedContent}
                       </h4>
+                      <div className="flex justify-center">
+                        <div className="flex flex-col">
+                          {userContents && userContents}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

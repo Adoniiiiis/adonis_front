@@ -82,7 +82,7 @@ const Navbar: FC = () => {
   return (
     <>
       {/* Phone navbar */}
-      <div className="lg:hidden flex flex-row bg-zinc-800 rounded-full fixed bottom-8 justify-around w-80 h-14 left-1/2 -translate-x-1/2 overflow-hidden">
+      <div className="lg:hidden flex flex-row bg-zinc-800 rounded-full fixed z-10 bottom-8 justify-around w-80 h-14 left-1/2 -translate-x-1/2 overflow-hidden">
         {listPages.map((el, i) => (
           <>
             {router.pathname === el.routeName ||

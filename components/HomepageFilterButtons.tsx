@@ -44,7 +44,7 @@ export default function HomepageFilterButtons({
   ];
 
   return (
-    <div className="mt-8 mb-16 flex justify-between bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[700px]">
+    <div className="mt-8 mb-16 flex justify-between min-w-[364px] bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[100vw] max-w-[700px]">
       <div>
         {CATEGORIES.map((el) => (
           <button
@@ -52,7 +52,7 @@ export default function HomepageFilterButtons({
             onClick={() => {
               !contentIsLoading && changeContentType(el.id);
             }}
-            className="mr-4 p-2 hover:bg-gray-200 hover:rounded-full"
+            className="p-2 px-4 hover:bg-gray-200 hover:rounded-full md:text-base text-sm"
           >
             {el.displayName}
           </button>
