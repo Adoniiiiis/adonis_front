@@ -1,6 +1,6 @@
 export type videoType = {
   videoUrl: string;
-  videoData: {
+  data: {
     id: number;
     author: string;
     ranking: number;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
 type bookmarkHeart = {

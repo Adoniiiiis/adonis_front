@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { BsFillTrash3Fill } from 'react-icons/bs';
 import DeleteModal from './deleteModal';
 
-export default function BookCard({ bookData }: bookType) {
+export default function BookCard({ data }: bookType) {
   const {
     id,
     title,
@@ -23,7 +23,7 @@ export default function BookCard({ bookData }: bookType) {
     ranking,
     isBookmarked,
     userRating,
-  } = bookData;
+  } = data;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);

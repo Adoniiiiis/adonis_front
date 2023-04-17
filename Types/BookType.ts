@@ -1,7 +1,5 @@
-import { StaticImageData } from 'next/image';
-
 export type bookType = {
-  bookData: {
+  data: {
     id: number;
     title: string;
     subtitle: string;

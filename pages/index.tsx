@@ -107,6 +107,7 @@ export default function Home() {
       setContentDisplayed(FilterContentResponse(contentToDisplay));
     } else {
       if (!contentIsLoading) {
+        setContentIsLoading(true);
         let data: any = null;
         if (contentChosen === 'popularContent') {
           data = await GetPopularContentAxios(user.id);
@@ -115,7 +116,6 @@ export default function Home() {
         } else {
           data = await getContentByCategory(contentChosen, user.id);
         }
-        console.log('fetching');
         const contentToDisplay = paginate(data, 5, 1);
         setContentDisplayed(FilterContentResponse(contentToDisplay));
         setContentData({ ...contentData, [contentChosen]: data });
@@ -123,10 +123,6 @@ export default function Home() {
       }
     }
   };
-
-  useEffect(() => {
-    console.log(contentIsLoading);
-  }, [contentIsLoading]);
 
   // The User Chooses what Content to Display
   function changeContentType(contentTypeChosen: string) {
