@@ -1,5 +1,5 @@
 import UpdateRankingAxios from '@/Axios/UpdateRankingAxios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Ranking from './Ranking';
 import useAuth from '@/context/AuthContext';
 import BookmarkHeart from './BookmarkHeart';
@@ -12,11 +12,9 @@ import { useRouter } from 'next/router';
 import { BsFillTrash3Fill } from 'react-icons/bs';
 import DeleteModal from './deleteModal';
 
-export default function QuoteCard({ quoteData }: quoteType) {
-  const { id, quote, author, ranking, isBookmarked, userRating } = quoteData;
+export default function QuoteCard({ data }: quoteType) {
+  const { id, quote, author, ranking, isBookmarked, userRating } = data;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
-  const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
-    useState<boolean>(isBookmarked);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const { getUser }: any = useAuth();
   const user: userType = getUser();
@@ -24,6 +22,8 @@ export default function QuoteCard({ quoteData }: quoteType) {
   const { updateBookmark } = useContent();
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
+    useState<boolean>(isBookmarked);
 
   // Updating client and server side values for the ranking
   const handleArrowClick = async (
@@ -50,7 +50,7 @@ export default function QuoteCard({ quoteData }: quoteType) {
     <div
       className={`${
         router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[100vw]'
-      }  min-h-[200px] min-w-[364px] bg-white flex justify-center mb-8 rounded-md border-gray-400 border-[1px]`}
+      } min-h-[200px] min-w-[364px] bg-white flex justify-center mb-8 rounded-md border-gray-400 border-[1px]`}
     >
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">
         <div className="flex flex-col justify-between items-center">

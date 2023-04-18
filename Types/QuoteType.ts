@@ -1,5 +1,5 @@
 export type quoteType = {
-  quoteData: {
+  data: {
     id: number;
     quote: string;
     author: string;

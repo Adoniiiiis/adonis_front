@@ -12,8 +12,8 @@ import { useRouter } from 'next/router';
 import { BsFillTrash3Fill } from 'react-icons/bs';
 import DeleteModal from './deleteModal';
 
-export default function VideoCard({ videoUrl, videoData }: videoType) {
-  const { id, author, ranking, isBookmarked, userRating } = videoData;
+export default function VideoCard({ videoUrl, data }: videoType) {
+  const { id, author, ranking, isBookmarked, userRating } = data;
   const [currentRanking, setCurrentRanking] = useState<any>(null);
   const [isCurrentlyBookmarked, setIsCurrentlyBookmarked] =
     useState<boolean>(isBookmarked);
