@@ -50,7 +50,7 @@ export default function VideoCard({ videoUrl, data }: videoType) {
   return (
     <div
       className={`${
-        router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[100vw]'
+        router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[95vw]'
       } min-h-[200px] min-w-[364px] bg-white flex mb-8 rounded-md border-gray-400 border-[1px]`}
     >
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-3 rounded-l-md">

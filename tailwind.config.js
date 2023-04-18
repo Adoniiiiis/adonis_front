@@ -23,6 +23,10 @@ module.exports = {
           900: '#1e3a8a',
         },
       },
+      screens: {
+        settings_md: '850px',
+        settings_sm: '530px',
+      },
     },
     fontFamily: {
       body: [

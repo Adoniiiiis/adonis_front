@@ -5,6 +5,8 @@ import ChangeProfileContentAxios from '@/Axios/ChangeProfileContentAxios';
 import { profileDataType } from '@/Types/ProfileDataType';
 import { toast } from 'react-toastify';
 import useLang from '@/hooks/useLang';
+import Image from 'next/image';
+import blank_profile_img from './../../public/images/blank_profile_img.webp';
 
 export default function ProfileContent() {
   const { getUser } = useAuth();
@@ -15,6 +17,8 @@ export default function ProfileContent() {
     name: user && user.name,
     email: user && user.email,
     username: user && user.username,
+    profile_img: null,
+    // profile_img: profile_img ?? null,
   });
   const langStrings = useLang();
 
@@ -54,7 +58,7 @@ export default function ProfileContent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="mt-3">
+      <section className="flex flex-col items-center settings_sm:justify-around settings_sm:flex-row mt-3">
         <div className="flex flex-col lg:py-0">
           <h1 className="mb-6 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             {langStrings && langStrings.myProfile}
@@ -124,6 +128,12 @@ export default function ProfileContent() {
               Enregistrer
             </button>
           </form>
+        </div>
+        <div className="mt-8 settings_sm:ml-8 settings_sm:-mt-28">
+          <Image
+            src={user?.profile_img ?? blank_profile_img}
+            className="md:w-[120px] w-28 rounded-full"
+          />
         </div>
       </section>
     </>

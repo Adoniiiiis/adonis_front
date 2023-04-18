@@ -12,19 +12,18 @@ const SettingsLayout: FC<TypeProps> = ({ children }) => {
   useDark();
 
   return (
-    <div className="flex flex-row h-screen dark:bg-gray-900">
+    <div className="flex flex-row h-full dark:bg-gray-900">
       <Navbar />
-      <div className="flex justify-center md:p-8 py-8 px-2 w-full h-full bg-gray-300 dark:bg-gray-900">
+      <div className="flex justify-center md:py-4 w-full h-full bg-gray-300 dark:bg-gray-900">
         <div
-          className="flex max-w-[95%] max-h-full w-[900px] h-[600px] rounded-md bg-white dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white
-        md:w-[700px]
-        lg:w-[900px] lg:h-[700px]"
+          className="flex max-w-[1000px] max-h-[800px] w-[95vw] md:w-[90vw] h-[95vh] rounded-md bg-white dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white
+        "
         >
-          <div className="flex flex-wrap h-fit w-fit">
-            <div className="mb-4">
+          <div className="flex flex-col w-full settings_md:flex-row settings_md:items-start">
+            <div className="mb-4 h-fit">
               <Sidebar />
             </div>
-            <div className="p-4">{children}</div>
+            <div className="p-4 flex justify-center">{children}</div>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="font-ubuntu">
+      <body className="font-ubuntu bg-zinc-300 dark:bg-gray-900">
         <Main />
         <NextScript />
       </body>

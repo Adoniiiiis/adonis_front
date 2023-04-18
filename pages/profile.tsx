@@ -7,6 +7,8 @@ import { userType } from '@/Types/UserType';
 import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
+import blank_profile_img from './../public/images/blank_profile_img.webp';
+import Image from 'next/image';
 
 export default function Profile() {
   const { getUser }: any = useAuth();
@@ -52,9 +54,10 @@ export default function Profile() {
                   />
                 </div>
                 <div className="flex flex-col items-center -mt-20">
-                  <img
-                    src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
-                    className="lg:w-40 w-32 border-4 border-white rounded-full"
+                  <Image
+                    src={userData?.profile_img ?? blank_profile_img}
+                    className="border-white rounded-full lg lg:w-40 w-32 mb-1"
+                    alt="user profile image"
                   />
                   <div className="flex items-center space-x-2 mt-2">
                     <p className="text-2xl">{userData?.name}</p>

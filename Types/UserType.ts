@@ -7,5 +7,5 @@ export type userType = {
   email_verified_at: Date | null;
   created_at: Date | null;
   updated_at: Date | null;
-  currentTheme: string;
+  profile_img: string | null;
 };
