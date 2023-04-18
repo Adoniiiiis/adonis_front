@@ -47,7 +47,6 @@ export default function Bookmarks() {
       source.index,
       destination.index
     );
-    console.log('newBookmarksOrder', newBookmarksOrder);
     newBookmarksOrder && setBookmarkDisplay(newBookmarksOrder);
   };
 
