@@ -3,7 +3,6 @@ import LoginAxios from '@/Axios/LoginAxios';
 import { useRouter } from 'next/router';
 import RegisterAxios from '@/Axios/RegisterAxios';
 import { RegisterType } from '@/Types/RegisterType';
-import Axios from 'axios';
 import { toast } from 'react-toastify';
 import { loginResponseType } from '@/Types/LoginResponseType';
 import { registerResponseType } from '@/Types/RegisterResponseType';

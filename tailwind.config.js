@@ -66,5 +66,10 @@ module.exports = {
       ubuntu: ['Ubuntu'],
     },
     plugins: [],
+    variants: {
+      extend: {
+        display: ['group-hover'],
+      },
+    },
   },
 };

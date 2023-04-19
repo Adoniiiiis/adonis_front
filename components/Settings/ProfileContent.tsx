@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import useAuth from '@/context/AuthContext';
 import ChangeProfileContentAxios from '@/Axios/ChangeProfileContentAxios';
@@ -7,20 +7,27 @@ import { toast } from 'react-toastify';
 import useLang from '@/hooks/useLang';
 import Image from 'next/image';
 import blank_profile_img from './../../public/images/blank_profile_img.webp';
+import { BsPlusCircleDotted } from 'react-icons/bs';
+import ChangeProfileImgAxios from '@/Axios/ChangeProfileImgAxios';
 
 export default function ProfileContent() {
   const { getUser } = useAuth();
   const user = getUser();
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(true);
+  const [newProfileImageDisplay, setNewProfileImageDisplay] =
+    useState<any>(null);
+  const [profileImageDisplay, setProfileImageDisplay] = useState<any>(null);
   const [profileData, setProfileData] = useState<profileDataType>({
     id: user && user.id,
     name: user && user.name,
     email: user && user.email,
     username: user && user.username,
-    profile_img: null,
-    // profile_img: profile_img ?? null,
   });
   const langStrings = useLang();
+
+  useEffect(() => {
+    user && user.profile_img && setProfileImageDisplay(user.profile_img);
+  }, []);
 
   function checkIfDataChanged() {
     const didItChange =
@@ -48,6 +55,20 @@ export default function ProfileContent() {
     localStorage.setItem('user', JSON.stringify(profileData));
     toast.success('Vos informations ont bien été changées');
     setIsBtnDisabled(true);
+  };
+
+  const handleProfileImgChange = (e: any) => {
+    const file: any = e.target.files;
+    const chosenProfileImg: string = URL.createObjectURL(file[0]);
+    setNewProfileImageDisplay(chosenProfileImg);
+    try {
+      ChangeProfileImgAxios(user.id, file[0]);
+      toast.success('Votre image de profil a été modifiée avec succès!');
+    } catch {
+      toast.error(
+        "Une erreur est survenue dans l'enregistrement de votre image."
+      );
+    }
   };
 
   return (
@@ -129,10 +150,27 @@ export default function ProfileContent() {
             </button>
           </form>
         </div>
-        <div className="mt-8 settings_sm:ml-8 settings_sm:-mt-28">
+        <div className="mt-8 settings_sm:ml-8 settings_sm:-mt-28 relative group">
+          <BsPlusCircleDotted
+            size={50}
+            color="black"
+            className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] hidden group-hover:block"
+          />
+          <input
+            className="opacity-0 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] rounded-full w-[120px] h-[120px]"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleProfileImgChange(e)}
+          />
           <Image
-            src={user?.profile_img ?? blank_profile_img}
-            className="md:w-[120px] w-28 rounded-full"
+            width={120}
+            height={120}
+            loader={() => profileImageDisplay}
+            src={
+              newProfileImageDisplay ?? profileImageDisplay ?? blank_profile_img
+            }
+            className="rounded-full w-[120px] h-[120px] object-cover"
+            alt="user profile image"
           />
         </div>
       </section>

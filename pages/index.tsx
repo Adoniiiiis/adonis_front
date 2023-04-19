@@ -25,10 +25,12 @@ export default function Home() {
 
   // Displaying Popular Content by Default And Setting Bookmarks
   useEffect(() => {
-    !contentChosen &&
-      user.id &&
-      !contentIsLoading &&
-      changeContentType('popularContent');
+    if (user) {
+      !contentChosen &&
+        user.id &&
+        !contentIsLoading &&
+        changeContentType('popularContent');
+    }
   }, []);
 
   // Getting Paginated Content For A Given Page

@@ -12,13 +12,16 @@ import Image from 'next/image';
 
 export default function Profile() {
   const { getUser }: any = useAuth();
+  const user = getUser();
   const [userData, setUserData] = useState<userType | null>(null);
+  const [userProfileImg, setUserProfileImg] = useState<any>(null);
   const langStrings = useLang();
   const { contentData } = useContent();
   const [userContents, setUserContents] = useState<any>();
 
   useEffect(() => {
-    setUserData(getUser());
+    setUserData(user);
+    setUserProfileImg(user.profile_img);
   }, []);
 
   useEffect(() => {
@@ -55,8 +58,11 @@ export default function Profile() {
                 </div>
                 <div className="flex flex-col items-center -mt-20">
                   <Image
-                    src={userData?.profile_img ?? blank_profile_img}
-                    className="border-white rounded-full lg lg:w-40 w-32 mb-1"
+                    width={150}
+                    height={150}
+                    loader={() => userProfileImg}
+                    src={userProfileImg ?? blank_profile_img}
+                    className="border-white rounded-full lg mb-1 w-[150px] h-[150px] object-cover"
                     alt="user profile image"
                   />
                   <div className="flex items-center space-x-2 mt-2">
