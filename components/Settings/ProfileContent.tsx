@@ -5,18 +5,17 @@ import ChangeProfileContentAxios from '@/Axios/ChangeProfileContentAxios';
 import { profileDataType } from '@/Types/ProfileDataType';
 import { toast } from 'react-toastify';
 import useLang from '@/hooks/useLang';
-import Image from 'next/image';
-import blank_profile_img from './../../public/images/blank_profile_img.webp';
 import { BsPlusCircleDotted } from 'react-icons/bs';
+import GetProfileImgAxios from '@/Axios/GetProfileImgAxios';
+import ProfileImg from './ProfileImg';
 import ChangeProfileImgAxios from '@/Axios/ChangeProfileImgAxios';
 
 export default function ProfileContent() {
   const { getUser } = useAuth();
   const user = getUser();
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(true);
-  const [newProfileImageDisplay, setNewProfileImageDisplay] =
-    useState<any>(null);
-  const [profileImageDisplay, setProfileImageDisplay] = useState<any>(null);
+  const [newProfileImage, setNewProfileImage] = useState<any>(null);
+  const [profileImage, setProfileImage] = useState<any>(null);
   const [profileData, setProfileData] = useState<profileDataType>({
     id: user && user.id,
     name: user && user.name,
@@ -26,7 +25,9 @@ export default function ProfileContent() {
   const langStrings = useLang();
 
   useEffect(() => {
-    user && user.profile_img && setProfileImageDisplay(user.profile_img);
+    if (user && user.profile_img) {
+      setProfileImage(user.profile_img);
+    }
   }, []);
 
   function checkIfDataChanged() {
@@ -57,12 +58,14 @@ export default function ProfileContent() {
     setIsBtnDisabled(true);
   };
 
-  const handleProfileImgChange = (e: any) => {
+  const handleProfileImgChange = async (e: any) => {
     const file: any = e.target.files;
     const chosenProfileImg: string = URL.createObjectURL(file[0]);
-    setNewProfileImageDisplay(chosenProfileImg);
+    setNewProfileImage(chosenProfileImg);
     try {
-      ChangeProfileImgAxios(user.id, file[0]);
+      const newImage = await ChangeProfileImgAxios(user.id, file[0]);
+      user.profile_img = newImage.profile_img;
+      localStorage.setItem('user', JSON.stringify(user));
       toast.success('Votre image de profil a été modifiée avec succès!');
     } catch {
       toast.error(
@@ -162,15 +165,9 @@ export default function ProfileContent() {
             accept="image/*"
             onChange={(e) => handleProfileImgChange(e)}
           />
-          <Image
-            width={120}
-            height={120}
-            loader={() => profileImageDisplay}
-            src={
-              newProfileImageDisplay ?? profileImageDisplay ?? blank_profile_img
-            }
-            className="rounded-full w-[120px] h-[120px] object-cover"
-            alt="user profile image"
+          <ProfileImg
+            profileImg={profileImage}
+            newProfileImg={newProfileImage}
           />
         </div>
       </section>

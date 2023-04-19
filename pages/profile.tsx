@@ -20,8 +20,10 @@ export default function Profile() {
   const [userContents, setUserContents] = useState<any>();
 
   useEffect(() => {
-    setUserData(user);
-    setUserProfileImg(user.profile_img);
+    if (user) {
+      setUserData(user);
+      setUserProfileImg(user.profile_img);
+    }
   }, []);
 
   useEffect(() => {

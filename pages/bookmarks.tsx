@@ -4,10 +4,14 @@ import { useState, useEffect } from 'react';
 import FilterContentResponse from '@/Axios/FilterContentResponse';
 import useContent from '@/context/ContentContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import useAuth from '@/context/AuthContext';
+import { userType } from '@/Types/UserType';
 
 export default function Bookmarks() {
   const [bookmarkDisplay, setBookmarkDisplay] = useState<any>(null);
   const { contentData } = useContent();
+  const { getUser } = useAuth();
+  const user: userType = getUser();
 
   const noBookmarks = (
     <p className="mt-4 dark:text-white">
@@ -17,7 +21,7 @@ export default function Bookmarks() {
 
   // Handling Bookmarks Loading, Display and NoContent
   useEffect(() => {
-    if (contentData) {
+    if (contentData && user) {
       if (contentData.popularContent.length > 0) {
         const bookmarkedContents = contentData.popularContent.filter(
           (content: any) => content.isBookmarked != false
@@ -86,28 +90,30 @@ export default function Bookmarks() {
                         {...droppableProvided.droppableProps}
                         ref={droppableProvided.innerRef}
                       >
-                        {bookmarkDisplay.map((el: any, i: number) => {
-                          return (
-                            <Draggable
-                              key={el?.props.children.props.data.id}
-                              draggableId={el?.props.children.props.data.id.toString()}
-                              index={i}
-                            >
-                              {(draggableProvided, draggableSnapshot) => (
-                                <div
-                                  {...draggableProvided.dragHandleProps}
-                                  {...draggableProvided.draggableProps}
-                                  ref={draggableProvided.innerRef}
-                                  className={`${
-                                    draggableSnapshot.isDragging && 'opacity-90'
-                                  }`}
-                                >
-                                  {el}
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        })}
+                        {user &&
+                          bookmarkDisplay.map((el: any, i: number) => {
+                            return (
+                              <Draggable
+                                key={el?.props.children.props.data.id}
+                                draggableId={el?.props.children.props.data.id.toString()}
+                                index={i}
+                              >
+                                {(draggableProvided, draggableSnapshot) => (
+                                  <div
+                                    {...draggableProvided.dragHandleProps}
+                                    {...draggableProvided.draggableProps}
+                                    ref={draggableProvided.innerRef}
+                                    className={`${
+                                      draggableSnapshot.isDragging &&
+                                      'opacity-90'
+                                    }`}
+                                  >
+                                    {el}
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
                         {droppableProvided.placeholder}
                       </div>
                     )}

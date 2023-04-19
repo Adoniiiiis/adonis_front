@@ -14,7 +14,8 @@ export default function ChangeProfileImgAxios(userId: number, profileImg: any) {
         profileImg,
       },
     });
-    return request;
+    const response = request.then((res) => res.data);
+    return response;
   } catch (err: any) {
     const error = err.message;
     return error;
