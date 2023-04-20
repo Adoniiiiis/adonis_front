@@ -146,10 +146,6 @@ export const ContentProvider = ({ children }: any) => {
     });
   }
 
-  useEffect(() => {
-    console.log(contentData);
-  }, [contentData]);
-
   return (
     <ContentContext.Provider
       value={{
