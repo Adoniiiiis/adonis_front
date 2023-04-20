@@ -26,7 +26,6 @@ export default function ProfileImg({ profileImg, newProfileImg }: any) {
       />
     );
   } else {
-    console.log('omg');
     return (
       <Image
         width={120}

@@ -4,19 +4,19 @@ import VideoCard from '@/components/VideoCard';
 
 export default function FilterContentResponse(content: any) {
   const filteredContent = Object.values(content).map((el: any) => {
-    if (el.category === 'book') {
+    if (el.category === 'books') {
       return (
         <div key={el.id} className="-mt-5 flex justify-center">
           <BookCard data={el} />
         </div>
       );
-    } else if (el.category === 'quote') {
+    } else if (el.category === 'quotes') {
       return (
         <div key={el.id} className="-mt-5 flex justify-center">
           <QuoteCard data={el} />
         </div>
       );
-    } else if (el.category === 'video') {
+    } else if (el.category === 'videos') {
       const validUrl = el.link.replace('watch?v=', 'embed/');
       const videoUrl = `${validUrl}?controls=0`;
       return (

@@ -11,7 +11,7 @@ export default function HomepageSqueletons() {
           <Skeleton
             sx={{ bgcolor: 'gray' }}
             variant="rectangular"
-            width={700}
+            width={800}
             height={200}
             className="rounded-lg"
             animation="pulse"

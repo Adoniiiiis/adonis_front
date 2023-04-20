@@ -31,7 +31,7 @@ export default function BookCard({ data }: bookType) {
   const { getUser }: any = useAuth();
   const user: userType = getUser();
   const langStrings = useLang();
-  const { updateBookmark } = useContent();
+  const { updateBookmark, updateRanking } = useContent();
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
@@ -45,7 +45,7 @@ export default function BookCard({ data }: bookType) {
       clientSideNewValue != 0
         ? setCurrentRanking(clientSideNewValue)
         : setCurrentRanking('zero');
-
+      updateRanking(id, ranking + clientSideNewValue);
       setIsUpdating(await UpdateRankingAxios(id, user.id, serverSideNewValue));
     }
   };
@@ -60,7 +60,7 @@ export default function BookCard({ data }: bookType) {
   return (
     <div
       className={`${
-        router.pathname === '/profile' ? 'w-full' : 'max-w-[700px] w-[95vw]'
+        router.pathname === '/profile' ? 'w-full' : 'max-w-[800px] w-[95vw]'
       } min-h-[200px] min-w-[364px] bg-white flex mb-8 rounded-md border-gray-400 dark:border-gray-700 border-[1px]`}
     >
       <div className="min-w-[45px] bg-gray-100 flex justify-center pt-[15px] rounded-l-md">

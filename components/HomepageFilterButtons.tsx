@@ -31,20 +31,20 @@ export default function HomepageFilterButtons({
     },
     {
       displayName: langStrings && langStrings.books,
-      id: 'book',
+      id: 'books',
     },
     {
       displayName: langStrings && langStrings.videos,
-      id: 'video',
+      id: 'videos',
     },
     {
       displayName: langStrings && langStrings.quotes,
-      id: 'quote',
+      id: 'quotes',
     },
   ];
 
   return (
-    <div className="mt-8 mb-16 flex justify-between min-w-[364px] bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[100vw] max-w-[700px]">
+    <div className="mt-8 mb-16 flex justify-between min-w-[364px] bg-white rounded-lg border-gray-400 border-[1px] p-2 w-[95vw] max-w-[800px]">
       <div>
         {CATEGORIES.map((el) => (
           <button

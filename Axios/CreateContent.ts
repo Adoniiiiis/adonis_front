@@ -14,7 +14,8 @@ export default function CreateContent(userId: number, finalObject: any) {
         finalObject,
       },
     });
-    return request;
+    const response = request.then((res) => res.data.content);
+    return response;
   } catch (err: any) {
     const error = err.message;
     return error;

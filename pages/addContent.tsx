@@ -12,6 +12,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import useLang from '@/hooks/useLang';
+import useContent from '@/context/ContentContext';
 
 interface FinalObject {
   category: string | null;
@@ -54,19 +55,20 @@ export default function AddContent() {
     user_id: null,
   });
   const langStrings = useLang();
+  const { addCreatedContent } = useContent();
 
   const categories = [
     {
       displayName: langStrings && langStrings.videos,
-      id: 'video',
+      id: 'videos',
     },
     {
       displayName: langStrings && langStrings.quotes,
-      id: 'quote',
+      id: 'quotes',
     },
     {
       displayName: langStrings && langStrings.books,
-      id: 'book',
+      id: 'books',
     },
   ];
 
@@ -89,7 +91,7 @@ export default function AddContent() {
     } else if (step === 2) {
       setLoading(true);
       try {
-        await CreateContent(user.id, finalObject);
+        addCreatedContent(await CreateContent(user.id, finalObject));
         toast.success(langStrings && langStrings.toastContentAdded);
         router.push('/');
       } catch (err) {

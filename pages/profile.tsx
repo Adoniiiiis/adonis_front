@@ -17,7 +17,7 @@ export default function Profile() {
   const [userProfileImg, setUserProfileImg] = useState<any>(null);
   const langStrings = useLang();
   const { contentData } = useContent();
-  const [userContents, setUserContents] = useState<any>();
+  const [userContents, setUserContents] = useState<any>(null);
 
   useEffect(() => {
     if (user) {

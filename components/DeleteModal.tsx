@@ -23,10 +23,9 @@ export default function DeleteModal({
 
   const handleDelete = () => {
     setIsDeleteModalOpen(false);
-    DeleteContentAxios(userId, postId).then(() => {
-      toast.success('Post supprimé avec succès!');
-    });
+    DeleteContentAxios(userId, postId);
     removeContent(postId);
+    toast.success('Post supprimé avec succès!');
   };
 
   return (
