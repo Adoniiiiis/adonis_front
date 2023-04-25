@@ -148,6 +148,7 @@ export default function Home() {
               <HomepageFilterButtons
                 changeContentType={changeContentType}
                 contentIsLoading={contentIsLoading}
+                contentChosen={contentChosen}
               />
               <div className="-mt-7 flex justify-center">
                 <div className="flex-col w-full">

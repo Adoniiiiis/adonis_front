@@ -117,9 +117,9 @@ const Navbar: FC = () => {
       <div
         onMouseOver={() => setDesktopNavbarFull(true)}
         onMouseOut={() => setDesktopNavbarFull(false)}
-        className={`lg:flex shrink-0 hidden flex-col font-medium bg-zinc-800 rounded-r-[5px] justify-center gap-y-8 ${
+        className={`lg:flex lg:fixed z-0 shrink-0 hidden flex-col bg-zinc-800 font-medium rounded-r-[5px] justify-center h-screen gap-y-8 ${
           desktopNavbarFull ? 'w-56' : 'w-20'
-        } transition-all ease-in-out h-screen overflow-hidden text-white`}
+        } transition-all ease-in-out overflow-hidden text-white`}
       >
         {listPages.map((el, i) => (
           <>
