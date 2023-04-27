@@ -63,7 +63,6 @@ export default function DarkmodeSwitch() {
             control={
               <MaterialUISwitch
                 sx={{ m: 1 }}
-                currentTheme={currentTheme}
                 defaultChecked={currentTheme === 'dark' ? true : false}
               />
             }
