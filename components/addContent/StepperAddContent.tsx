@@ -14,7 +14,7 @@ import StepConnector, {
 import { StepIconProps } from '@mui/material/StepIcon';
 import useLang from '@/hooks/useLang';
 
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
+const QontoConnector = styled(StepConnector)(({ theme }: any) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
     left: 'calc(-50% + 16px)',
@@ -39,7 +39,7 @@ const QontoConnector = styled(StepConnector)(({ theme }) => ({
 }));
 
 const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(
-  ({ theme, ownerState }) => ({
+  ({ theme, ownerState }: any) => ({
     color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
     display: 'flex',
     height: 22,
@@ -75,7 +75,7 @@ function QontoStepIcon(props: StepIconProps) {
   );
 }
 
-const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+const ColorlibConnector = styled(StepConnector)(({ theme }: any) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
   },
@@ -102,7 +102,7 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
-}>(({ theme, ownerState }) => ({
+}>(({ theme, ownerState }: any) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
   zIndex: 1,
