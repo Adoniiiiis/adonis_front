@@ -3,7 +3,7 @@ import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
 import useDark from '@/hooks/useDark';
 
-export default function register() {
+export default function Register() {
   const initialData = {
     name: '',
     email: '',
@@ -90,7 +90,7 @@ export default function register() {
                   htmlFor="username"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Nom d'utilisateur
+                  Nom d&#39;utilisateur
                 </label>
                 <input
                   onChange={(e) => handleInputChange(e)}
@@ -148,7 +148,7 @@ export default function register() {
                     htmlFor="terms"
                     className="font-light text-gray-500 dark:text-gray-300"
                   >
-                    J'accepte les{' '}
+                    J&#39;accepte les{' '}
                     <a
                       className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                       href="#"

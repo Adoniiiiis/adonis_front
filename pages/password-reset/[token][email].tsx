@@ -2,7 +2,7 @@ import ResetPasswordAxios from '@/Axios/ResetPasswordAxios';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 
-export default function resetPassword() {
+export default function ResetPassword() {
   const [password, setPassword] = useState<string>('');
   const [password_confirmation, setConfirmPassword] = useState<string>('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState<boolean>(false);

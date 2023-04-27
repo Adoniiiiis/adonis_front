@@ -1,7 +1,7 @@
 import ForgotPasswordAxios from '@/Axios/ForgotPasswordAxios';
 import React, { useState, useEffect } from 'react';
 
-export default function forgotPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState<string>('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState<boolean>(false);
 

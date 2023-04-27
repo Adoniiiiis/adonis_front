@@ -11,7 +11,7 @@ import Image from 'next/image';
 import useContent from '@/context/ContentContext';
 import { useRouter } from 'next/router';
 import { BsFillTrash3Fill } from 'react-icons/bs';
-import DeleteModal from './deleteModal';
+import DeleteModal from './DeleteModal';
 
 export default function BookCard({ data }: bookType) {
   const {

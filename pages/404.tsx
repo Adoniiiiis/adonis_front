@@ -25,7 +25,7 @@ export default function Error400() {
           404 - Page introuvable
         </h1>
         <p className="text-slate-600 mt-5 lg:text-lg">
-          La page que vous avez recherché n'existe pas <br />
+          La page que vous avez recherché n&#39;existe pas <br />
           ou a été retirée.
         </p>
       </div>

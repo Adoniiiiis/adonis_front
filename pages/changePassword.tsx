@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-export default function resetPassword() {
+export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [password_confirmation, setConfirmPassword] = useState('');
   const [isBtnDisplayed, setIsBtnDisplayed] = useState(false);

@@ -10,7 +10,7 @@ import useLang from '@/hooks/useLang';
 import useContent from '@/context/ContentContext';
 import { useRouter } from 'next/router';
 import { BsFillTrash3Fill } from 'react-icons/bs';
-import DeleteModal from './deleteModal';
+import DeleteModal from './DeleteModal';
 
 export default function VideoCard({ videoUrl, data }: videoType) {
   const { id, author, ranking, isBookmarked, userRating } = data;

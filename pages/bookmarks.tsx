@@ -15,7 +15,7 @@ export default function Bookmarks() {
 
   const noBookmarks = (
     <p className="mt-4 dark:text-white">
-      Vous n'avez aucun favoris pour le moment.
+      Vous n&#39;avez aucun favoris pour le moment.
     </p>
   );
 

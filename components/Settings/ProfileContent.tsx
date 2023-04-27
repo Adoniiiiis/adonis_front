@@ -129,7 +129,7 @@ export default function ProfileContent() {
                 htmlFor="username"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Nom d'utilisateur
+                Nom d&#39;utilisateur
               </label>
               <input
                 onChange={(e) => handleInputChange(e)}

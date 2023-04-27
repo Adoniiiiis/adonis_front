@@ -24,12 +24,11 @@ export default function Sidebar() {
 
   const sidebarMapping = settingsSubPages.map((el, i) => {
     return (
-      <div className="flex">
+      <div className="flex" key={i}>
         <div
           className={`w-1 ${pathname === el.routeName && 'bg-blue-600'}`}
         ></div>
         <div
-          key={i}
           onClick={() => {
             pathname != el.routeName && push(el.routeName);
           }}

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import useAuth from '@/context/AuthContext';
 import useDark from '@/hooks/useDark';
 
-export default function login() {
+export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { login, errors } = useAuth();
@@ -88,7 +88,7 @@ export default function login() {
                   href="/register"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  S'inscrire
+                  S&#39;inscrire
                 </Link>
               </p>
             </form>
