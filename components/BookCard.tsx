@@ -69,6 +69,8 @@ export default function BookCard({ data }: bookType) {
             ? currentRanking === 'zero'
               ? 0
               : currentRanking
+            : ranking === 0
+            ? 0
             : ranking}
           {router.pathname === '/profile' && (
             <BsFillTrash3Fill

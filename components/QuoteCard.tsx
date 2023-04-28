@@ -59,6 +59,8 @@ export default function QuoteCard({ data }: quoteType) {
             ? currentRanking === 'zero'
               ? 0
               : currentRanking
+            : ranking === 0
+            ? 0
             : ranking}
           {router.pathname === '/profile' && (
             <BsFillTrash3Fill
@@ -81,7 +83,7 @@ export default function QuoteCard({ data }: quoteType) {
           setIsDeleteModalOpen={setIsDeleteModalOpen}
         />
       )}
-      <div className="flex-col w-full mt-[50px] pb-3">
+      <div className="flex-col w-full mt-[65px] pb-3">
         <h1 className="italic flex justify-center mb-3 text-[1.050em] pl-5 pr-5">
           {quote}
         </h1>
@@ -91,12 +93,12 @@ export default function QuoteCard({ data }: quoteType) {
           </p>
           <p className="text-[0.8em] ml-[5px]">{author}</p>
         </div>
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <p className="text-gray-500 text-[0.8em]">
             {langStrings && langStrings.book}:
           </p>
           <p className="text-[0.8em] ml-[5px]">Pas de livre omg</p>
-        </div>
+        </div> */}
       </div>
       <div className="m-0">
         <Ranking

@@ -59,6 +59,8 @@ export default function VideoCard({ videoUrl, data }: videoType) {
             ? currentRanking === 'zero'
               ? 0
               : currentRanking
+            : ranking === 0
+            ? 0
             : ranking}
           {router.pathname === '/profile' && (
             <BsFillTrash3Fill
